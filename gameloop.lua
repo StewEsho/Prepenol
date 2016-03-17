@@ -6,7 +6,7 @@
 --
 ------------------------------- Private Fields ---------------------------------
 local ship = require ("ship")
-
+local joystick = require ("joystick")
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -19,6 +19,7 @@ local gameloop_mt = {}; --metatable
 ]]
 local gameState;
 local player;
+local stick;
 
 ------------------------------ Public Functions --------------------------------
 
@@ -27,6 +28,7 @@ function gameloop.new()
   local newGameloop = {
     gameState = 0;
     player = nil;
+    stick = nil;
   }
 
   return setmetatable(newGameloop, gameloop_mt);
@@ -37,11 +39,12 @@ end
 function gameloop:init()
   gameState = 2
   player = ship.new(display.contentWidth / 2, 5 * display.contentHeight / 6);
+  stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
-
+  joystick.run();
 end
 
 return gameloop;
