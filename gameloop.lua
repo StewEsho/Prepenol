@@ -36,7 +36,7 @@ end
 --Runs again everytime the game state changes
 function gameloop:init()
   gameState = 2
-  player = ship.new(display.contentWidth / 2, 5 * display.contentHeight / 6); 
+  player = ship.new(display.contentWidth / 2, 5 * display.contentHeight / 6);
 end
 
 --Runs continously. Different code for each different game state
