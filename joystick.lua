@@ -45,18 +45,20 @@ function joystick.new(_x, _y)
     x = _x;
     y = _y;
 
-    angle = 1/0;
+    angle = 0;
     magnitude = 0;
     background = nil;
     stick = nil;
   }
+
+  angle = 0;
 
   background = display.newCircle(_x, _y, display.contentWidth/8);
   background:setFillColor(0.7, 0.7, 0.7)
   stick = display.newCircle(_x, _y, display.contentWidth/20);
   stick:setFillColor(0.4, 1, 0.6, 0.3);
 
-  angleText = display.newText("nan", 500, 300, "Arial", 72);
+  angleText = display.newText(angle, 500, 300, "Arial", 72);
   magText = display.newText("0", 500, 500, "Arial", 72)
 
   return setmetatable(newJoystick, joystick_mt);
@@ -81,6 +83,8 @@ local function onStickHold(event)
   end
   angleText.text = joystick:getAngle();
   magText.text = joystick:getMagnitude();
+
+  ship:translate(joystick:getMagnitude() * math.sin(math.rad(joystick:getAngle())) * ship:getSpeed(), -joystick:getMagnitude() * math.cos(math.rad(joystick:getAngle())) * ship:getSpeed());
 end
 
 ------------------------------ Public Functions --------------------------------
@@ -96,8 +100,10 @@ end
 function joystick:getAngle()
   if (stick.x - background.x < 0) then
     angle = math.deg(math.atan((stick.y - background.y)/(stick.x - background.x)))+270;
-  else
+  elseif (stick.x - background.x > 0) then
     angle = math.deg(math.atan((stick.y - background.y)/(stick.x - background.x)))+90;
+  elseif (stick.x - background.x == 0) then
+    angle = 0;
   end
   return angle;
 end

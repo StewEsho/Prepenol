@@ -9,20 +9,26 @@
 local ship = {};
 local ship_mt = {}; --metatable
 
-local x = 0;
-local y = 0;
-local isShooting = false;
+local x;
+local y;
+local speed;
+local isShooting;
 
 ------------------------------ Public Functions --------------------------------
 
 --Constructor
-function ship.new(_x, _y)
+function ship.new(_x, _y, _speed)
   local newShip = {
     x = _x;
     y = _y;
+    speed = _speed;
   }
 
-  display.newRect(_x, _y, 300, 300)
+  x = _x;
+  y = _y;
+  speed = _speed;
+  
+  player = display.newRect(_x, _y, 300, 300)
 
   return setmetatable(newShip, ship_mt);
 end
@@ -35,6 +41,10 @@ function ship:getY()
   return y;
 end
 
+function ship:getSpeed()
+  return speed;
+end
+
 function ship:setX(_x)
   x = _x;
 end
@@ -43,9 +53,13 @@ function ship:setY(_y)
   y = _y;
 end
 
+function ship:setSpeed(_speed)
+  speed = _speed;
+end
+
 function ship:translate(_x, _y)
-  x = x + _x;
-  y = y + _y;
+  player.x = player.x + _x;
+  player.y = player.y + _y;
 end
 
 return ship;
