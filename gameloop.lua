@@ -43,7 +43,7 @@ function gameloop:init()
 end
 
 --Runs continously. Different code for each different game state
-function gameloop:run()
+function gameloop:run(event)
   joystick:run();
 end
 

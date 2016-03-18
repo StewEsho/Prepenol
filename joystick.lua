@@ -38,6 +38,7 @@ local magnitude;
 local background;
 local stick;
 local x, y;
+local angleText = display.newText("0", 500, 300, "Arial", 72)
 
 ----------------------------- Private Functions --------------------------------
 
@@ -53,6 +54,7 @@ local function onStickHold(event)
       if ((event.y < (background.y + 100)) or (event.y > (background.y - 100))) then
         stick.y = event.y;
       end
+
     elseif (event.phase == "ended" or event.phase == "cancelled") then
       display.getCurrentStage():setFocus( self, nil );
       isStickFocus = false
@@ -60,6 +62,7 @@ local function onStickHold(event)
       stick.y = background.y;
     end
   end
+  angleText.text = joystick:getAngle();
 end
 
 ------------------------------ Public Functions --------------------------------
@@ -85,15 +88,20 @@ function joystick.new(_x, _y)
   }
 
   background = display.newCircle(_x, _y, display.contentWidth/8);
-  background:setFillColor(0.324, 0.434, 0.112, 0.3)
+  background:setFillColor(0.7, 0.7, 0.7)
   stick = display.newCircle(_x, _y, display.contentWidth/20);
-  stick:setFillColor(0.123, 0.233, 0.540)
+  stick:setFillColor(0.4, 1, 0.6)
 
   return setmetatable(newJoystick, joystick_mt);
 end
 
 --Getters
 function joystick:getAngle()
+  if (stick.x - background.x < 0) then
+    angle = ((math.atan((stick.y - background.y)/(stick.x - background.x)))*(180/math.pi))+270;
+  else
+    angle = ((math.atan((stick.y - background.y)/(stick.x - background.x)))*(180/math.pi))+90;
+  end
   return angle;
 end
 function joystick:getMagnitude()
