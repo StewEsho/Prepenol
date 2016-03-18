@@ -6,6 +6,8 @@
 --
 ------------------------------- Private Fields ---------------------------------
 
+local ship = require ("ship");
+
 local joystick = {};
 local joystick_mt = {}; --metatable
 
@@ -37,6 +39,29 @@ local background;
 local stick;
 local x, y;
 
+----------------------------- Private Functions --------------------------------
+
+local function onStickHold(event)
+  if (event.phase == "began") then
+    display.getCurrentStage():setFocus( self, event.id )
+    isStickFocus = true
+  elseif (isStickFocus == true) then
+    if (event.phase == "moved") then
+      if ((event.x < (background.x + 100)) or (event.x > (background.x - 100))) then
+        stick.x = event.x;
+      end
+      if ((event.y < (background.y + 100)) or (event.y > (background.y - 100))) then
+        stick.y = event.y;
+      end
+    elseif (event.phase == "ended" or event.phase == "cancelled") then
+      display.getCurrentStage():setFocus( self, nil );
+      isStickFocus = false
+      stick.x = background.x;
+      stick.y = background.y;
+    end
+  end
+end
+
 ------------------------------ Public Functions --------------------------------
 
 --[[
@@ -67,24 +92,6 @@ function joystick.new(_x, _y)
   return setmetatable(newJoystick, joystick_mt);
 end
 
-local function onStickHold(event)
-  if (event.phase == "moved") then
-    if ((event.x < (background.x + 100)) or (event.x > (background.x - 100))) then
-      stick.x = event.x;
-    end
-    if ((event.y < (background.y + 100)) or (event.y > (background.y - 100))) then
-      stick.y = event.y;
-    end
-  elseif (event.phase == "ended") then
-    stick.x = background.x;
-    stick.y = background.y;
-  end
-end
-
-function joystick:run()
-  stick:addEventListener("touch", onStickHold);
-end
-
 --Getters
 function joystick:getAngle()
   return angle;
@@ -93,5 +100,8 @@ function joystick:getMagnitude()
   return magnitude;
 end
 
+function joystick:run()
+  stick:addEventListener("touch", onStickHold);
+end
 
 return joystick;

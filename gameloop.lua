@@ -44,7 +44,7 @@ end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
-  joystick.run();
+  joystick:run();
 end
 
 return gameloop;
