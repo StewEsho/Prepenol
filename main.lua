@@ -13,4 +13,8 @@ gameloop.new();
 
 gameloop:init();
 
-gameloop:run();
+local function gameLoop()
+  gameloop:run();
+end
+
+Runtime:addEventListener("enterFrame", gameLoop);

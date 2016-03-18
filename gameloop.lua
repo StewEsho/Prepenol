@@ -45,6 +45,7 @@ end
 --Runs continously. Different code for each different game state
 function gameloop:run(event)
   joystick:run();
+  ship:translate(joystick:getMagnitude() * math.sin(math.rad(joystick:getAngle())) * ship:getSpeed(), -joystick:getMagnitude() * math.cos(math.rad(joystick:getAngle())) * ship:getSpeed());
 end
 
 return gameloop;

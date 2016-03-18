@@ -59,7 +59,7 @@ function joystick.new(_x, _y)
   stick:setFillColor(0.4, 1, 0.6, 0.3);
 
   angleText = display.newText(angle, 500, 300, "Arial", 72);
-  magText = display.newText("0", 500, 500, "Arial", 72)
+  magText = display.newText("0", 500, 500, "Arial", 72);
 
   return setmetatable(newJoystick, joystick_mt);
 end
@@ -81,10 +81,6 @@ local function onStickHold(event)
       stick.y = background.y;
     end
   end
-  angleText.text = joystick:getAngle();
-  magText.text = joystick:getMagnitude();
-
-  ship:translate(joystick:getMagnitude() * math.sin(math.rad(joystick:getAngle())) * ship:getSpeed(), -joystick:getMagnitude() * math.cos(math.rad(joystick:getAngle())) * ship:getSpeed());
 end
 
 ------------------------------ Public Functions --------------------------------
@@ -115,6 +111,8 @@ end
 
 function joystick:run()
   stick:addEventListener("touch", onStickHold);
+  angleText.text = joystick:getAngle();
+  magText.text = joystick:getMagnitude();
 end
 
 return joystick;
