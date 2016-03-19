@@ -109,8 +109,11 @@ function joystick:getMagnitude()
   return magnitude;
 end
 
-function joystick:run()
+function joystick:init()
   stick:addEventListener("touch", onStickHold);
+end
+
+function joystick:run()
   angleText.text = joystick:getAngle();
   magText.text = joystick:getMagnitude();
 end

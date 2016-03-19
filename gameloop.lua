@@ -40,6 +40,7 @@ function gameloop:init()
   gameState = 2
   player = ship.new(3 * display.contentWidth / 4, 5 * display.contentHeight / 6, 20);
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
+  joystick:init();
 end
 
 --Runs continously. Different code for each different game state
