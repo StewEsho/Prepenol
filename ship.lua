@@ -27,7 +27,7 @@ function ship.new(_x, _y, _speed)
   x = _x;
   y = _y;
   speed = _speed;
-  
+
   player = display.newRect(_x, _y, 300, 300)
 
   return setmetatable(newShip, ship_mt);
@@ -57,9 +57,10 @@ function ship:setSpeed(_speed)
   speed = _speed;
 end
 
-function ship:translate(_x, _y)
+function ship:translate(_x, _y, _angle)
   player.x = player.x + _x;
   player.y = player.y + _y;
+  player.rotation = _angle;
 end
 
 return ship;

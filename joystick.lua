@@ -78,8 +78,8 @@ local function onStickHold(event)
         stick.x = event.x;
         stick.y = event.y;
       else
-        stick.x = background.x + (deltaRadius/math.sin(math.rad(joystick:getAngle())));
-        stick.y = background.y + (deltaRadius/-math.cos(math.rad(joystick:getAngle())));
+        stick.x = background.x + (deltaRadius * math.sin(math.rad(joystick:getAngle())));
+        stick.y = background.y + (deltaRadius * math.cos(math.rad(joystick:getAngle())));
       end
     if (event.phase == "ended" or event.phase == "cancelled") then
       display.getCurrentStage():setFocus( self, nil );
@@ -126,11 +126,7 @@ end
 
 function joystick:getMagnitude()
   magnitude = math.sqrt(math.pow((stick.x-background.x),2) + math.pow((stick.y-background.y),2)) / (display.contentWidth/8)
-  if (magnitude > 1) then
-    return 1;
-  else
-    return magnitude;
-  end
+  return magnitude;
 end
 
 function joystick:init()
