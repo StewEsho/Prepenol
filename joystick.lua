@@ -78,28 +78,10 @@ local function onStickHold(event)
     isStickFocus = true;
   end
   if (isStickFocus == true) then
-      if (joystick:getMagnitude() < 0.95) then
         stick.x = event.x;
         stick.y = event.y;
         xMag = 0;
         yMag = 0;
-      --[[
-      else
-        xMag = joystick:getStickX();
-        yMag = joystick:getStickY();
-        if (xMag > 0) and (event.x < xMag) then
-          stick.x = event.x;
-        elseif (xMag < 0) and (event.x > xMag) then
-          stick.x = event.x;
-        end
-
-        if (yMag > 0) and (event.y < yMag) then
-          stick.y = event.y;
-        elseif (yMag < 0) and (event.y > yMag) then
-          stick.y = event.y;
-        end
-]]
-      end
     if (event.phase == "ended" or event.phase == "cancelled") then
       display.getCurrentStage():setFocus( self, nil );
       isStickFocus = false;
@@ -163,7 +145,11 @@ end
 
 function joystick:getMagnitude()
   magnitude = math.sqrt(math.pow((stick.x-background.x),2) + math.pow((stick.y-background.y),2)) / (background.width/2)
-  return magnitude;
+  if magnitude > 1 then
+    return 1;
+  else
+    return magnitude;
+  end
 end
 
 function joystick:getStickX()
@@ -175,7 +161,7 @@ function joystick:getStickY()
 end
 
 function joystick:init()
-  background:addEventListener("touch", onStickHold);
+  stick:addEventListener("touch", onStickHold);
 end
 
 function joystick:debug()
