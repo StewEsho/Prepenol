@@ -11,6 +11,11 @@ local joystick = require ("joystick");
 local ship = {};
 local ship_mt = {}; --metatable
 
+local sprite_ship = {
+    type = "image",
+    filename = "Ship.png"
+}
+
 local x;
 local y;
 local speed;
@@ -28,7 +33,8 @@ function ship.new(_x, _y, _speed)
   y = _y;
   speed = _speed;
 
-  player = display.newRect(_x, _y, 300, 400)
+  player = display.newRect(_x, _y, 240, 400)
+  player.fill = sprite_ship;
 
   return setmetatable(newShip, ship_mt);
 end
