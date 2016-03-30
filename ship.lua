@@ -13,7 +13,7 @@ local ship_mt = {}; --metatable
 
 local sprite_ship = {
     type = "image",
-    filename = "Ship.png"
+    filename = "img/sprites/ship.png"
 }
 
 local x;
