@@ -6,6 +6,8 @@
 --
 ------------------------------- Private Fields ---------------------------------
 
+local joystick = require ("joystick");
+
 local ship = {};
 local ship_mt = {}; --metatable
 
@@ -28,7 +30,7 @@ function ship.new(_x, _y, _speed)
   y = _y;
   speed = _speed;
 
-  player = display.newRect(_x, _y, 300, 300)
+  player = display.newRect(_x, _y, 300, 400)
 
   return setmetatable(newShip, ship_mt);
 end
@@ -61,6 +63,12 @@ function ship:translate(_x, _y, _angle)
   player.x = player.x + _x;
   player.y = player.y + _y;
   player.rotation = _angle;
+end
+
+function ship:run()
+  ship:translate(joystick:getMagnitude() * math.sin(math.rad(joystick:getAngle())) * ship:getSpeed(),
+                -joystick:getMagnitude() * math.cos(math.rad(joystick:getAngle())) * ship:getSpeed(),
+                joystick:getAngle());
 end
 
 return ship;
