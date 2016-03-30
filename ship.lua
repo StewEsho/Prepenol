@@ -16,8 +16,6 @@ local y;
 local speed;
 local isShooting;
 
------------------------------- Public Functions --------------------------------
-
 --Constructor
 function ship.new(_x, _y, _speed)
   local newShip = {
@@ -34,6 +32,47 @@ function ship.new(_x, _y, _speed)
 
   return setmetatable(newShip, ship_mt);
 end
+
+------------------------------ Public Functions --------------------------------
+
+--[[
+
+  getX
+    @return x
+    - gets the ship's x position on the screen
+
+  getY
+    @return y
+    - gets the ship's y position on the screen
+
+  getSpeed
+    @return speed
+    - gets the speed of the ship
+
+  setX
+    { _x = new x coordinate of the ship}
+    - sets the ship's x coordinate
+
+  setY
+    { _y = new y coordinate of the ship}
+    - sets the ship's y coordinate
+
+  setSpeed
+    {_speed = new speed of ship}
+    - sets the ship's new speed
+
+  translate
+    {_x = new x coordinate
+     _y = new y coordinate
+     _angle = angle to rotate the ship}
+    - translates the ship around
+    - usually used alongside the joystick in a gameloop
+
+  run
+    - runs during the game loop.
+    - allows for the ship to move using the joystick.
+
+]]--
 
 function ship:getX()
   return x;
