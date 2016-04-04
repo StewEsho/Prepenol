@@ -40,8 +40,6 @@ local x, y;
 
 local angleText;
 local magText;
-local xMagText;
-local yMagText;
 
 function joystick.new(_x, _y)
   local newJoystick = {
@@ -64,8 +62,6 @@ function joystick.new(_x, _y)
 
   angleText = display.newText(angle, 500, 300, "Arial", 72);
   magText = display.newText("0", 500, 500, "Arial", 72);
-  xMagText = display.newText("0", 1200, 300, "Arial", 72);
-  yMagText = display.newText("0", 1200, 500, "Arial", 72);
 
   return setmetatable(newJoystick, joystick_mt);
 end
@@ -128,6 +124,10 @@ end
     - runs once to initiate the joystick
     - adds the event listener that allows the joystick to move around
 
+  isInUse
+    - returns true if the joystick is being used.
+    - returns false if joystick magnitude is 0.
+
   debug
     - Runs in the game loop
     - prints out information such as angles and magnitude
@@ -171,11 +171,17 @@ function joystick:init()
   background:addEventListener("touch", snapStick);
 end
 
+function joystick:isInUse()
+  if (joystick:getMagnitude() == 0) then
+    return false;
+  else
+    return true;
+  end
+end
+
 function joystick:debug()
   angleText.text = joystick:getAngle();
   magText.text = joystick:getMagnitude();
-  xMagText.text = string.format("%.3f", joystick:getStickX());
-  yMagText.text = string.format("%.3f", joystick:getStickY());
 end
 
 return joystick;
