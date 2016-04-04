@@ -66,7 +66,7 @@ function joystick.new(_x, _y)
   return setmetatable(newJoystick, joystick_mt);
 end
 
------------------------------ Private Functions --------------------------------
+  ----------------------------- Private Functions --------------------------------
 
 local function onStickHold(event)
   if (isStickFocus == true) then
