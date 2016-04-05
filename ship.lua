@@ -7,13 +7,14 @@
 ------------------------------- Private Fields ---------------------------------
 
 local joystick = require ("joystick");
+local physics = require ("physics");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
 
 local sprite_ship = {
     type = "image",
-    filename = "img/sprites/ship2.png"
+    filename = "img/sprites/ship.png"
 }
 
 local x;
@@ -112,12 +113,21 @@ function ship:setY(_y)
   y = _y;
 end
 
+function ship:setIsShooting(_flag)
+  isShooting = _flag;
+end
+
 function ship:setSpeed(_speed)
   speed = _speed;
 end
 
 function ship:setAcceleration(_acceleration)
   accelerationRate = _acceleration;
+end
+
+function ship:init()
+  physics.start()
+  physics.setGravity( 0, 0 )
 end
 
 function ship:translate(_x, _y, _angle)
@@ -143,7 +153,21 @@ function ship:run()
     lastMagnitude = joystick:getMagnitude();
   end
 
+  if(isShooting == true) then
+    isShooting = false;
+    timer.performWithDelay (500, ship:shoot(), 1);
+  end
+
   speedText.text = speed;
+end
+
+function ship:shoot()
+    local bullet = display.newRect(player.x, player.y, 25, 250)
+    bullet:setFillColor(0.3, 0.6, 0.9);
+    bullet.rotation = player.rotation;
+
+    physics.addBody( bullet, "kinematic");
+    bullet:setLinearVelocity( math.sin(math.rad(bullet.rotation))*5000, -math.cos(math.rad(bullet.rotation))*5000 )
 end
 
 return ship;

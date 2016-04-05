@@ -8,6 +8,8 @@
 local ship = require ("ship")
 local joystick = require ("joystick")
 local button = require ("button")
+local physics = require("physics")
+
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -45,12 +47,13 @@ function gameloop:init()
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
                         display.contentHeight-(display.contentHeight/6),
                         display.contentHeight/2, display.contentHeight/3,
-                        false, 
+                        true,
                         1,
                         0.2,
                         0.25,
                         "fire");
 
+  player:init();
   stick:init();
   fireBttn:init();
 end
@@ -61,9 +64,11 @@ function gameloop:run(event)
   player:run();
 
   if (fireBttn:isPressed() == true) then
-    debaq.text = "qwek"
+    player:setIsShooting(true);
+    debaq.text = isShooting;
   else
-    debaq.text = "FRC me"
+    player:setIsShooting(false);
+    debaq.text = isShooting;
   end
 end
 
