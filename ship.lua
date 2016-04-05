@@ -9,11 +9,11 @@
 local joystick = require ("joystick");
 
 local ship = {};
-local ship_mt = {}; --metatable
+local ship_mt = {__index = ship}; --metatable
 
 local sprite_ship = {
     type = "image",
-    filename = "img/sprites/ship.png"
+    filename = "img/sprites/ship2.png"
 }
 
 local x;

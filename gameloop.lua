@@ -22,7 +22,7 @@ local gameState;
 local player;
 local stick;
 local fireBttn;
-
+local debaq
 ------------------------------ Public Functions --------------------------------
 
 --constructor
@@ -38,17 +38,33 @@ end
 --Runs again everytime the game state changes
 function gameloop:init()
   gameState = 2
-  player = ship.new(3 * display.contentWidth / 4, 5 * display.contentHeight / 6, 0.5);
+
+  debaq = display.newText("123", 333, 444, "Arial", 60)
+  player = ship.new(display.contentWidth / 2, 3 * display.contentHeight / 4, 0.5);
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
-  fireBttn = button.new(800, 750, 300, 300, true, 255, 45, 65, "kek");
-  joystick:init();
-  button:init();
+  fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
+                        display.contentHeight-(display.contentHeight/6),
+                        display.contentHeight/2, display.contentHeight/3,
+                        false, 
+                        1,
+                        0.2,
+                        0.25,
+                        "fire");
+
+  stick:init();
+  fireBttn:init();
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run(event)
-  joystick:debug();
-  ship:run();
+  stick:debug();
+  player:run();
+
+  if (fireBttn:isPressed() == true) then
+    debaq.text = "qwek"
+  else
+    debaq.text = "FRC me"
+  end
 end
 
 return gameloop;

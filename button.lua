@@ -7,7 +7,7 @@
 ------------------------------- Private Fields ---------------------------------
 
 local button = {};
-local button_mt = {}; --metatable
+local button_mt = {__index = button}; --metatable
 
 local r, g, b;
 local width, height;
@@ -19,14 +19,21 @@ local tag;
 local buttonBox;
 
 --Constructor
-function button.new(_x, _y, _width, _height, _toggleable, _r, _g, _b , _tag)
+function button.new(_x,
+                    _y,
+                    _width,
+                    _height,
+                    _toggleable,
+                    _r,
+                    _g,
+                    _b,
+                    _tag)
   local newButton = {
     x = _x;
     y = _y;
     width = _width;
     height = _height;
     tag = _tag;
-    color = {_r/255, _g/255, _b/255};
     isToggleable = _toggleable
   }
 
@@ -34,27 +41,40 @@ function button.new(_x, _y, _width, _height, _toggleable, _r, _g, _b , _tag)
   y = _y;
   width = _width;
   height = _height;
-  tag = _tag;
-  isToggleable = _toggleable;
+  tag = _tag or "button";
+  isToggleable = _toggleable or false;
   isPressed = false;
-  r = _r/255;
-  g = _g/255;
-  b = _b/255;
+  r = _r or 1;
+  g = _g or 1;
+  b = _b or 1;
 
   buttonBox = display.newRect(x, y, width, height);
   buttonBox:setFillColor(r, g, b);
+
+  return setmetatable(newButton, button_mt);
 end
 ----------------------------- Private Functions --------------------------------
 
 local function run(event)
   if(event.phase == "began") then
     if(isToggleable == false) then
+      buttonBox.width = width - 25;
+      buttonBox.height = height - 25;
       isPressed = true;
     else
       isPressed = not isPressed;
+      if (isPressed) then
+        buttonBox.width = width - 25;
+        buttonBox.height = height - 25;
+      else
+        buttonBox.width = width + 25;
+        buttonBox.height = height + 25;
+      end
     end
   elseif(event.phase == "ended" or event.phase == "cancelled") then
     if(isToggleable == false) then
+      buttonBox.width = width + 25;
+      buttonBox.height = height + 25;
       isPressed = false;
     end
   end
