@@ -23,6 +23,7 @@ local speed;
 local maxSpeed;
 local accelerationRate;
 local isShooting;
+local shootCooldown;
 local lastAngle;
 local lastMagnitude;
 local speedText;
@@ -41,6 +42,7 @@ function ship.new(_x, _y, _acceleration)
   maxSpeed = 45
   accelerationRate = _acceleration;
 
+  shootCooldown = 0;
   lastAngle = 0;
   lastMagnitude = 0;
 
@@ -136,7 +138,15 @@ function ship:translate(_x, _y, _angle)
   player.rotation = _angle;
 end
 
+function ship:fireCheck()
+  if shootCooldown == true then
+    shootCooldown = false
+    timer.performWithDelay (500, spawnBullets, 1)
+  end
+end
+
 function ship:run()
+  shootCooldown = shootCooldown + 1;
   if (joystick:isInUse() == false and (speed) > 0) then
     speed = speed - accelerationRate;
     ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
@@ -153,21 +163,21 @@ function ship:run()
     lastMagnitude = joystick:getMagnitude();
   end
 
-  if(isShooting == true) then
-    isShooting = false;
-    timer.performWithDelay (500, ship:shoot(), 1);
+  if(isShooting == true and shootCooldown > 12) then
+    ship:shoot();
   end
 
   speedText.text = speed;
 end
 
 function ship:shoot()
-    local bullet = display.newRect(player.x, player.y, 25, 250)
-    bullet:setFillColor(0.3, 0.6, 0.9);
-    bullet.rotation = player.rotation;
+  local bullet = display.newRect(player.x, player.y, 25, 250)
+  bullet:setFillColor(0.3, 0.6, 0.9);
+  bullet.rotation = player.rotation;
 
-    physics.addBody( bullet, "kinematic");
-    bullet:setLinearVelocity( math.sin(math.rad(bullet.rotation))*5000, -math.cos(math.rad(bullet.rotation))*5000 )
+  physics.addBody( bullet, "kinematic");
+  bullet:setLinearVelocity( math.sin(math.rad(bullet.rotation))*5000, -math.cos(math.rad(bullet.rotation))*5000);
+  shootCooldown = 0;
 end
 
 return ship;
