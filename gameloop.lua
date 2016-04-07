@@ -42,7 +42,6 @@ end
 function gameloop:init()
   gameState = 2
 
-  debaq = display.newText("123", 333, 444, "Arial", 60)
   player = ship.new(display.contentWidth / 2, 3 * display.contentHeight / 4, 0.75);
   physics.addBody (player, "kinematic")
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
@@ -78,8 +77,8 @@ function gameloop:init()
 
   camera:setParallax(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3) -- Here we set parallax for each layer in descending order
 
-  camera.damping = 10; -- A bit more fluid tracking
-  camera:setFocus(player); -- Set the focus to the player
+  camera.damping = 4; -- A bit more fluid tracking
+  camera:setFocus(player:getDisplayObject()); -- Set the focus to the player
   camera:track(); -- Begin auto-tracking
 end
 
@@ -87,14 +86,11 @@ end
 function gameloop:run(event)
   stick:debug();
   player:run();
-  camera:snap();
 
   if (fireBttn:isPressed() == true) then
     player:setIsShooting(true);
-    debaq.text = isShooting;
   else
     player:setIsShooting(false);
-    debaq.text = isShooting;
   end
 end
 
