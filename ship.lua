@@ -174,7 +174,6 @@ function ship:shoot()
   local bullet = display.newRect(player.x, player.y, 25, 250)
   bullet:setFillColor(0.3, 0.6, 0.9);
   bullet.rotation = player.rotation;
-
   physics.addBody( bullet, "kinematic");
   bullet:setLinearVelocity( math.sin(math.rad(bullet.rotation))*5000, -math.cos(math.rad(bullet.rotation))*5000);
   shootCooldown = 0;
