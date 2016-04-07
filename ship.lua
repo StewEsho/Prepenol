@@ -14,7 +14,7 @@ local ship_mt = {__index = ship}; --metatable
 
 local sprite_ship = {
     type = "image",
-    filename = "img/sprites/ship.png"
+    filename = "img/sprites/ship2.png"
 }
 
 local x;
@@ -46,7 +46,7 @@ function ship.new(_x, _y, _acceleration)
   lastAngle = 0;
   lastMagnitude = 0;
 
-  player = display.newRect(_x, _y, 240, 400)
+  player = display.newRect(_x, _y, 160, 267)
   player.fill = sprite_ship;
 
   speedText = display.newText("0", 1200, 300, "Arial", 72);
@@ -94,6 +94,10 @@ end
     - allows for the ship to move using the joystick.
 
 ]]--
+
+function ship:getDisplayObject()
+  return player;
+end
 
 function ship:getX()
   return x;
