@@ -37,7 +37,7 @@ function ship.new(_x, _y, _acceleration)
     speed = 0;
   }
   speed = 0;
-  maxSpeed = 45
+  maxSpeed = 55;
   accelerationRate = _acceleration;
 
   shootCooldown = 0;
@@ -161,7 +161,7 @@ function ship:run()
                   lastAngle);
   elseif (joystick:isInUse() == true) then
     if (speed < maxSpeed) then
-      speed = speed + accelerationRate;
+      speed = speed + (accelerationRate * joystick:getMagnitude());
     end
     ship:translate(joystick:getMagnitude() * math.sin(math.rad(joystick:getAngle())) * speed,
                   -joystick:getMagnitude() * math.cos(math.rad(joystick:getAngle())) * speed,

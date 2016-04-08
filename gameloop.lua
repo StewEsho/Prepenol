@@ -43,10 +43,10 @@ end
 function gameloop:init()
   gameState = 2
 
-  local debbyTheBug = display.newCircle(1920/2, 0, 30);
+  local debbyTheBug = display.newCircle(0, 0, 50);
 
   testScene = scene.new();
-  player = ship.new(0, 0, 0.75);
+  player = ship.new(0, 0, 0.6);
   physics.addBody (player, "kinematic")
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
@@ -62,8 +62,8 @@ function gameloop:init()
   stick:init();
   fireBttn:init();
 
-  testScene:addObjectToScene(player:getDisplayObject(), 1);
   testScene:addObjectToScene(debbyTheBug, 1);
+  testScene:addObjectToScene(player:getDisplayObject(), 1);
   testScene:addFocusTrack(player:getDisplayObject())
 end
 

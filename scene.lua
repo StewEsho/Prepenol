@@ -33,14 +33,19 @@ function scene:init(_sceneNum)
   camera:prependLayer();
 
   if(_sceneNum == 1) then
-    ------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------
+    -- Adds bound boxes, used to remove bullets that leave the screen.
+    ----------------------------------------------------------------------------
+    --local boundBox_top = display.newRect()
+
+    ----------------------------------------------------------------------------
     -- Adds in Scenery
-    ------------------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     local scene = {}
-    for i = 1, 100 do
+    for i = 1, 1000 do
       scene[i] = display.newCircle(0, 0, 10)
-      scene[i].x = math.random(display.screenOriginX, display.contentWidth * 3)
-      scene[i].y = math.random(display.screenOriginY, display.contentHeight)
+      scene[i].x = math.random(-display.contentWidth * 3, display.contentWidth * 3)
+      scene[i].y = math.random(-display.contentHeight, display.contentHeight)
       scene[i]:setFillColor(math.random(100) * 0.01, math.random(100) * 0.01, math.random(100) * 0.01)
       camera:add(scene[i], math.random(0, camera:layerCount()))
     end
