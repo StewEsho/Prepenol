@@ -171,7 +171,7 @@ function ship:run()
   end
 
   shootCooldown = shootCooldown + 1;
-  if(isShooting == true and shootCooldown > 12) then
+  if(isShooting == true and shootCooldown > (18 + (speed/1.25))) then
     ship:shoot();
   end
 end
@@ -184,7 +184,7 @@ function ship:shoot()
   scene:addObjectToScene(bullets[bulletNum], 2)
 
   physics.addBody( bullets[bulletNum], "kinematic");
-  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*5000, -math.cos(math.rad(bullets[bulletNum].rotation))*5000);
+  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*((speed*joystick:getMagnitude()*1000) + 5000), -math.cos(math.rad(bullets[bulletNum].rotation))*((speed*joystick:getMagnitude()*1000) + 5000));
   shootCooldown = 0;
 end
 
