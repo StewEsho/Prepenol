@@ -184,10 +184,8 @@ function ship:shoot()
   scene:addObjectToScene(bullets[bulletNum], 2)
 
   physics.addBody( bullets[bulletNum], "kinematic");
-  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*500000, -math.cos(math.rad(bullets[bulletNum].rotation))*500000);
+  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*5000, -math.cos(math.rad(bullets[bulletNum].rotation))*5000);
   shootCooldown = 0;
 end
-
-
 
 return ship;
