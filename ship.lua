@@ -8,6 +8,7 @@
 
 local joystick = require ("joystick");
 local physics = require ("physics");
+local scene = require ("scene")
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -17,8 +18,6 @@ local sprite_ship = {
     filename = "img/sprites/ship2.png"
 }
 
-local x;
-local y;
 local speed;
 local maxSpeed;
 local accelerationRate;
@@ -26,30 +25,32 @@ local isShooting;
 local shootCooldown;
 local lastAngle;
 local lastMagnitude;
-local speedText;
+local bulletNum;
+local bullets = {};
+
+local debug_speedText;
+local debug_shipX, debug_shipY;
 
 --Constructor
 function ship.new(_x, _y, _acceleration)
   local newShip = {
-    x = _x;
-    y = _y;
     speed = 0;
   }
-
-  x = _x;
-  y = _y;
   speed = 0;
   maxSpeed = 45
   accelerationRate = _acceleration;
 
   shootCooldown = 0;
+  bulletNum = 0;
   lastAngle = 0;
   lastMagnitude = 0;
 
   player = display.newRect(_x, _y, 160, 267)
   player.fill = sprite_ship;
 
-  speedText = display.newText("0", 1200, 300, "Arial", 72);
+  debug_speedText = display.newText("", 1200, 300, "Arial", 72);
+  debug_shipX = display.newText("", 1400, 500, "Times New Roman", 72);
+  debug_shipY = display.newText("", 1400, 600, "Times New Roman", 72);
 
   return setmetatable(newShip, ship_mt);
 end
@@ -100,15 +101,19 @@ function ship:getDisplayObject()
 end
 
 function ship:getX()
-  return x;
+  return player.x;
 end
 
 function ship:getY()
-  return y;
+  return player.y;
 end
 
 function ship:getSpeed()
   return speed;
+end
+
+function ship:getBullets()
+  return bullets;
 end
 
 function ship:setX(_x)
@@ -142,15 +147,13 @@ function ship:translate(_x, _y, _angle)
   player.rotation = _angle;
 end
 
-function ship:fireCheck()
-  if shootCooldown == true then
-    shootCooldown = false
-    timer.performWithDelay (500, spawnBullets, 1)
-  end
+function ship:debug()
+  debug_speedText.text = speed;
+  debug_shipX.text = player.x;
+  debug_shipY.text = player.y;
 end
 
 function ship:run()
-  shootCooldown = shootCooldown + 1;
   if (joystick:isInUse() == false and (speed) > 0) then
     speed = speed - accelerationRate;
     ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
@@ -167,21 +170,24 @@ function ship:run()
     lastMagnitude = joystick:getMagnitude();
   end
 
+  shootCooldown = shootCooldown + 1;
   if(isShooting == true and shootCooldown > 12) then
     ship:shoot();
   end
-
-  speedText.text = speed;
 end
 
 function ship:shoot()
-  local bullet = display.newRect(player.x, player.y, 25, 250)
-  bullet:setFillColor(0.3, 0.6, 0.9);
-  bullet.rotation = player.rotation;
+  bulletNum = bulletNum + 1;
+  bullets[bulletNum] = display.newRect(player.x, player.y, 25, 200);
+  bullets[bulletNum]:setFillColor(0.3, 0.6, 0.9);
+  bullets[bulletNum].rotation = player.rotation;
+  scene:addObjectToScene(bullets[bulletNum], 2)
 
-  physics.addBody( bullet, "kinematic");
-  bullet:setLinearVelocity( math.sin(math.rad(bullet.rotation))*5000, -math.cos(math.rad(bullet.rotation))*5000);
+  physics.addBody( bullets[bulletNum], "kinematic");
+  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*500000, -math.cos(math.rad(bullets[bulletNum].rotation))*500000);
   shootCooldown = 0;
 end
+
+
 
 return ship;

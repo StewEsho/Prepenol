@@ -9,7 +9,7 @@ local ship = require ("ship")
 local joystick = require ("joystick")
 local button = require ("button")
 local physics = require("physics")
-local perspective = require("perspective")
+local scene = require("scene")
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -24,7 +24,8 @@ local gameState;
 local player;
 local stick;
 local fireBttn;
-local camera;
+local testScene;
+
 local debaq;
 ------------------------------ Public Functions --------------------------------
 
@@ -42,7 +43,10 @@ end
 function gameloop:init()
   gameState = 2
 
-  player = ship.new(display.contentWidth / 2, 3 * display.contentHeight / 4, 0.75);
+  local debbyTheBug = display.newCircle(1920/2, 0, 30);
+
+  testScene = scene.new();
+  player = ship.new(0, 0, 0.75);
   physics.addBody (player, "kinematic")
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
@@ -53,39 +57,20 @@ function gameloop:init()
                         0.2,
                         0.25,
                         "fire");
-
+  testScene:init(1);
   player:init();
   stick:init();
   fireBttn:init();
 
-  --Used to allow the camera to follow the player
-  camera = perspective.createView();
-  camera:add(player:getDisplayObject(), 1) -- Add player to layer 1 of the camera
-  camera:prependLayer();
-
-  --------------------------------------------------------------------------------
--- "Scenery"
---------------------------------------------------------------------------------
-  local scene = {}
-  for i = 1, 100 do
-  	scene[i] = display.newCircle(0, 0, 10)
-  	scene[i].x = math.random(display.screenOriginX, display.contentWidth * 3)
-  	scene[i].y = math.random(display.screenOriginY, display.contentHeight)
-  	scene[i]:setFillColor(math.random(100) * 0.01, math.random(100) * 0.01, math.random(100) * 0.01)
-  	camera:add(scene[i], math.random(0, camera:layerCount()))
-  end
-
-  camera:setParallax(1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3) -- Here we set parallax for each layer in descending order
-
-  camera.damping = 4; -- A bit more fluid tracking
-  camera:setFocus(player:getDisplayObject()); -- Set the focus to the player
-  camera:track(); -- Begin auto-tracking
+  testScene:addObjectToScene(player:getDisplayObject(), 1);
+  testScene:addObjectToScene(debbyTheBug, 1);
+  testScene:addFocusTrack(player:getDisplayObject())
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run(event)
-  stick:debug();
   player:run();
+  player:debug();
 
   if (fireBttn:isPressed() == true) then
     player:setIsShooting(true);
