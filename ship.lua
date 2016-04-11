@@ -18,8 +18,8 @@ local sprite_ship = {
     filename = "img/sprites/ship2.png"
 }
 
-local speed;
-local maxSpeed;
+local width, length;
+local speed, currentSpeed, maxSpeed;
 local accelerationRate;
 local isShooting;
 local shootCooldown;
@@ -29,7 +29,9 @@ local bulletNum;
 local bullets = {};
 
 local debug_speedText;
+local debug_currentSpeed;
 local debug_shipX, debug_shipY;
+local debug_bulletNum;
 
 --Constructor
 function ship.new(_x, _y, _acceleration)
@@ -37,6 +39,7 @@ function ship.new(_x, _y, _acceleration)
     speed = 0;
   }
   speed = 0;
+  currentSpeed = 0;
   maxSpeed = 55;
   accelerationRate = _acceleration;
 
@@ -44,13 +47,17 @@ function ship.new(_x, _y, _acceleration)
   bulletNum = 0;
   lastAngle = 0;
   lastMagnitude = 0;
+  width = 80;
+  length = 133.5;
 
-  player = display.newRect(_x, _y, 160, 267)
+  player = display.newRect(_x, _y, width, length)
   player.fill = sprite_ship;
 
   debug_speedText = display.newText("", 1200, 300, "Arial", 72);
+  debug_currentSpeed = display.newText("", 500, 300, "Arial", 72);
   debug_shipX = display.newText("", 1400, 500, "Times New Roman", 72);
   debug_shipY = display.newText("", 1400, 600, "Times New Roman", 72);
+  debug_bulletNum = display.newText("", 500, 900, "Courier", 72);
 
   return setmetatable(newShip, ship_mt);
 end
@@ -58,6 +65,11 @@ end
 ------------------------------ Public Functions --------------------------------
 
 --[[
+
+  getDisplayObject
+    @return player
+    - returns the display object / sprite of the ship
+    - used for camera tracking
 
   getX
     @return x
@@ -71,28 +83,52 @@ end
     @return speed
     - gets the speed of the ship
 
+  getBullets
+    @return bullets
+    - gets the table containing all shot bullets
+
+  setIsShooting
+    ( _flag = boolean to set isShooting as)
+    - used to toggle shooting on or off
+
   setX
-    { _x = new x coordinate of the ship}
+    ( _x = new x coordinate of the ship)
     - sets the ship's x coordinate
 
   setY
-    { _y = new y coordinate of the ship}
+    ( _y = new y coordinate of the ship)
     - sets the ship's y coordinate
 
   setSpeed
-    {_speed = new speed of ship}
+    (_speed = new speed of ship)
     - sets the ship's new speed
 
+  setAcceleration
+    (_acceleration = new accelerationRate of ship)
+    - sets the acceleartion and decceleration rate of the ship (in pixels per 1/60th of a second squared)
+
+  init
+    - runs once at the beginning of the game loop
+    - used to initiate the physics engine
+
   translate
-    {_x = new x coordinate
+    (_x = new x coordinate
      _y = new y coordinate
-     _angle = angle to rotate the ship}
+     _angle = angle to rotate the ship)
     - translates the ship around
     - usually used alongside the joystick in a gameloop
+
+  debug
+    - sets the gui texts as important info, such as coordinates or speed
+    - mainly used to debug game during development
 
   run
     - runs during the game loop.
     - allows for the ship to move using the joystick.
+
+  shoot
+    - controlls the shooting of bullets
+    - adds bullets to a table containing all bullets
 
 ]]--
 
@@ -151,11 +187,14 @@ function ship:debug()
   debug_speedText.text = speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
+  debug_currentSpeed.text = currentSpeed;
+  debug_bulletNum.text = bulletNum;
 end
 
 function ship:run()
   if (joystick:isInUse() == false and (speed) > 0) then
     speed = speed - accelerationRate;
+    currentSpeed = speed;
     ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
                   -lastMagnitude * math.cos(math.rad(lastAngle)) * speed,
                   lastAngle);
@@ -163,28 +202,29 @@ function ship:run()
     if (speed < maxSpeed) then
       speed = speed + (accelerationRate * joystick:getMagnitude());
     end
-    ship:translate(joystick:getMagnitude() * math.sin(math.rad(joystick:getAngle())) * speed,
-                  -joystick:getMagnitude() * math.cos(math.rad(joystick:getAngle())) * speed,
+    currentSpeed = joystick:getMagnitude() * speed;
+    ship:translate(currentSpeed * math.sin(math.rad(joystick:getAngle())),
+                  -currentSpeed * math.cos(math.rad(joystick:getAngle())),
                   joystick:getAngle());
     lastAngle = joystick:getAngle();
     lastMagnitude = joystick:getMagnitude();
   end
 
   shootCooldown = shootCooldown + 1;
-  if(isShooting == true and shootCooldown > (18 + (speed/1.25))) then
+  if(isShooting == true and shootCooldown > (8 + currentSpeed/8)) then
     ship:shoot();
   end
 end
 
 function ship:shoot()
-  bulletNum = bulletNum + 1;
-  bullets[bulletNum] = display.newRect(player.x, player.y, 25, 200);
+  bulletNum = table.getn(bullets) + 1;
+  bullets[bulletNum] = display.newRect(player.x, player.y, width/12, length/3);
   bullets[bulletNum]:setFillColor(0.3, 0.6, 0.9);
   bullets[bulletNum].rotation = player.rotation;
   scene:addObjectToScene(bullets[bulletNum], 2)
 
   physics.addBody( bullets[bulletNum], "kinematic");
-  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*((speed*joystick:getMagnitude()*1000) + 5000), -math.cos(math.rad(bullets[bulletNum].rotation))*((speed*joystick:getMagnitude()*1000) + 5000));
+  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*(currentSpeed+1)*50000, -math.cos(math.rad(bullets[bulletNum].rotation))*(currentSpeed+1)*50000);
   shootCooldown = 0;
 end
 

@@ -4,7 +4,7 @@
 -- As well as camera tracking and parallax movement
 --
 -- scene.lua
---------------------------------------------------------------------------------
+------------------------------- Private Fields ---------------------------------
 local perspective = require("perspective")
 
 local scene = {};
@@ -12,6 +12,9 @@ local scene_mt = {__index = scene}; --metatable
 
 local camera;
 local sceneNum;
+
+------------------------------ Public Functions --------------------------------
+
 
 function scene.new()
   local newScene = {

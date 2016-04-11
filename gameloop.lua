@@ -25,8 +25,6 @@ local player;
 local stick;
 local fireBttn;
 local testScene;
-
-local debaq;
 ------------------------------ Public Functions --------------------------------
 
 --constructor
