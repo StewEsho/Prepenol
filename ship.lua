@@ -184,6 +184,7 @@ function ship:translate(_x, _y, _angle)
 end
 
 function ship:debug()
+  print(bullets, j);
   debug_speedText.text = speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
@@ -213,6 +214,7 @@ function ship:run()
   shootCooldown = shootCooldown + 1;
   if(isShooting == true and shootCooldown > (8 + currentSpeed/8)) then
     ship:shoot();
+    ship:removeBullets();
   end
 end
 
@@ -226,6 +228,14 @@ function ship:shoot()
   physics.addBody( bullets[bulletNum], "kinematic");
   bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*(currentSpeed+1)*50000, -math.cos(math.rad(bullets[bulletNum].rotation))*(currentSpeed+1)*50000);
   shootCooldown = 0;
+end
+
+function ship:removeBullets()
+  for j = 1, table.getn(bullets) do
+    if (bullets[j].x > (player.x + 1920) or bullets[j].y > (player.y + 1080)) then
+      table.remove(bullets, j);
+    end
+  end
 end
 
 return ship;
