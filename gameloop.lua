@@ -39,6 +39,7 @@ end
 --Runs once to initialize the game
 --Runs again everytime the game state changes
 function gameloop:init()
+  system.activate( "multitouch" );
   gameState = 2
 
   local debbyTheBug = display.newCircle(0, 0, 50);
