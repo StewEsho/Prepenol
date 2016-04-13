@@ -27,6 +27,7 @@ local lastAngle;
 local lastMagnitude;
 local bulletNum;
 local bullets = {};
+local numberOfBulletsToRemove;
 
 local debug_speedText;
 local debug_currentSpeed;
@@ -45,6 +46,7 @@ function ship.new(_x, _y, _acceleration)
 
   shootCooldown = 0;
   bulletNum = 0;
+  bulletCount = 1;
   lastAngle = 0;
   lastMagnitude = 0;
   width = 80;
@@ -184,11 +186,12 @@ function ship:translate(_x, _y, _angle)
 end
 
 function ship:debug()
+  print(bullets, j);
   debug_speedText.text = speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
   debug_currentSpeed.text = currentSpeed;
-  debug_bulletNum.text = bulletNum;
+  debug_bulletNum.text = table.getn(bullets);
 end
 
 function ship:run()
@@ -214,6 +217,7 @@ function ship:run()
   if(isShooting == true and shootCooldown > (8)) then
     ship:shoot();
   end
+  ship:removeBullets();
 end
 
 function ship:shoot()
@@ -224,8 +228,25 @@ function ship:shoot()
   scene:addObjectToScene(bullets[bulletNum], 2)
 
   physics.addBody( bullets[bulletNum], "kinematic");
-  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*(currentSpeed+1)*50000, -math.cos(math.rad(bullets[bulletNum].rotation))*(currentSpeed+1)*50000);
+  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*50000, -math.cos(math.rad(bullets[bulletNum].rotation))*50000);
   shootCooldown = 0;
+
+end
+
+function ship:removeBullets()
+  numberOfBulletsToRemove = 0;
+  for i = 1, table.getn(bullets) do
+    if (bullets[i].x > (player.x + 2000) or bullets[i].x < (player.x - 2000) or bullets[i].y > (player.y + 1000) or bullets[i].y < (player.y - 1000)) then
+      numberOfBulletsToRemove = numberOfBulletsToRemove + 1;
+    end
+  end
+
+  if numberOfBulletsToRemove > 0 then
+    for j = 1, numberOfBulletsToRemove do
+      bullets[j]:removeSelf();
+      table.remove(bullets, j);
+    end
+  end
 end
 
 return ship;
