@@ -39,6 +39,7 @@ end
 --Runs once to initialize the game
 --Runs again everytime the game state changes
 function gameloop:init()
+  display.setDefault( "background", 30/255, 15/255, 27/255);
   system.activate( "multitouch" );
   gameState = 2
 
@@ -47,6 +48,8 @@ function gameloop:init()
   testScene = scene.new();
   player = ship.new(0, 0, 0.6);
   physics.addBody (player, "kinematic")
+  testScene:init(1);
+
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
                         display.contentHeight-(display.contentHeight/6),
@@ -55,8 +58,8 @@ function gameloop:init()
                         1,
                         0.2,
                         0.25,
+                        0.25,
                         "fire");
-  testScene:init(1);
   player:init();
   stick:init();
   fireBttn:init();

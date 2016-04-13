@@ -9,7 +9,7 @@
 local button = {};
 local button_mt = {__index = button}; --metatable
 
-local r, g, b;
+local r, g, b, a;
 local width, height;
 local x, y;
 local isPressed;
@@ -27,6 +27,7 @@ function button.new(_x,
                     _r,
                     _g,
                     _b,
+                    _a,
                     _tag)
   local newButton = {
     x = _x;
@@ -47,9 +48,10 @@ function button.new(_x,
   r = _r or 1;
   g = _g or 1;
   b = _b or 1;
+  a = _a or 1;
 
   buttonBox = display.newRect(x, y, width, height);
-  buttonBox:setFillColor(r, g, b);
+  buttonBox:setFillColor(r, g, b, a);
 
   return setmetatable(newButton, button_mt);
 end

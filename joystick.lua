@@ -55,7 +55,7 @@ function joystick.new(_x, _y)
   angle = 0
 
   background = display.newCircle(_x, _y, display.contentWidth/8);
-  background:setFillColor(0.4, 1, 0.32, 0.5)
+  background:setFillColor(0.4, 1, 0.32, 0.25)
   stick = display.newCircle(_x, _y, display.contentWidth/20);
   stick:setFillColor(0.4, 1, 0.6, 1);
   deltaRadius = (3 * display.contentWidth)/40;
@@ -66,7 +66,7 @@ function joystick.new(_x, _y)
   return setmetatable(newJoystick, joystick_mt);
 end
 
-  ----------------------------- Private Functions --------------------------------
+----------------------------- Private Functions --------------------------------
 
 local function onStickHold(event)
   if (isStickFocus == true) then
