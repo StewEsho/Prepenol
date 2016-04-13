@@ -40,7 +40,7 @@ function ship.new(_x, _y, _acceleration)
   }
   speed = 0;
   currentSpeed = 0;
-  maxSpeed = 55;
+  maxSpeed = 40;
   accelerationRate = _acceleration;
 
   shootCooldown = 0;
@@ -211,7 +211,7 @@ function ship:run()
   end
 
   shootCooldown = shootCooldown + 1;
-  if(isShooting == true and shootCooldown > (8 + currentSpeed/8)) then
+  if(isShooting == true and shootCooldown > (8)) then
     ship:shoot();
   end
 end
