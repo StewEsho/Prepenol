@@ -57,7 +57,7 @@ function scene:init(_sceneNum)
     end
 
     --adds paralax to the layers
-    camera:setParallax(0.8, 1, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2); -- Here we set parallax for each layer in descending order
+    camera:setParallax(1, 1, 1, 0.6, 0.5, 0.4, 0.3, 0.2); -- Here we set parallax for each layer in descending order
 
     camera.damping = 5;
   end

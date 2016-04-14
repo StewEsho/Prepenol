@@ -9,6 +9,7 @@
 local joystick = require ("joystick");
 local physics = require ("physics");
 local scene = require ("scene")
+local bullets = require ("bullets");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -25,9 +26,6 @@ local isShooting;
 local shootCooldown;
 local lastAngle;
 local lastMagnitude;
-local bulletNum;
-local bullets = {};
-local numberOfBulletsToRemove;
 
 local debug_speedText;
 local debug_currentSpeed;
@@ -39,9 +37,10 @@ function ship.new(_x, _y, _acceleration)
   local newShip = {
     speed = 0;
   }
+
   speed = 0;
   currentSpeed = 0;
-  maxSpeed = 40;
+  maxSpeed = 50;
   accelerationRate = _acceleration;
 
   shootCooldown = 0;
@@ -49,11 +48,13 @@ function ship.new(_x, _y, _acceleration)
   bulletCount = 1;
   lastAngle = 0;
   lastMagnitude = 0;
-  width = 80;
-  length = 133.5;
+  width = 92;
+  length = 153.5;
 
   player = display.newRect(_x, _y, width, length)
   player.fill = sprite_ship;
+
+  bullets.new(player);
 
   debug_speedText = display.newText("", 1200, 300, "Arial", 72);
   debug_currentSpeed = display.newText("", 500, 300, "Arial", 72);
@@ -150,10 +151,6 @@ function ship:getSpeed()
   return speed;
 end
 
-function ship:getBullets()
-  return bullets;
-end
-
 function ship:setX(_x)
   x = _x;
 end
@@ -175,8 +172,7 @@ function ship:setAcceleration(_acceleration)
 end
 
 function ship:init()
-  physics.start()
-  physics.setGravity( 0, 0 )
+  bullets:init();
 end
 
 function ship:translate(_x, _y, _angle)
@@ -186,12 +182,10 @@ function ship:translate(_x, _y, _angle)
 end
 
 function ship:debug()
-  print(bullets, j);
   debug_speedText.text = speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
   debug_currentSpeed.text = currentSpeed;
-  debug_bulletNum.text = table.getn(bullets);
 end
 
 function ship:run()
@@ -215,9 +209,10 @@ function ship:run()
 
   shootCooldown = shootCooldown + 1;
   if(isShooting == true and shootCooldown > (8)) then
-    ship:shoot();
+    bullets:shoot();
+    shootCooldown = 0;
   end
-  ship:removeBullets();
+  bullets:removeBullets();
 end
 
 return ship;

@@ -44,7 +44,7 @@ function gameloop:init()
   gameState = 2
 
   testScene = scene.new();
-  player = ship.new(0, 0, 0.6);
+  player = ship.new(0, 0, 0.75);
   physics.addBody (player, "kinematic")
   testScene:init(1);
 
