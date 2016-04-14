@@ -220,33 +220,4 @@ function ship:run()
   ship:removeBullets();
 end
 
-function ship:shoot()
-  bulletNum = table.getn(bullets) + 1;
-  bullets[bulletNum] = display.newRect(player.x, player.y, width/12, length/3);
-  bullets[bulletNum]:setFillColor(0.3, 0.6, 0.9);
-  bullets[bulletNum].rotation = player.rotation;
-  scene:addObjectToScene(bullets[bulletNum], 2)
-
-  physics.addBody( bullets[bulletNum], "kinematic");
-  bullets[bulletNum]:setLinearVelocity(math.sin(math.rad(bullets[bulletNum].rotation))*50000, -math.cos(math.rad(bullets[bulletNum].rotation))*50000);
-  shootCooldown = 0;
-
-end
-
-function ship:removeBullets()
-  numberOfBulletsToRemove = 0;
-  for i = 1, table.getn(bullets) do
-    if (bullets[i].x > (player.x + 2000) or bullets[i].x < (player.x - 2000) or bullets[i].y > (player.y + 1000) or bullets[i].y < (player.y - 1000)) then
-      numberOfBulletsToRemove = numberOfBulletsToRemove + 1;
-    end
-  end
-
-  if numberOfBulletsToRemove > 0 then
-    for j = 1, numberOfBulletsToRemove do
-      bullets[j]:removeSelf();
-      table.remove(bullets, j);
-    end
-  end
-end
-
 return ship;

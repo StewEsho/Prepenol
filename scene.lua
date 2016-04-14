@@ -44,17 +44,20 @@ function scene:init(_sceneNum)
     ----------------------------------------------------------------------------
     -- Adds in Scenery
     ----------------------------------------------------------------------------
-    local scene = {}
-    for i = 1, 1000 do
-      scene[i] = display.newCircle(0, 0, 10)
-      scene[i].x = math.random(-display.contentWidth * 3, display.contentWidth * 3)
-      scene[i].y = math.random(-display.contentHeight, display.contentHeight)
-      scene[i]:setFillColor(math.random(100) * 0.01, math.random(100) * 0.01, math.random(100) * 0.01)
-      camera:add(scene[i], math.random(0, camera:layerCount()))
+    local scene = {};
+    for i = 1, 5000 do
+      scene[i] = display.newCircle(0, 0, 10);
+      scene[i].x = math.random(-display.contentWidth * 3, display.contentWidth * 3);
+      scene[i].y = math.random(-display.contentHeight * 3, display.contentHeight * 3);
+      scene[i]:setFillColor(math.random(100) * 0.01, math.random(100) * 0.01, math.random(100) * 0.01);
+      local layer = math.random(0, camera:layerCount());
+      camera:add(scene[i], layer);
+      scene[i].width = (11 - layer) * 3;
+      scene[i].height = (11 - layer) * 3;
     end
 
     --adds paralax to the layers
-    camera:setParallax(1, 1, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3) -- Here we set parallax for each layer in descending order
+    camera:setParallax(0.8, 1, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2); -- Here we set parallax for each layer in descending order
 
     camera.damping = 5;
   end
