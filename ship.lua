@@ -16,7 +16,7 @@ local ship_mt = {__index = ship}; --metatable
 
 local sprite_ship = {
     type = "image",
-    filename = "img/sprites/ship2.png"
+    filename = "img/sprites/ship.png"
 }
 
 local width, length;
@@ -35,7 +35,6 @@ local debug_bulletNum;
 --Constructor
 function ship.new(_x, _y, _acceleration)
   local newShip = {
-    speed = 0;
   }
 
   speed = 0;

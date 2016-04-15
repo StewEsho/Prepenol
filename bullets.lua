@@ -45,8 +45,8 @@ end
 
 function bullets:shoot()
   bulletNum = table.getn(bullets) + 1;
-  bullet[bulletNum] = display.newRect(baseObject.x, baseObject.y, baseObject.width/12, baseObject.height/3);
-  bullet[bulletNum]:setFillColor(0.3, 0.6, 0.9);
+  bullet[bulletNum] = display.newRect(baseObject.x, baseObject.y, baseObject.width/8, baseObject.height/3);
+  bullet[bulletNum]:setFillColor(0.6, 0.8, 1);
   bullet[bulletNum].rotation = baseObject.rotation;
   scene:addObjectToScene(bullet[bulletNum], 2)
 
