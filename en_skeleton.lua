@@ -18,7 +18,7 @@ local speed;
 
 ------------------------------ Public Functions --------------------------------
 
-function skeleton.new( _x, _y,)
+function skeleton.new( _x, _y)
   local newSkeleton = {
   }
 

@@ -8,10 +8,13 @@
 -- enemies.lua
 --
 ------------------------------- Private Fields ---------------------------------
+local skeleton = require("en_skeleton");
+
 enemies = {};
 enemies_mt = {__index = enemies}; --metatable
 
 local enemyList;
+local moduleList;
 local skeletonList;
 
 --------------------------------- Constructor ----------------------------------
@@ -19,14 +22,19 @@ local skeletonList;
 function enemies.new()
   local newEnemies = {
   }
-  --List of all enemies
   skeletonList = {};
+
+  --List of all modules; corresponds with order in enemyList
+  moduleList = {
+    skeleton
+  }
+  --List of all enemies
 
   enemyList = {
     --[[
     /////INDEX of ENEMIES/////
 
-    [1] = Skeletons,
+    [1] = skeletonList
 
     ]]
     skeletonList
@@ -38,11 +46,16 @@ end
 ------------------------------ Public Functions --------------------------------
 
 --[[
-  spawn(_index)
+  spawn(_index, _x, _y)
 ]]
 
 function enemies:spawn(_index, _x, _y)
+  table.insert(enemyList[_index], moduleList[_index].new(_x, _y));
+  enemyList[_index][table.getn(enemyList[_index])]:init("img/sprites/skel.jpg");
+end
 
+function enemies:getDisplayObject(_index1, _index2)
+  enemyList[_index1][_index2]:getDisplayObject();
 end
 
 return enemies;
