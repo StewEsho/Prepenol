@@ -10,7 +10,6 @@ local joystick = require ("joystick");
 local button = require ("button");
 local physics = require("physics");
 local scene = require("scene");
-local enemy = require("enemy");
 local skeleton = require("en_skeleton");
 
 local gameloop = {};
@@ -42,15 +41,19 @@ end
 --Runs once to initialize the game
 --Runs again everytime the game state changes
 function gameloop:init()
+  --initializes system variables and settings
   math.randomseed(os.time());
   display.setDefault( "background", 30/255, 15/255, 27/255);
   system.activate( "multitouch" );
-  gameState = 2
+  native.setProperty( "androidSystemUiVisibility", "immersiveSticky" );
 
+  --sets gamestate
+  gameState = 2;
+
+  --creates instances of classes
   testScene = scene.new();
   player = ship.new(0, 0, 0.75);
-  testEn = skeleton.new(100, 800, 300, 300, 10, 10);
-
+  testEn = skeleton.new();
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
                         display.contentHeight-(display.contentHeight/6),
@@ -61,11 +64,12 @@ function gameloop:init()
                         0.25,
                         0.25,
                         "fire");
+  --initializes instances
   player:init();
   testEn:init("img/sprites/skel.jpg")
   stick:init();
   fireBttn:init();
-
+  --initializes scene; adds objects
   testScene:init(1);
   testScene:addObjectToScene(player:getDisplayObject(), 1);
   testScene:addObjectToScene(testEn:getDisplayObject(), 1);

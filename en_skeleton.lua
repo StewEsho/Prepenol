@@ -1,15 +1,12 @@
 --------------------------------------------------------------------------------
 --
--- Skeleton enemy
--- Inherited from enemy.lua
+-- Controls the basic, common logic of enemies
 --
--- en_skeleton.lua
+-- skeleton.lua
 --
 ------------------------------- Private Fields ---------------------------------
-require ("enemy")
-
-local skeleton = {};
-skeleton.__index = skeleton;
+skeleton = {};
+skeleton_mt = {__index = skeleton}; --metatable
 
 local x,y
 local width, height;
@@ -21,24 +18,52 @@ local speed;
 
 ------------------------------ Public Functions --------------------------------
 
-function skeleton.new(_x, _y,
-                      _width, _height,
-                      _maxSpeed,
-                      _acceleration)
+function skeleton.new( _x, _y,
+                    _width, _height,
+                    _maxSpeed,
+                    _acceleration)
   local newSkeleton = {
-    x = _x or 0;
-    y = _y or 0;
-    width = _width or 256;
-    height = _height or 256;
-    maxSpeed = _maxSpeed or 50;
-    acceleration = _acceleration or 0.75;
-
-    speed = 0;
   }
 
-  setmetatable(newSkeleton, skeleton);
-  return newSkeleton;
+  x = _x or 0;
+  y = _y or 0;
+  width = _width or 256;
+  height = _height or 256;
+  maxSpeed = _maxSpeed or 50;
+  acceleration = _acceleration or 0.75;
+
+  sprite = display.newRect(x, y, width, height);
+
+  speed = 0;
+
+  return setmetatable(newSkeleton, skeleton_mt);
 end
-setmetatable(skeleton, {__index = enemy})
+
+function skeleton:getSpeed()
+  return speed;
+end
+
+function skeleton:getX()
+  return x;
+end
+
+function skeleton:getY()
+  return y;
+end
+
+function skeleton:getDisplayObject()
+  return sprite;
+end
+
+function skeleton:init(_filepath)
+  sprite.fill = {type = "image", filename = _filepath}
+end
+
+function skeleton:run()
+  x = sprite.x;
+  y = sprite.y;
+  width = sprite.width;
+  height = sprite.height;
+end
 
 return skeleton;
