@@ -18,19 +18,16 @@ local speed;
 
 ------------------------------ Public Functions --------------------------------
 
-function skeleton.new( _x, _y,
-                    _width, _height,
-                    _maxSpeed,
-                    _acceleration)
+function skeleton.new( _x, _y,)
   local newSkeleton = {
   }
 
-  x = _x or 0;
-  y = _y or 0;
-  width = _width or 256;
-  height = _height or 256;
-  maxSpeed = _maxSpeed or 50;
-  acceleration = _acceleration or 0.75;
+  x = _x or math.random(-1000, 1000);
+  y = _y or math.random(-1000, 1000);
+  width = 160
+  height = 200
+  maxSpeed = 50
+  acceleration = 0.75;
 
   sprite = display.newRect(x, y, width, height);
 

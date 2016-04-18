@@ -10,7 +10,7 @@ local joystick = require ("joystick");
 local button = require ("button");
 local physics = require("physics");
 local scene = require("scene");
-local skeleton = require("en_skeleton");
+local enemies = require("enemies");
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -53,7 +53,7 @@ function gameloop:init()
   --creates instances of classes
   testScene = scene.new();
   player = ship.new(0, 0, 0.75);
-  testEn = skeleton.new();
+  --testEn = skeleton.new();
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
                         display.contentHeight-(display.contentHeight/6),
@@ -66,13 +66,13 @@ function gameloop:init()
                         "fire");
   --initializes instances
   player:init();
-  testEn:init("img/sprites/skel.jpg")
+  --testEn:init("img/sprites/skel.jpg")
   stick:init();
   fireBttn:init();
   --initializes scene; adds objects
   testScene:init(1);
   testScene:addObjectToScene(player:getDisplayObject(), 1);
-  testScene:addObjectToScene(testEn:getDisplayObject(), 1);
+--  testScene:addObjectToScene(testEn:getDisplayObject(), 1);
   testScene:addFocusTrack(player:getDisplayObject());
 end
 
