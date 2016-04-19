@@ -9,7 +9,7 @@ skeleton = {};
 skeleton.__index = skeleton;
 ------------------------------ Public Functions --------------------------------
 
-function skeleton.new( _x, _y)
+function skeleton.new( _x, _y, index)
   local newSkeleton = {
   }
 
@@ -19,10 +19,11 @@ function skeleton.new( _x, _y)
   newSkeleton.height = 200
   newSkeleton.maxSpeed = 50
   newSkeleton.acceleration = 0.75;
-
   newSkeleton.sprite = display.newRect(newSkeleton.x, newSkeleton.y, newSkeleton.width, newSkeleton.height);
-
   newSkeleton.speed = 0;
+
+  newSkeleton.index = index;
+  newSkeleton.enemyType = 1; --skeleton
 
   return setmetatable(newSkeleton, skeleton);
 end
