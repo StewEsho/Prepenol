@@ -11,6 +11,7 @@
 local scene = require("scene");
 
 local skeleton = require("en_skeleton");
+local aqua = require("en_aqua");
 
 enemies = {};
 enemies_mt = {__index = enemies}; --metatable
@@ -18,6 +19,7 @@ enemies_mt = {__index = enemies}; --metatable
 local enemyList;
 local moduleList;
 local skeletonList;
+local aquaList;
 
 --------------------------------- Constructor ----------------------------------
 
@@ -27,21 +29,25 @@ function enemies.new()
   setmetatable(newEnemies, enemies_mt);
 
   skeletonList = {}; --List of all Skeleton enemies
+  aquaList = {}; --List of all aqua ships
   --List of all enemies
   enemyList = {
     --[[
     /////INDEX of ENEMIES/////
 
     [1] = skeletonList
+    [2] = aquaList
 
     ]]
-    skeletonList
+    skeletonList,
+    aquaList
   }
 
   --List of all clases; corresponds with order in enemyList
   --Used to spawn instances of these classes
   moduleList = {
-    skeleton
+    skeleton,
+    aqua
   }
 
   return newEnemies;
@@ -65,6 +71,7 @@ end
 
 function enemies:spawn(_index, _x, _y)
   table.insert(enemyList[_index], moduleList[_index].new(_x, _y, table.getn(enemyList[_index])));
+  enemyList[_index][table.getn(enemyList[_index])]:init();
   return enemyList[_index][table.getn(enemyList[_index])];
 end
 

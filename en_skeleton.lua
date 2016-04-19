@@ -2,7 +2,7 @@
 --
 -- Controls the basic, common logic of enemies
 --
--- skeleton.lua
+-- en_skeleton.lua
 --
 ------------------------------- Private Fields ---------------------------------
 skeleton = {};
@@ -44,8 +44,8 @@ function skeleton:getDisplayObject()
   return self.sprite;
 end
 
-function skeleton:init(_filepath)
-  self.sprite.fill = {type = "image", filename = _filepath}
+function skeleton:init()
+  self.sprite.fill = {type = "image", filename = "img/sprites/skel.jpg"};
 end
 
 function skeleton:run()
