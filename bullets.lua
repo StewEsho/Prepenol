@@ -27,8 +27,6 @@ function bullets.new(_object)
   bullet = {};
   numberOfBulletsToRemove = 0;
 
-  scene.new();
-
   return setmetatable(newBullets, bullets_mt);
 end
 
@@ -48,7 +46,7 @@ function bullets:shoot()
   bullet[bulletNum] = display.newRect(baseObject.x, baseObject.y, baseObject.width/8, baseObject.height/3);
   bullet[bulletNum]:setFillColor(0.6, 0.8, 1);
   bullet[bulletNum].rotation = baseObject.rotation;
-  scene:addObjectToScene(bullet[bulletNum], 2)
+  scene:addObjectToScene(bullet[bulletNum], 1)
 
   physics.addBody(bullet[bulletNum], "kinematic");
   bullet[bulletNum]:setLinearVelocity(math.sin(math.rad(bullet[bulletNum].rotation))*50000, -math.cos(math.rad(bullet[bulletNum].rotation))*50000);

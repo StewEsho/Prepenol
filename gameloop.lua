@@ -5,11 +5,13 @@
 -- gameloop.lua
 --
 ------------------------------- Private Fields ---------------------------------
-local ship = require ("ship")
-local joystick = require ("joystick")
-local button = require ("button")
-local physics = require("physics")
-local scene = require("scene")
+local ship = require ("ship");
+local joystick = require ("joystick");
+local button = require ("button");
+local physics = require("physics");
+local scene = require("scene");
+local enemies = require("enemies");
+local skeleton = require("en_skeleton");
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -24,30 +26,26 @@ local gameState;
 local player;
 local stick;
 local fireBttn;
-local testScene;
+local testEn;
+local enemy;
+local kek;
 ------------------------------ Public Functions --------------------------------
-
---constructor
-function gameloop.new()
-  local newGameloop = {
-    gameState = 0;
-  }
-
-  return setmetatable(newGameloop, gameloop_mt);
-end
 
 --Runs once to initialize the game
 --Runs again everytime the game state changes
 function gameloop:init()
+  --initializes system variables and settings
+  math.randomseed(os.time());
   display.setDefault( "background", 30/255, 15/255, 27/255);
   system.activate( "multitouch" );
-  gameState = 2
+  native.setProperty( "androidSystemUiVisibility", "immersiveSticky" );
 
-  testScene = scene.new();
+  --sets gamestate
+  gameState = 2;
+
+  --creates instances of classes
+  enemy = enemies.new();
   player = ship.new(0, 0, 0.75);
-  physics.addBody (player, "kinematic")
-  testScene:init(1);
-
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
                         display.contentHeight-(display.contentHeight/6),
@@ -58,12 +56,19 @@ function gameloop:init()
                         0.25,
                         0.25,
                         "fire");
+  --initializes instances
+
   player:init();
   stick:init();
   fireBttn:init();
+  --initializes scene; adds objects
+  scene:init(1);
 
-  testScene:addObjectToScene(player:getDisplayObject(), 1);
-  testScene:addFocusTrack(player:getDisplayObject())
+  enemy:spawn(1, 300, 200);
+
+  scene:addObjectToScene(enemy:get(1):getDisplayObject(), 0);
+  scene:addObjectToScene(player:getDisplayObject(), 0);
+  scene:addFocusTrack(player:getDisplayObject());
 end
 
 --Runs continously. Different code for each different game state
