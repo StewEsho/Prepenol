@@ -22,6 +22,8 @@ local skeletonList;
 function enemies.new()
   local newEnemies = {
   }
+  setmetatable(newEnemies, enemies_mt);
+
   skeletonList = {};
 
   --List of all modules; corresponds with order in enemyList
@@ -40,7 +42,7 @@ function enemies.new()
     skeletonList
   }
 
-  return setmetatable(newEnemies, enemies_mt);
+  return newEnemies;
 end
 
 ------------------------------ Public Functions --------------------------------
@@ -51,7 +53,7 @@ end
 
 function enemies:spawn(_index, _x, _y)
   table.insert(enemyList[_index], moduleList[_index].new(_x, _y));
-  enemyList[_index][table.getn(enemyList[_index])]:init("img/sprites/skel.jpg");
+  return enemyList[_index][table.getn(enemyList[_index])]
 end
 
 function enemies:getDisplayObject(_index1, _index2)

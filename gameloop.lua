@@ -26,8 +26,10 @@ local gameState;
 local player;
 local stick;
 local fireBttn;
-local testScene;
+local gameScene;
 local testEn;
+local enemy;
+local newSkel;
 ------------------------------ Public Functions --------------------------------
 
 --constructor
@@ -53,9 +55,8 @@ function gameloop:init()
 
   --creates instances of classes
   enemy = enemies.new();
-  testScene = scene.new();
+  gameScene = scene.new();
   player = ship.new(0, 0, 0.75);
-  testEn = skeleton.new();
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
                         display.contentHeight-(display.contentHeight/6),
@@ -67,17 +68,19 @@ function gameloop:init()
                         0.25,
                         "fire");
   --initializes instances
-  enemy:spawn(1, 300, 300);
+  local newSkel = enemy:spawn(1, 300, 25);
+  local newSkelSec = enemy:spawn(1, 400, -200);
   player:init();
-  testEn:init("img/sprites/skel.jpg")
+  newSkel:init("img/sprites/skel.jpg");
+  newSkelSec:init("img/sprites/skel.jpg");
   stick:init();
   fireBttn:init();
   --initializes scene; adds objects
-  testScene:init(1);
-  testScene:addObjectToScene(player:getDisplayObject(), 1);
-  testScene:addObjectToScene(testEn:getDisplayObject(), 1);
-  testScene:addObjectToScene(enemy:getDisplayObject(1,1), 1);
-  testScene:addFocusTrack(player:getDisplayObject());
+  gameScene:init(1);
+  gameScene:addObjectToScene(player:getDisplayObject(), 1);
+  gameScene:addObjectToScene(newSkel:getDisplayObject(), 3);
+  gameScene:addObjectToScene(newSkelSec:getDisplayObject(), 3);
+  gameScene:addFocusTrack(player:getDisplayObject());
 end
 
 --Runs continously. Different code for each different game state
