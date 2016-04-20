@@ -57,28 +57,22 @@ function gameloop:init()
                         0.25,
                         "fire");
   --initializes instances
-
   player:init();
   stick:init();
   fireBttn:init();
-  --initializes scene; adds objects
+
+  --initializes scene
   scene:init(1);
-
-  enemy:spawn(1, 300, 200);
-  enemy:spawn(2, -200, -500);
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
-
-  scene:addObjectToScene(enemy:get(1):getDisplayObject(), 0);
-  scene:addObjectToScene(enemy:get(2, 1):getDisplayObject(), 0);
-  scene:addObjectToScene(enemy:get(2, 2):getDisplayObject(), 0);
-  scene:addObjectToScene(enemy:get(2, 3):getDisplayObject(), 0);
-  scene:addObjectToScene(enemy:get(2, 4):getDisplayObject(), 0);
-  scene:addObjectToScene(enemy:get(2, 5):getDisplayObject(), 0);
   scene:addObjectToScene(player:getDisplayObject(), 0);
   scene:addFocusTrack(player:getDisplayObject());
+
+  --Spawns in enemies
+  enemy:spawn(1);
+  enemy:spawn(2, -200, -500);
+  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
+  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
+  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
+  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
 end
 
 --Runs continously. Different code for each different game state
