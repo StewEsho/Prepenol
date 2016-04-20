@@ -6,6 +6,7 @@
 --
 ------------------------------- Private Fields ---------------------------------
 local scene = require("scene");
+local player = require("ship");
 
 skeleton = {};
 skeleton.__index = skeleton;
@@ -24,6 +25,12 @@ function skeleton.new( _x, _y, index, _layer)
   instance.height = 200;
   instance.sprite = display.newRect(instance.x, instance.y, instance.width, instance.height);
   instance.speed = 0;
+
+  --Used for shaking the object when hit
+  instance.shakeMax = 15;
+  instance.shakeAmount = 0;
+  instance.isShaking = false;
+  instance.kek = display.newText(instance.shakeMax, 300, 300, "Arial", 36);
 
   instance.properties = {
     enemyType = 1, --skeleton
@@ -58,16 +65,38 @@ function skeleton:getDescription()
   return self.properties.description;
 end
 
+function skeleton:enableShake()
+  self.isShaking = true;
+end
+
+function skeleton:shake()
+  if(self.isShaking == true) then
+    if(self.shakeMax <= 1) then
+      self.shakeMax = 15;
+      self.isShaking = false;
+    else
+      self.shakeAmount = math.random(self.shakeMax);
+      self.x = self.x + math.random(-self.shakeAmount, self.shakeAmount);
+      self.y = self.y + math.random(-self.shakeAmount, self.shakeAmount);
+      self.shakeMax = self.shakeMax - 0.85;
+      self.kek.text = self.shakeMax;
+    end
+  end
+end
+
 function skeleton:init()
   self.sprite.fill = {type = "image", filename = "img/sprites/skel.jpg"};
   scene:addObjectToScene(self.sprite, self.layer);
 end
 
 function skeleton:run()
-  self.x = self.sprite.x;
-  self.y = self.sprite.y;
-  self.width = self.sprite.width;
-  self.height = self.sprite.height;
+  if (math.abs(player:getX() - self.x) < 50 or math.abs(player:getY() - self.y) < 50) then
+    self.isShaking = true;
+  end
+
+  self:shake();
+  self.sprite.x = self.x;
+  self.sprite.y = self.y;
 end
 
 return skeleton;

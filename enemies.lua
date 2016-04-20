@@ -80,8 +80,10 @@ function enemies:spawn(_index, _x, _y, _layer)
 end
 
 function enemies:get(_index1, _index2)
-  if (_index2 == nil) then
-    return enemyList[_index1][table.getn(enemyList[_index1])];
+  if (_index1 == nil) then
+    return enemyList;
+  elseif (_index2 == nil) then
+    return enemyList[_index1];
   else
     return enemyList[_index1][_index2];
   end
