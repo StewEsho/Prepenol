@@ -194,7 +194,7 @@ function ship:debug()
   debug_speedText.text = speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
-  debug_currentSpeed.text = currentSpeed;
+  debug_currentSpeed.text = table.getn(bullets:getTable());
 end
 
 function ship:run()

@@ -6,6 +6,7 @@
 --
 ------------------------------- Private Fields ---------------------------------
 local scene = require("scene");
+local physics = require("physics");
 
 aqua = {};
 aqua.__index = aqua;
@@ -25,37 +26,21 @@ function aqua.new(_x, _y, _index, _layer)
   instance.sprite = display.newRect(instance.x, instance.y, instance.width, instance.height);
   instance.speed = 0;
 
-  instance.properties = {
-    enemyType = 2, --aqua
-    canShoot = true,
-    maxSpeed = 20,
-    acceleration = 0.6,
-    health = 60,
-    name = "Skeleships",
-    description = "Careful: Aquaes won't restrict themselves to one shape or size."
-  }
+  instance.enemyType = 2; --aqua
+  instance.canShoot = true;
+  instance.maxSpeed = 20;
+  instance.acceleration = 0.6;
+  instance.health = 60;
+  instance.armour = 0;
+  instance.name = "Skeleships";
+  instance.description = "Careful: Aquaes won't restrict themselves to one shape or size.";
 
   return setmetatable(instance, aqua);
 end
 
-function aqua:getSpeed()
-  return self.speed;
-end
-
-function aqua:getX()
-  return self.x;
-end
-
-function aqua:getY()
-  return self.y;
-end
-
-function aqua:getDisplayObject()
-  return self.sprite;
-end
-
 function aqua:init()
   self.sprite.fill = {type = "image", filename = "img/sprites/aqua.png"};
+  physics.addBody(self.sprite, "kinematic");
   scene:addObjectToScene(self.sprite, self.layer);
 end
 

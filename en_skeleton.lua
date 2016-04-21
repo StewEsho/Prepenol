@@ -6,7 +6,6 @@
 --
 ------------------------------- Private Fields ---------------------------------
 local scene = require("scene");
-local player = require("ship");
 
 skeleton = {};
 skeleton.__index = skeleton;
@@ -30,43 +29,17 @@ function skeleton.new( _x, _y, index, _layer)
   instance.shakeMax = 15;
   instance.shakeAmount = 0;
   instance.isShaking = false;
-  instance.kek = display.newText(instance.shakeMax, 300, 300, "Arial", 36);
 
-  instance.properties = {
-    enemyType = 1, --skeleton
-    canShoot = true,
-    maxSpeed = 42,
-    acceleration = 1,
-    health = 30,
-    name = "Skeleships",
-    description = "Fast and lightweight, Skeleships will weave through the brightest stars for their bounty."
-  }
+  instance.enemyType = 1; --skeleton
+  instance.canShoot = true;
+  instance.maxSpeed = 42;
+  instance.acceleration = 1;
+  instance.health = 30;
+  instance.armour = math.random(1, 3);
+  instance.name = "Skeleships";
+  instance.description = "Fast and lightweight, Skeleships will weave through the brightest stars for their bounty.";
 
   return setmetatable(instance, skeleton);
-end
-
-function skeleton:getSpeed()
-  return self.speed;
-end
-
-function skeleton:getX()
-  return self.x;
-end
-
-function skeleton:getY()
-  return self.y;
-end
-
-function skeleton:getDisplayObject()
-  return self.sprite;
-end
-
-function skeleton:getDescription()
-  return self.properties.description;
-end
-
-function skeleton:enableShake()
-  self.isShaking = true;
 end
 
 function skeleton:shake()
@@ -79,24 +52,25 @@ function skeleton:shake()
       self.x = self.x + math.random(-self.shakeAmount, self.shakeAmount);
       self.y = self.y + math.random(-self.shakeAmount, self.shakeAmount);
       self.shakeMax = self.shakeMax - 0.85;
-      self.kek.text = self.shakeMax;
     end
   end
 end
 
 function skeleton:init()
   self.sprite.fill = {type = "image", filename = "img/sprites/skel.jpg"};
+  physics.addBody(self.sprite, "kinematic");
   scene:addObjectToScene(self.sprite, self.layer);
 end
 
 function skeleton:run()
-  if (math.abs(player:getX() - self.x) < 50 or math.abs(player:getY() - self.y) < 50) then
-    self.isShaking = true;
-  end
+  if self.health <= 0 then
+    self.sprite:removeSelf();
 
-  self:shake();
-  self.sprite.x = self.x;
-  self.sprite.y = self.y;
+  else
+    self:shake();
+    self.sprite.x = self.x;
+    self.sprite.y = self.y;
+  end
 end
 
 return skeleton;

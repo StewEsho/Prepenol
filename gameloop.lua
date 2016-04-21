@@ -11,7 +11,9 @@ local button = require ("button");
 local physics = require("physics");
 local scene = require("scene");
 local enemies = require("enemies");
-local skeleton = require("en_skeleton");
+local bullets = require("bullets");
+
+local kek
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -46,41 +48,47 @@ function gameloop:init()
   --creates instances of classes
   enemy = enemies.new();
   player = ship.new(0, 0, 0.75);
-  stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
-  fireBttn = button.new(display.contentWidth - (display.contentHeight/4),
-                        display.contentHeight-(display.contentHeight/6),
-                        display.contentHeight/2, display.contentHeight/3,
-                        true,
-                        1,
-                        0.2,
-                        0.25,
-                        0.25,
-                        "fire");
   --initializes instances
+  scene:init(1);
   player:init();
-  stick:init();
-  fireBttn:init();
 
   --initializes scene
-  scene:init(1);
   scene:addObjectToScene(player:getDisplayObject(), 0);
   scene:addFocusTrack(player:getDisplayObject());
 
   --Spawns in enemies
-  enemy:spawn(1);
-  enemy:spawn(1);
-  enemy:spawn(2, -200, -500);
-  enemy:spawn(1);
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
-  enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000), 6);
+  enemy:spawn(1, 0, -500);
+  --enemy:spawn(1);
+  --enemy:spawn(2, -200, -500);
+  --enemy:spawn(1);
+  --enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
+  --enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
+  --enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
+  --enemy:spawn(2, math.random(-1000, 1000), math.random(-1000, 1000));
+
+  kek = display.newText(enemy:get(1,1).health, 200, 200, "Arial", 48)
+
+  --Spawns in HUD and Controls
+  stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
+  fireBttn = button.new(display.contentWidth - (display.contentHeight/4),  --x
+                        display.contentHeight-(display.contentHeight/6),   --y
+                        display.contentHeight/2, display.contentHeight/3,  --width, height
+                        true,     --toggleable?
+                        1,      --red
+                        0.6,      --green
+                        0.6,     --blue
+                        0.5,     --alpha
+                        "fire");  --tag
+  fireBttn:init();
+  stick:init();
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
   player:run();
   --player:debug();
+
+  kek.text = enemy:get(1,1).health
 
   for i = 1, table.getn(enemy:get()) do
     for j = 1, table.getn(enemy:get(i)) do
