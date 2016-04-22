@@ -70,7 +70,7 @@ function gameloop:init()
   fireBttn = button.new(display.contentWidth - (display.contentHeight/4),  --x
                         display.contentHeight-(display.contentHeight/6),   --y
                         display.contentHeight/2, display.contentHeight/3,  --width, height
-                        true,     --toggleable?
+                        false,     --toggleable?
                         1,      --red
                         0.6,      --green
                         0.6,     --blue
@@ -87,7 +87,9 @@ function gameloop:run()
     kek = kek + 1;
   else
     kek = 0;
-    enemy:spawn(math.random(1,2));
+    if (table.getn(enemy:get(1)) + table.getn(enemy:get(2)) < 20) then
+      enemy:spawn(math.random(1,2));
+    end
   end
   player:run();
   --player:debug();
