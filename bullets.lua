@@ -63,7 +63,7 @@ local function onBulletCollision( self, event )
   if ( event.phase == "began") then
     self:removeSelf();
     if ( event.other.name ~= "Bullet") then
-      event.other.health = event.other.health - 5;
+      event.other.health = event.other.health - 20 + event.other.armour;
       event.other.isShaking = true;
     end
   end

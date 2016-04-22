@@ -17,8 +17,8 @@ function skeleton.new( _x, _y, index, _layer)
 
   instance.x = _x or math.random(-1000, 1000);
   instance.y = _y or math.random(-1000, 1000);
-  instance.layer = _layer or 1;
   instance.index = index;
+  instance.layer = _layer or 1;
 
   instance.width = 160;
   instance.height = 200;
@@ -36,8 +36,8 @@ function skeleton.new( _x, _y, index, _layer)
   instance.sprite.isShaking = false;
 
   instance.sprite.health = 30;
-  instance.sprite.armour = math.random(1, 3);
-  instance.sprite.name = "Skeleships";
+  instance.sprite.armour = math.random(10, 13);
+  instance.sprite.name = "Skeleship";
   instance.sprite.description = "Fast and lightweight, Skeleships will weave through the brightest stars for their bounty.";
 
   return setmetatable(instance, skeleton);
@@ -72,7 +72,7 @@ function skeleton:run()
     self.isDead = true;
   else
     self:shake();
-    self.x = self.x + 1;
+    self.x = self.x + 0.25;
     if(self.sprite.isShaking == false) then
       self.sprite.x = self.x;
       self.sprite.y = self.y;

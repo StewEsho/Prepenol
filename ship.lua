@@ -52,7 +52,7 @@ function ship.new(_x, _y, _acceleration)
   width = 92;
   length = 153.5;
 
-  player = display.newRect(_x, _y, width, length)
+  player = display.newRect(_x, _y, width, length);
   player.fill = sprite_ship;
 
   bullets.new(player);
