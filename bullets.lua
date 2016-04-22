@@ -60,9 +60,12 @@ end
 
 local function onBulletCollision( self, event )
   --Runs when the bullet hits something
-  if ( event.phase == "began" ) then
+  if ( event.phase == "began") then
     self:removeSelf();
-    enemy:get(1,1).health = enemy:get(1,1).health + 5;
+    if ( event.other.name ~= "Bullet") then
+      event.other.health = event.other.health - 5;
+      event.other.isShaking = true;
+    end
   end
 end
 
@@ -71,6 +74,7 @@ function bullets:shoot()
   bullet[bulletNum] = display.newRect(baseObject.x, baseObject.y, baseObject.width/8, baseObject.height/3);
   bullet[bulletNum]:setFillColor(0.6, 0.8, 1);
   bullet[bulletNum].rotation = baseObject.rotation;
+  bullet[bulletNum].name = "Bullet";
   scene:addObjectToScene(bullet[bulletNum], 1);
 
   physics.addBody(bullet[bulletNum], "dynamic");
@@ -81,18 +85,13 @@ function bullets:shoot()
 end
 
 function bullets:removeBullets()
-  numberOfBulletsToRemove = 0;
+
   for i = 1, table.getn(bullet) do
-    if (bullet[i].x > (baseObject.x + 2000)
+    if (bullet[i] == nil) then break
+    elseif (bullet[i].x > (baseObject.x + 2000)
     or bullet[i].x < (baseObject.x - 2000)
     or bullet[i].y > (baseObject.y + 1000)
     or bullet[i].y < (baseObject.y - 1000)) then
-      numberOfBulletsToRemove = numberOfBulletsToRemove + 1;
-    end
-  end
-
-  if numberOfBulletsToRemove > 0 then
-    for j = 1, numberOfBulletsToRemove do
       bullet[j]:removeSelf();
       table.remove(bullet, j);
     end

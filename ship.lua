@@ -10,6 +10,7 @@ local joystick = require ("joystick");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullets = require ("bullets");
+local enemy = require("enemies");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -194,7 +195,7 @@ function ship:debug()
   debug_speedText.text = speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
-  debug_currentSpeed.text = table.getn(bullets:getTable());
+  debug_currentSpeed.text = currentSpeed;
 end
 
 function ship:run()

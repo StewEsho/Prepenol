@@ -24,36 +24,41 @@ function skeleton.new( _x, _y, index, _layer)
   instance.height = 200;
   instance.sprite = display.newRect(instance.x, instance.y, instance.width, instance.height);
   instance.speed = 0;
-
-  --Used for shaking the object when hit
-  instance.shakeMax = 15;
-  instance.shakeAmount = 0;
-  instance.isShaking = false;
-
   instance.enemyType = 1; --skeleton
   instance.canShoot = true;
   instance.maxSpeed = 42;
   instance.acceleration = 1;
-  instance.health = 30;
-  instance.armour = math.random(1, 3);
-  instance.name = "Skeleships";
-  instance.description = "Fast and lightweight, Skeleships will weave through the brightest stars for their bounty.";
+  instance.isDead = false;
+
+  --Used for shaking the object when hit
+  instance.sprite.shakeMax = 15;
+  instance.sprite.shakeAmount = 0;
+  instance.sprite.isShaking = false;
+
+  instance.sprite.health = 30;
+  instance.sprite.armour = math.random(1, 3);
+  instance.sprite.name = "Skeleships";
+  instance.sprite.description = "Fast and lightweight, Skeleships will weave through the brightest stars for their bounty.";
 
   return setmetatable(instance, skeleton);
 end
 
 function skeleton:shake()
-  if(self.isShaking == true) then
-    if(self.shakeMax <= 1) then
-      self.shakeMax = 15;
-      self.isShaking = false;
+  if(self.sprite.isShaking == true) then
+    if(self.sprite.shakeMax <= 1) then
+      self.sprite.shakeMax = 15;
+      self.sprite.isShaking = false;
     else
-      self.shakeAmount = math.random(self.shakeMax);
-      self.x = self.x + math.random(-self.shakeAmount, self.shakeAmount);
-      self.y = self.y + math.random(-self.shakeAmount, self.shakeAmount);
-      self.shakeMax = self.shakeMax - 0.85;
+      self.sprite.shakeAmount = math.random(self.sprite.shakeMax);
+      self.sprite.x = self.x + math.random(-self.sprite.shakeAmount, self.sprite.shakeAmount);
+      self.sprite.y = self.y + math.random(-self.sprite.shakeAmount, self.sprite.shakeAmount);
+      self.sprite.shakeMax = self.sprite.shakeMax - 0.85;
     end
   end
+end
+
+function skeleton:kill()
+  self.sprite:removeSelf();
 end
 
 function skeleton:init()
@@ -63,13 +68,15 @@ function skeleton:init()
 end
 
 function skeleton:run()
-  if self.health <= 0 then
-    self.sprite:removeSelf();
-
+  if (self.sprite.health <= 0) then
+    self.isDead = true;
   else
     self:shake();
-    self.sprite.x = self.x;
-    self.sprite.y = self.y;
+    self.x = self.x + 1;
+    if(self.sprite.isShaking == false) then
+      self.sprite.x = self.x;
+      self.sprite.y = self.y;
+    end
   end
 end
 
