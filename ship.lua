@@ -54,6 +54,8 @@ function ship.new(_x, _y, _acceleration)
 
   player = display.newRect(_x, _y, width, length);
   player.fill = sprite_ship;
+  player.name = "Player";
+  player.health = 100;
 
   bullets.new(player);
 

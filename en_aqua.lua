@@ -24,7 +24,6 @@ function aqua.new(_x, _y, _index, _layer)
   instance.width = math.random(100, 500);
   instance.height = math.random(100, 500);
   instance.speed = 0;
-  instance.enemyType = 1; --skeleton
   instance.canShoot = true;
   instance.maxSpeed = 25;
   instance.acceleration = 0.45;
@@ -34,6 +33,7 @@ function aqua.new(_x, _y, _index, _layer)
   instance.sprite.health = 70;
   instance.sprite.armour = 15;
   instance.sprite.name = "Aquae";
+  instance.sprite.enemyType = 2; --aquae
   instance.sprite.description = "Careful: Aquaes won't restrict themselves to one shape or size.";
   --Used for shaking the object when hit
   instance.sprite.shakeMax = 15;

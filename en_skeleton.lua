@@ -24,7 +24,6 @@ function skeleton.new( _x, _y, index, _layer)
   instance.height = 200;
   instance.sprite = display.newRect(instance.x, instance.y, instance.width, instance.height);
   instance.speed = 0;
-  instance.enemyType = 1; --skeleton
   instance.canShoot = true;
   instance.maxSpeed = 42;
   instance.acceleration = 1;
@@ -37,6 +36,7 @@ function skeleton.new( _x, _y, index, _layer)
 
   instance.sprite.health = 30;
   instance.sprite.armour = math.random(10, 13);
+  instance.sprite.enemyType = 1; --skeleton
   instance.sprite.name = "Skeleship";
   instance.sprite.description = "Fast and lightweight, Skeleships will weave through the brightest stars for their bounty.";
 
