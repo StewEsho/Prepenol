@@ -51,10 +51,6 @@ function gameloop:init()
   scene:init(1);
   player:init();
 
-  --initializes scene
-  scene:addObjectToScene(player:getDisplayObject(), 0);
-  scene:addFocusTrack(player:getDisplayObject());
-
   --Spawns in enemies
   enemy:spawn(1, 0, -500);
   enemy:spawn(1);

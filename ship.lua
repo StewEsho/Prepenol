@@ -56,6 +56,12 @@ function ship.new(_x, _y, _acceleration)
   player.fill = sprite_ship;
   player.name = "Player";
   player.health = 100;
+  player.maxHealth = 100;
+
+  healthBar = display.newRect(_x, _y - 100, 150, 20);
+  healthBar:setFillColor(100/255, 255/255, 60/255);
+  healthMissing = display.newRect(_x, _y - 100, 150, 20);
+  healthMissing:setFillColor(255/255, 100/255, 60/255);
 
   bullets.new(player);
 
@@ -176,6 +182,11 @@ end
 
 function ship:init()
   bullets:init();
+  scene:addObjectToScene(player, 0);
+  scene:addObjectToScene(healthMissing, 0);
+  scene:addObjectToScene(healthBar, 0);
+  scene:addFocusTrack(player);
+  healthBar.x = player.x - ((healthMissing.width - healthBar.width)/2);
 end
 
 function ship:translate(_x, _y, _angle)
@@ -201,12 +212,22 @@ function ship:debug()
 end
 
 function ship:run()
+
+  healthBar.width = (player.health/player.maxHealth)*healthMissing.width;
+
+  healthBar.y = player.y - 100 - currentSpeed * math.cos(math.rad(lastAngle));
+  healthBar.x = player.x - ((healthMissing.width - healthBar.width)/2) + currentSpeed * math.sin(math.rad(lastAngle));
+  healthMissing.y = player.y - 100 -currentSpeed * math.cos(math.rad(lastAngle));
+  healthMissing.x = player.x + currentSpeed * math.sin(math.rad(lastAngle));
+
   if (joystick:isInUse() == false and (speed) > 0) then
     speed = speed - accelerationRate;
     currentSpeed = speed;
+
     ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
                   -lastMagnitude * math.cos(math.rad(lastAngle)) * speed,
                   lastAngle);
+
   elseif (joystick:isInUse() == true) then
     if (speed < maxSpeed) then
       speed = speed + (accelerationRate * joystick:getMagnitude());
