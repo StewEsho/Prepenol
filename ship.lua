@@ -180,6 +180,14 @@ function ship:setAcceleration(_acceleration)
   accelerationRate = _acceleration;
 end
 
+function ship:onCollision(self, event)
+  --Runs when the bullet hits something
+  if ( event.phase == "began" and event.other.name ~= "Bullet") then
+    self.health = self.health - 20;
+    print("yeah");
+  end
+end
+
 function ship:init()
   bullets:init();
   scene:addObjectToScene(player, 0);
@@ -187,6 +195,11 @@ function ship:init()
   scene:addObjectToScene(healthBar, 0);
   scene:addFocusTrack(player);
   healthBar.x = player.x - ((healthMissing.width - healthBar.width)/2);
+
+  physics.addBody(player, "dynamic");
+  player.gravityScale = 0;
+  player.collision = onCollision;
+  player:addEventListener("collision", player);
 end
 
 function ship:translate(_x, _y, _angle)
