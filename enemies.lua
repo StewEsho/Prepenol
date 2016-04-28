@@ -12,6 +12,7 @@ local scene = require("scene");
 
 local skeleton = require("en_skeleton");
 local aquae = require("en_aqua");
+local fireballer = require("en_fire");
 
 enemies = {};
 enemies_mt = {__index = enemies}; --metatable
@@ -30,6 +31,7 @@ function enemies.new()
 
   skeletonList = {}; --List of all Skeleton enemies
   aquaeList = {}; --List of all aquae ships
+  fireList = {}; --List of all fireballer ships
   --List of all enemies
   enemyList = {
     --[[
@@ -37,17 +39,20 @@ function enemies.new()
 
     [1] = skeletonList
     [2] = aquaList
+    [3] = fireList
 
     ]]
     skeletonList,
-    aquaeList
+    aquaeList,
+    fireList
   }
 
   --List of all clases; corresponds with order in enemyList
   --Used to spawn instances of these classes
   moduleList = {
     skeleton,
-    aquae
+    aquae,
+    fireballer
   }
 
   return newEnemies;
@@ -76,6 +81,7 @@ function enemies:spawn(_index, _x, _y)
   else
     return -1;
   end
+  print(enemyList[_index][table.getn(enemyList[_index])].sprite.name);
 end
 
 function enemies:get(_index1, _index2)

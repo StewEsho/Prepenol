@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 --
--- ENEMY: Aquae
+-- ENEMY: Fireball
 --
--- en_aqua.lua
+-- en_fire.lua
 --
 ------------------------------- Private Fields ---------------------------------
 local enemyBase = require("baseEnemy")
@@ -10,17 +10,17 @@ local class = require("classy");
 
 local M = {};
 
-M.class = class("Aquae", enemyBase.BaseEnemy);
-M.description = "Careful: Aquaes won't restrict themselves to one shape or size."
+M.class = class("Fireballer", enemyBase.BaseEnemy);
+M.description = "These guys are bringing and packing the heat."
 
 function M.class:__init(_x, _y)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 2, self.x, self.y, math.random(100, 500), math.random(100, 500), 0, "img/sprites/aqua.png", "Aquae", description, 1);
+  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 100, 200, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 1);
 
-  self.maxSpeed = 25;
-  self.acceleration = 0.25;
-  self.sprite.health = 65;
+  self.maxSpeed = 40;
+  self.acceleration = 0.5;
+  self.sprite.health = 25;
   self.sprite.armour = math.random(12, 17);
 
   physics.addBody(self.sprite, "kinematic");

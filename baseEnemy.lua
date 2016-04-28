@@ -12,7 +12,7 @@ local M = {}
 
 M.BaseEnemy = class("BaseEnemy");
 
-function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _spriteImg, _name, _description, _layer)
+function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spriteImg, _name, _description, _layer)
   self.x = _x or math.random(-1000, 1000);
   self.y = _y or math.random(-1000, 1000);
   self.sprite = display.newRect(self.x, self.y, _width, _height);
@@ -21,10 +21,12 @@ function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _spriteImg, _na
   end
   self.sprite.enemyType = _enemyType; --base class
 
+  self.sprite.rotation = _rotation or 0;
   self.sprite.name = _name or "BaseEnemy";
   self.sprite.description = _description or "Base Description";
   self.layer = _layer or 1;
 
+  self.sprite.speed = 0;
   self.sprite.shakeMax = 15;
   self.sprite.shakeAmount = 0;
   self.sprite.isShaking = false;
