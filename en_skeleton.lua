@@ -20,8 +20,9 @@ function M.class:__init(_x, _y)
 
   self.maxSpeed = 42;
   self.acceleration = 1;
-  self.sprite.health = 30;
-  self.sprite.armour = math.random(10, 13);
+  self.sprite.healthBar.maxHealth = 30;
+  self.sprite.healthBar.health = 30;
+  self.sprite.healthBar.armour = math.random(10, 13);
 
   physics.addBody(self.sprite, "kinematic");
 end
