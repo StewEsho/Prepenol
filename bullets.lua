@@ -7,7 +7,6 @@
 ------------------------------- Private Fields ---------------------------------
 local physics = require("physics");
 local scene = require("scene");
-local enemy = require("enemies");
 
 local bullets = {};
 local bullets_mt = {__index = bullets}; --metatable

@@ -13,8 +13,6 @@ local scene = require("scene");
 local enemies = require("enemies");
 local bullets = require("bullets");
 
-local kek;
-
 local gameloop = {};
 local gameloop_mt = {}; --metatable
 
@@ -51,13 +49,7 @@ function gameloop:init()
   scene:init(1);
   player:init();
 
-  --Spawns in enemies
-  enemy:spawn(1);
-  enemy:spawn(2);
-  enemy:spawn(1);
-  enemy:spawn(2);
-  enemy:spawn(1);
-  enemy:spawn(2);
+  enemy:spawn(3, 500, -500);
 
   --Spawns in HUD and Controls
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
@@ -74,17 +66,19 @@ function gameloop:init()
   stick:init();
 
 end
-local kek = 0;
+local enemyTimer = 0;
 --Runs continously. Different code for each different game state
 function gameloop:run()
-  if (kek < 60) then
-    kek = kek + 1;
+
+  if (enemyTimer < 30) then
+    enemyTimer = enemyTimer + 1;
   else
-    kek = 0;
-    if (table.getn(enemy:get(1)) + table.getn(enemy:get(2)) < 20) then
-      enemy:spawn(math.random(1, table.getn(enemy:get())));
+    enemyTimer = 0;
+    if (table.getn(enemy:get(3)) < 10) then
+      enemy:spawn(3);
     end
   end
+
   player:run();
   --player:debug();
 
@@ -101,6 +95,12 @@ function gameloop:run()
   for k = 1, table.getn(enemy:get()) do
     for l = 1, table.getn(enemy:get(k)) do
       enemy:get(k,l):run();
+    end
+  end
+
+  for k = 1, table.getn(enemy:get()) do
+    for l = 1, table.getn(enemy:get(k)) do
+      enemy:get(k,l):runCoroutine();
     end
   end
 

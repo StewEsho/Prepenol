@@ -10,7 +10,6 @@ local joystick = require ("joystick");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullets = require ("bullets");
-local enemy = require("enemies");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -178,6 +177,10 @@ end
 
 function ship:setAcceleration(_acceleration)
   accelerationRate = _acceleration;
+end
+
+function ship:damage(_damage)
+  player.health = player.health - _damage;
 end
 
 function ship:init()
