@@ -35,6 +35,7 @@ function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spr
   self.sprite.healthBar:setFillColor(100/255, 255/255, 60/255);
   self.sprite.healthMissing = display.newRect(self.x, self.y - (self.sprite.height/2) - 50, 150, 20);
   self.sprite.healthMissing:setFillColor(255/255, 100/255, 60/255);
+  self.sprite.healthBar.isVisible = false;  self.sprite.healthMissing.isVisible = false;
 
   scene:addObjectToScene(self.sprite, self.layer);
   scene:addObjectToScene(self.sprite.healthMissing, self.layer);
@@ -56,6 +57,8 @@ function M.BaseEnemy:shake()
 end
 
 function M.BaseEnemy:kill()
+  self.sprite.healthBar:removeSelf();
+  self.sprite.healthMissing:removeSelf();
   self.sprite:removeSelf();
 end
 
@@ -76,15 +79,14 @@ function M.BaseEnemy:run()
     if(self.sprite.isShaking == false) then
       self.sprite.x = self.x;
       self.sprite.y = self.y;
-
-      self.sprite.healthBar.y = self.sprite.y - (self.sprite.height/2) - 50;
-      self.sprite.healthBar.x = self.sprite.x;
-      self.sprite.healthMissing.y = self.sprite.y - (self.sprite.height/2) - 50;
-      self.sprite.healthMissing.x = self.sprite.x;
-
     end
     self.sprite.healthBar.width = (self.sprite.healthBar.health / self.sprite.healthBar.maxHealth) * self.sprite.healthMissing.width;
-  end
+
+    self.sprite.healthBar.y = self.sprite.y - (self.sprite.height/2) - 50;
+    self.sprite.healthBar.x = self.sprite.x - ((self.sprite.healthMissing.width - self.sprite.healthBar.width)/2);
+    self.sprite.healthMissing.y = self.sprite.y - (self.sprite.height/2) - 50;
+    self.sprite.healthMissing.x = self.sprite.x;
+    end
 end
 
 return M;

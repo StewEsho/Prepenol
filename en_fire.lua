@@ -16,7 +16,7 @@ M.description = "These guys are bringing and packing the heat."
 function M.class:__init(_x, _y)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 100, 200, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 1);
+  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 175, 250, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 1);
 
   self.maxSpeed = 40;
   self.acceleration = 0.5;
