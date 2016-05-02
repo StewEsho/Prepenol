@@ -38,6 +38,7 @@ function gameloop:init()
   display.setDefault( "background", 30/255, 15/255, 27/255);
   system.activate( "multitouch" );
   native.setProperty( "androidSystemUiVisibility", "immersiveSticky" );
+  physics.setDrawMode("hybrid");
 
   --sets gamestate
   gameState = 2;
@@ -64,8 +65,8 @@ function gameloop:init()
                         "fire");  --tag
   fireBttn:init();
   stick:init();
-
 end
+
 local enemyTimer = 0;
 --Runs continously. Different code for each different game state
 function gameloop:run()
