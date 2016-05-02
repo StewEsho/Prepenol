@@ -21,28 +21,23 @@ function M.class:__init(_x, _y)
   self.y = _y;
   enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 175, 250, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 1);
 
-  self.sprite.maxSpeed = 15;
+  self.sprite.maxSpeed = 800;
   self.sprite.acceleration = 0.5;
   self.sprite.healthBar.maxHealth = 25;
   self.sprite.healthBar.health = 25;
   self.sprite.healthBar.armour = math.random(12, 17)
 
   self.chaseTimeout = 0;
-  self.damageTimeout = 0;
+  self.sprite.damageTimeout = 0;
   self.turnRateAngleDiff = 0;
 
   physics.addBody(self.sprite, "dynamic");
-  self.sprite.gravityScale = 0;
+
+  self.sprite.collision = self.onCollision;
+  self.sprite:addEventListener("collision", self.sprite);
 end
 
 function M.class:runCoroutine()
-
-  local oldX = self.x;
-  local oldY = self.y;
-
-  if(self:getDistanceTo(player:getX(), player:getY()) < 15) then
-
-  end
 
   if(self:getDistanceTo(player:getX(), player:getY()) < 1000) then
     self.chaseTimeout = 15;
@@ -61,21 +56,10 @@ function M.class:runCoroutine()
       self.sprite.rotation = self:getDirectionTo(player:getX(), player:getY());
     end
 
-    self.x = self.x + (self.sprite.maxSpeed * math.sin(math.rad(self.sprite.rotation)));
-    self.y = self.y + (self.sprite.maxSpeed * -math.cos(math.rad(self.sprite.rotation)));
+    self.sprite:setLinearVelocity(self.sprite.maxSpeed * math.sin(math.rad(self.sprite.rotation)), self.sprite.maxSpeed * -math.cos(math.rad(self.sprite.rotation)));
 
-    if(self:hasCollided(player:getDisplayObject())) then
-      self.x = oldX;
-      self.y = oldY;
-      if(self.damageTimeout <= 0) then
-        player:damage(2);
-        self.damageTimeout = 20;
-      end
-    end
-    self.damageTimeout = self.damageTimeout - 1;
+    if (self.sprite.damageTimeout > 0) then self.sprite.damageTimeout = self.sprite.damageTimeout - 1;end
   end
-
-  --print(self.chaseTimeout);
 
 end
 

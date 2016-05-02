@@ -57,6 +57,8 @@ function ship.new(_x, _y, _acceleration)
   player.health = 100;
   player.maxHealth = 100;
 
+  physics.addBody( player, "kinematic");
+
   healthBar = display.newRect(_x, _y - 100, 150, 20);
   healthBar:setFillColor(50/255, 100/255, 255/255);
   healthMissing = display.newRect(_x, _y - 100, 150, 20);

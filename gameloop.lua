@@ -64,8 +64,8 @@ function gameloop:init()
                         "fire");  --tag
   fireBttn:init();
   stick:init();
-
 end
+
 local enemyTimer = 0;
 --Runs continously. Different code for each different game state
 function gameloop:run()
