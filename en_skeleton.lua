@@ -18,17 +18,15 @@ function M.class:__init(_x, _y)
   self.y = _y;
   enemyBase.BaseEnemy.__init(self, 1, self.x, self.y, 160, 200, 0, "img/sprites/skel.jpg", "Skeleship", description, 1);
 
-  self.maxSpeed = 42;
-  self.acceleration = 1;
+  self.sprite.maxSpeed = 1200;
+  self.sprite.acceleration = 1;
   self.sprite.healthBar.maxHealth = 30;
   self.sprite.healthBar.health = 30;
   self.sprite.healthBar.armour = math.random(10, 13);
-
-  physics.addBody(self.sprite, "kinematic");
 end
 
 function M.class:runCoroutine()
-
+  --Add enemytype specific run routines here
 end
 
 return M;
