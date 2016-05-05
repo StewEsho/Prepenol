@@ -16,7 +16,7 @@ M.description = "Fast and lightweight, Skeleships will weave through the brighte
 function M.class:__init(_x, _y)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 1, self.x, self.y, 160, 200, 0, "img/sprites/skel.jpg", "Skeleship", description, 0);
+  enemyBase.BaseEnemy.__init(self, 1, self.x, self.y, 160, 200, 0, "img/sprites/skel.jpg", "Skeleship", description, 1);
 
   self.sprite.maxSpeed = 1200;
   self.sprite.acceleration = 1;

@@ -78,7 +78,7 @@ function bullets.newInstance:shoot(_maskBits, _angleOffset)
   self.bullet[self.bulletNum].name = "Bullet";
   self.bullet[self.bulletNum].baseObject = self.baseObject;
   self.bullet[self.bulletNum].enemyType = self.baseObject.enemyType; --non-enemy
-  scene:addObjectToScene(self.bullet[self.bulletNum], 1);
+  scene:addObjectToScene(self.bullet[self.bulletNum], 2);
 
   physics.addBody(self.bullet[self.bulletNum], "dynamic", {filter = { categoryBits=2, maskBits = _maskBits }});
   self.bullet[self.bulletNum].isBullet = true;

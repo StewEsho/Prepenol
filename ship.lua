@@ -228,56 +228,64 @@ function ship:debug()
   print(player.health)
 end
 
-function ship:run() --Runs every fram
-  --Updates the healthbar
-  player.healthBar.width = (player.healthBar.health/player.maxHealth)*player.healthMissing.width;
-
-  --Moves the healthbar with the player
-  player.healthBar.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + speed * lastMagnitude * math.sin(math.rad(lastAngle));
-  player.healthMissing.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthMissing.x = player.x + speed * lastMagnitude * math.sin(math.rad(lastAngle));
-
-  if (joystick:isInUse() == false and (speed) > 0) then
-    speed = speed - accelerationRate;
-    currentSpeed = speed;
-
-    ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
-                  -lastMagnitude * math.cos(math.rad(lastAngle)) * speed,
-                  lastAngle);
-
-  elseif (joystick:isInUse() == true) then
-    if (speed < maxSpeed) then
-      speed = speed + (accelerationRate * joystick:getMagnitude());
-    end
-    currentSpeed = joystick:getMagnitude() * speed;
-    ship:translate(currentSpeed * math.sin(math.rad(joystick:getAngle())),
-                  -currentSpeed * math.cos(math.rad(joystick:getAngle())),
-                  joystick:getAngle());
-    lastAngle = joystick:getAngle();
-    lastMagnitude = joystick:getMagnitude();
-  end
-
-  shootCooldown = shootCooldown + 1;
-  if(isShooting == true and shootCooldown > (8)) then
-    bullets:shoot(4);
-    bullets:shoot(4, 15 - (speed/3));
-    bullets:shoot(4, -15 + (speed/3));
-    shootCooldown = 0;
-  end
-  bullets:removeBullets();
-
-  print("PLAYER:" .. table.getn(bullets:getTable()))
-
-  if(player.damageTimeout <= 295) then
-    player.isVisible = true;
+function ship:run() --Runs every frame
+  if(player.healthBar.health <= 0) then
+    local gameOverlay = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
+    gameOverlay:setFillColor(0.4, 0.4, 0.4, 0.5)
+    gameOverlay.alpha = 0.8;
+    local gameOverText = display.newText("GG NO RE", display.contentWidth/2, display.contentHeight/2, "Arial", 300);
+    gameOverText:setFillColor((math.random(0, 255)/255), (math.random(0, 255)/255), (math.random(0, 255)/255))
   else
-    player.isVisible = not player.isVisible;
-  end
+    --Updates the healthbar
+    player.healthBar.width = (player.healthBar.health/player.maxHealth)*player.healthMissing.width;
 
-  player.damageTimeout = player.damageTimeout - 1;
-  if(player.damageTimeout <= 0 and player.healthBar.health < player.maxHealth) then
-    player.healthBar.health = player.healthBar.health + 1;
+    --Moves the healthbar with the player
+    player.healthBar.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
+    player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + speed * lastMagnitude * math.sin(math.rad(lastAngle));
+    player.healthMissing.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
+    player.healthMissing.x = player.x + speed * lastMagnitude * math.sin(math.rad(lastAngle));
+
+    if (joystick:isInUse() == false and (speed) > 0) then
+      speed = speed - accelerationRate;
+      currentSpeed = speed;
+
+      ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
+                    -lastMagnitude * math.cos(math.rad(lastAngle)) * speed,
+                    lastAngle);
+
+    elseif (joystick:isInUse() == true) then
+      if (speed < maxSpeed) then
+        speed = speed + (accelerationRate * joystick:getMagnitude());
+      end
+      currentSpeed = joystick:getMagnitude() * speed;
+      ship:translate(currentSpeed * math.sin(math.rad(joystick:getAngle())),
+                    -currentSpeed * math.cos(math.rad(joystick:getAngle())),
+                    joystick:getAngle());
+      lastAngle = joystick:getAngle();
+      lastMagnitude = joystick:getMagnitude();
+    end
+
+    shootCooldown = shootCooldown + 1;
+    if(isShooting == true and shootCooldown > (8)) then
+      bullets:shoot(4);
+      bullets:shoot(4, 15 - (speed/3));
+      bullets:shoot(4, -15 + (speed/3));
+      shootCooldown = 0;
+    end
+    bullets:removeBullets();
+
+    print("PLAYER:" .. table.getn(bullets:getTable()))
+
+    if(player.damageTimeout <= 295) then
+      player.isVisible = true;
+    else
+      player.isVisible = not player.isVisible;
+    end
+
+    player.damageTimeout = player.damageTimeout - 1;
+    if(player.damageTimeout <= 0 and player.healthBar.health < player.maxHealth) then
+      player.healthBar.health = player.healthBar.health + 1;
+    end
   end
 end
 
