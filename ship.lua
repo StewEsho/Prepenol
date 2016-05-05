@@ -267,7 +267,7 @@ function ship:run() --Runs every fram
   end
   bullets:removeBullets();
 
-  print("PLAYER:" .. table.getn(bullets:getTable()))
+  print("PLAYER:" .. table.maxn(bullets:getTable()))
 
   if(player.damageTimeout <= 295) then
     player.isVisible = true;
