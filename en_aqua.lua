@@ -16,7 +16,7 @@ M.description = "Careful: Aquaes won't restrict themselves to one shape or size.
 function M.class:__init(_x, _y)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 2, self.x, self.y, math.random(100, 500), math.random(100, 500), 0, "img/sprites/aqua.png", "Aquae", description, 1);
+  enemyBase.BaseEnemy.__init(self, 2, self.x, self.y, math.random(100, 500), math.random(100, 500), 0, "img/sprites/aqua.png", "Aquae", description, 0);
 
   self.sprite.maxSpeed = 200;
   self.sprite.acceleration = 0.25;

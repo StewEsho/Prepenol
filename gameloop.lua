@@ -38,7 +38,7 @@ function gameloop:init()
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
   native.setProperty("androidSystemUiVisibility", "immersiveSticky");
-  physics.setDrawMode("hybrid");
+  --physics.setDrawMode("hybrid");
 
   --sets gamestate
   gameState = 2;
@@ -93,8 +93,6 @@ function gameloop:run()
     end
   end
 
-  print(enemyCount);
-
   --randomly spawns enemies
   if (enemyTimer < 30) then
     enemyTimer = enemyTimer + 1;
@@ -104,7 +102,6 @@ function gameloop:run()
       enemy:spawn(math.random(1, table.getn(enemy:get())), math.random(player:getX()-5000, player:getX()+5000), math.random(player:getY()-5000, player:getY()+5000));
     end
   end
-  print(enemyCount)
 end
 
 return gameloop;
