@@ -35,9 +35,10 @@ local enemy;
 function gameloop:init()
   --initializes system variables and settings
   math.randomseed(os.time());
-  display.setDefault( "background", 30/255, 15/255, 27/255);
-  system.activate( "multitouch" );
-  native.setProperty( "androidSystemUiVisibility", "immersiveSticky" );
+  display.setDefault("background", 30/255, 15/255, 27/255);
+  system.activate("multitouch");
+  native.setProperty("androidSystemUiVisibility", "immersiveSticky");
+  physics.setDrawMode("hybrid");
 
   --sets gamestate
   gameState = 2;
@@ -48,8 +49,6 @@ function gameloop:init()
   --initializes instances
   scene:init(1);
   player:init();
-
-  enemy:spawn(3, 500, -500);
 
   --Spawns in HUD and Controls
   stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
@@ -94,7 +93,7 @@ function gameloop:run()
     end
   end
 
-  --print(enemyCount);
+  print(enemyCount);
 
   --randomly spawns enemies
   if (enemyTimer < 30) then
@@ -102,7 +101,7 @@ function gameloop:run()
   else
     enemyTimer = 0;
     if (enemyCount < 25) then
-      enemy:spawn(math.random(1, table.getn(enemy:get())), math.random(player:getX()-1000, player:getX()+1000), math.random(player:getY()-1000, player:getY()+1000));
+      enemy:spawn(math.random(1, table.getn(enemy:get())), math.random(player:getX()-5000, player:getX()+5000), math.random(player:getY()-5000, player:getY()+5000));
     end
   end
   print(enemyCount)

@@ -9,7 +9,7 @@
 local joystick = require ("joystick");
 local physics = require ("physics");
 local scene = require ("scene")
-local bullets = require ("bullets");
+local bullet = require ("bullets");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -33,6 +33,8 @@ local debug_currentSpeed;
 local debug_shipX, debug_shipY;
 local debug_bulletNum;
 
+local bullets;
+
 --Constructor
 function ship.new(_x, _y, _acceleration)
   local newShip = {
@@ -54,8 +56,8 @@ function ship.new(_x, _y, _acceleration)
   player = display.newRect(_x, _y, width, length);
   player.fill = sprite_ship;
   player.name = "Player";
-  player.health = 100;
-  player.maxHealth = 100;
+  player.health = 1000;
+  player.maxHealth = 1000;
   player.damage = nil;
   player.damageTimeout = 0;
 
@@ -66,7 +68,7 @@ function ship.new(_x, _y, _acceleration)
   healthMissing = display.newRect(_x, _y - 100, 150, 20);
   healthMissing:setFillColor(255/255, 100/255, 60/255);
 
-  bullets.new(player);
+  bullets = bullet.newInstance(player);
 
   debug_speedText = display.newText("", 1200, 300, "Arial", 72);
   debug_currentSpeed = display.newText("", 500, 300, "Arial", 72);
@@ -184,11 +186,9 @@ function ship:setAcceleration(_acceleration)
 end
 
 function ship.damage(_damage)
-  if(player.damageTimeout <= 0) then
+  if(player.damageTimeout <= 275) then
+    player.health = player.health - _damage;
     player.damageTimeout = 300;
-    player.health = player.health - _damage;
-  elseif(player.damageTimeout <= 285) then
-    player.health = player.health - _damage;
   end
 end
 
@@ -208,10 +208,10 @@ function ship:translate(_x, _y, _angle)
 
   turnRateAngleDiff = (player.rotation - _angle + 180) % 360 - 180;
 
-  if (turnRateAngleDiff > speed/2) then
-    player.rotation = player.rotation - speed/2;
-  elseif (turnRateAngleDiff < -speed/2) then
-    player.rotation = player.rotation + speed/2;
+  if (turnRateAngleDiff > speed/4) then
+    player.rotation = player.rotation - speed/4;
+  elseif (turnRateAngleDiff < -speed/4) then
+    player.rotation = player.rotation + speed/4;
   else
     player.rotation = _angle;
   end
@@ -222,6 +222,7 @@ function ship:debug()
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
   debug_currentSpeed.text = currentSpeed;
+  print(player.health)
 end
 
 function ship:run() --Runs every fram
@@ -261,9 +262,15 @@ function ship:run() --Runs every fram
   end
   bullets:removeBullets();
 
+  if(player.damageTimeout <= 275) then
+    player.isVisible = true;
+  else
+    player.isVisible = not player.isVisible;
+  end
+
   player.damageTimeout = player.damageTimeout - 1;
   if(player.damageTimeout <= 0 and player.health < player.maxHealth) then
-    player.health = player.health + 0.1;
+    player.health = player.health + 1;
   end
 end
 
