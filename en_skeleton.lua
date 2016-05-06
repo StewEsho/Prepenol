@@ -22,7 +22,7 @@ function M.class:__init(_x, _y)
   self.sprite.acceleration = 1;
   self.sprite.healthBar.maxHealth = 30;
   self.sprite.healthBar.health = 30;
-  self.sprite.healthBar.armour = math.random(10, 13);
+  self.sprite.healthBar.armour = math.random(25, 35)/100;
 end
 
 function M.class:runCoroutine()

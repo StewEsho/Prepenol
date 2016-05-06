@@ -228,7 +228,7 @@ function ship:debug()
   print(player.health)
 end
 
-function ship:run() --Runs every fram
+function ship:run() --Runs every frame
   --Updates the healthbar
   player.healthBar.width = (player.healthBar.health/player.maxHealth)*player.healthMissing.width;
 
@@ -258,16 +258,16 @@ function ship:run() --Runs every fram
     lastMagnitude = joystick:getMagnitude();
   end
 
+  bullets:removeBullets();
   shootCooldown = shootCooldown + 1;
   if(isShooting == true and shootCooldown > (8)) then
     bullets:shoot(4);
-    bullets:shoot(4, 15 - (speed/3));
-    bullets:shoot(4, -15 + (speed/3));
+    bullets:shoot(4, 2);
+    bullets:shoot(4, -2);
     shootCooldown = 0;
   end
-  bullets:removeBullets();
 
-  print("PLAYER:" .. table.maxn(bullets:getTable()))
+  --print("PLAYER:" .. table.maxn(bullets:getTable()))
 
   if(player.damageTimeout <= 295) then
     player.isVisible = true;

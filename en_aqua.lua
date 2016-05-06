@@ -22,7 +22,7 @@ function M.class:__init(_x, _y)
   self.sprite.acceleration = 0.25;
   self.sprite.healthBar.maxHealth = 65;
   self.sprite.healthBar.health = 65;
-  self.sprite.healthBar.armour = ((self.sprite.width + self.sprite.height)/200)*3;
+  self.sprite.healthBar.armour = ((self.sprite.width + self.sprite.height)/200)/10;
   self.sprite.damage = math.random(30, 60);
 end
 
@@ -30,13 +30,6 @@ function M.class:runCoroutine()
   --Add enemytype specific run routines here
 
   --Size of Aqaue ships change over time
-  --[[
-  self.widthSinFactor = math.random(-100, 100); --Used to change width and height based on sine waves over time
-  self.heightSinFactor = math.random(-100, 100); --Used to change width and height based on sine waves over time
-  self.widthSinFactor = self.widthSinFactor + 1;
-  self.heightSinFactor = self.heightSinFactor + 1;
-  self.sprite.width = self.width + (1000 * math.sin(self.widthSinFactor/50000));
-  self.sprite.height = self.height + (1000 * math.sin(self.widthSinFactor/500000));]]
 
   if(self.sprite.width >= self.width + 99) then
     self.widthIncrease = false
@@ -61,6 +54,9 @@ function M.class:runCoroutine()
   else
     self.sprite.height = self.sprite.height - 1;
   end
+
+  --Armour changes depending on size
+  self.sprite.healthBar.armour = ((self.sprite.width + self.sprite.height)/200)/10;
 end
 
 return M;

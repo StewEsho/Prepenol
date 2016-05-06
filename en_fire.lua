@@ -25,7 +25,7 @@ function M.class:__init(_x, _y)
   self.sprite.acceleration = 0.5;
   self.sprite.healthBar.maxHealth = 25;
   self.sprite.healthBar.health = 25;
-  self.sprite.healthBar.armour = math.random(12, 17)
+  self.sprite.healthBar.armour = math.random(30, 50)/100;
 
   self.bullets = bullets.newInstance(self.sprite, "img/sprites/bullet-fire.png", self.sprite.width / 4, self.sprite.height - 50, self.sprite.maxSpeed * 125);
   self.bulletCooldown = 0;
@@ -38,7 +38,7 @@ function M.class:runCoroutine()
     self.bullets:shoot(1);
   end
   self.bullets:removeBullets();
-  print("FIREBALLER:" .. table.getn(self.bullets:getTable()))
+  --print("FIREBALLER:" .. table.getn(self.bullets:getTable()))
 
   self.bulletCooldown = self.bulletCooldown - 1;
 end
