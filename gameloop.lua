@@ -34,7 +34,7 @@ local enemy;
 --Runs again everytime the game state changes
 function gameloop:init()
   --initializes system variables and settings
-  math.randomseed(os.time());
+  math.randomseed(os.time()); math.random(); math.random();
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
   native.setProperty("androidSystemUiVisibility", "immersiveSticky");

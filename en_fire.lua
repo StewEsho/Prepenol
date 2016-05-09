@@ -33,7 +33,7 @@ end
 
 --Add enemytype specific run routines here
 function M.class:runCoroutine()
-  if(self.isChasingPlayer == true and self.bulletCooldown<=0) then
+  if(self.sprite.isChasingPlayer == true and self.bulletCooldown<=0) then
     self.bulletCooldown = 10;
     self.bullets:shoot(1);
   end
