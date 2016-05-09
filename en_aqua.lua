@@ -28,35 +28,6 @@ end
 
 function M.class:runCoroutine()
   --Add enemytype specific run routines here
-
-  --Size of Aqaue ships change over time
-
-  if(self.sprite.width >= self.width + 99) then
-    self.widthIncrease = false
-  elseif(self.sprite.width <= self.width - 99) then
-    self.widthIncrease = true;
-  end
-
-  if(self.widthIncrease == true) then
-    self.sprite.width = self.sprite.width + 1;
-  else
-    self.sprite.width = self.sprite.width - 1;
-  end
-
-  if(self.sprite.height >= self.height + 99) then
-    self.heightIncrease = false
-  elseif(self.sprite.height <= self.height - 99) then
-    self.heightIncrease = true;
-  end
-
-  if(self.heightIncrease == true) then
-    self.sprite.height = self.sprite.height + 1;
-  else
-    self.sprite.height = self.sprite.height - 1;
-  end
-
-  --Armour changes depending on size
-  self.sprite.healthBar.armour = ((self.sprite.width + self.sprite.height)/200)/10;
 end
 
 return M;

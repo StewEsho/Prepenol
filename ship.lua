@@ -7,6 +7,7 @@
 ------------------------------- Private Fields ---------------------------------
 
 local joystick = require ("joystick");
+local button = require ("button");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullet = require ("bullets");
@@ -196,15 +197,6 @@ function ship.damage(_damage)
   end
 end
 
-function ship:init()
-  player.damage = ship.damage;
-  scene:addObjectToScene(player, 0);
-  scene:addObjectToScene(player.healthMissing, 0);
-  scene:addObjectToScene(player.healthBar, 0);
-  scene:addFocusTrack(player);
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2);
-end
-
 function ship:translate(_x, _y, _angle)
   player.x = player.x + _x;
   player.y = player.y + _y;
@@ -220,12 +212,29 @@ function ship:translate(_x, _y, _angle)
   end
 end
 
-function ship:debug()
-  debug_speedText.text = speed;
-  debug_shipX.text = player.x;
-  debug_shipY.text = player.y;
-  debug_currentSpeed.text = currentSpeed;
-  print(player.health)
+function ship:initHUD()
+  --Spawns in HUD and Controls
+  stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
+  fireBttn = button.new(display.contentWidth - (display.contentHeight/4),  --x
+                        display.contentHeight-(display.contentHeight/6),   --y
+                        display.contentHeight/2, display.contentHeight/3,  --width, height
+                        false,     --toggleable?
+                        1,      --red
+                        0.6,      --green
+                        0.6,     --blue
+                        0.5,     --alpha
+                        "fire");  --tag
+  fireBttn:init();
+  stick:init();
+end
+
+function ship:init()
+  player.damage = ship.damage;
+  scene:addObjectToScene(player, 0);
+  scene:addObjectToScene(player.healthMissing, 0);
+  scene:addObjectToScene(player.healthBar, 0);
+  scene:addFocusTrack(player);
+  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2);
 end
 
 function ship:run() --Runs every frame
@@ -237,6 +246,12 @@ function ship:run() --Runs every frame
   player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + speed * lastMagnitude * math.sin(math.rad(lastAngle));
   player.healthMissing.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
   player.healthMissing.x = player.x + speed * lastMagnitude * math.sin(math.rad(lastAngle));
+
+  if (fireBttn:isPressed() == true) then
+    isShooting = true;
+  else
+    isShooting = false;
+  end
 
   if (joystick:isInUse() == false and (speed) > 0) then
     speed = speed - accelerationRate;
@@ -267,8 +282,6 @@ function ship:run() --Runs every frame
     shootCooldown = 0;
   end
 
-  --print("PLAYER:" .. table.maxn(bullets:getTable()))
-
   if(player.damageTimeout <= 295) then
     player.isVisible = true;
   else
@@ -279,6 +292,14 @@ function ship:run() --Runs every frame
   if(player.damageTimeout <= 0 and player.healthBar.health < player.maxHealth) then
     player.healthBar.health = player.healthBar.health + 1;
   end
+end
+
+function ship:debug()
+  debug_speedText.text = speed;
+  debug_shipX.text = player.x;
+  debug_shipY.text = player.y;
+  debug_currentSpeed.text = currentSpeed;
+  print(player.health)
 end
 
 return ship;
