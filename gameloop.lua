@@ -6,12 +6,9 @@
 --
 ------------------------------- Private Fields ---------------------------------
 local ship = require ("ship");
-local joystick = require ("joystick");
-local button = require ("button");
 local physics = require("physics");
 local scene = require("scene");
 local enemies = require("enemies");
-local bullets = require("bullets");
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable

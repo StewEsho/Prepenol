@@ -16,10 +16,10 @@ local M = {};
 M.class = class("Fireballer", enemyBase.BaseEnemy);
 M.description = "Packing heat all day, any day."
 
-function M.class:__init(_x, _y)
+function M.class:__init(_x, _y, newIndex)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 175, 250, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 0);
+  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 132, 187.5, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 0, newIndex);
 
   self.sprite.maxSpeed = 800;
   self.sprite.acceleration = 0.5;

@@ -11,6 +11,7 @@ local button = require ("button");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullet = require ("bullets");
+local RadarClass = require("radar");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -37,6 +38,8 @@ local debug_bulletNum;
 local bullets;
 local collisionID;
 
+local radar;
+
 --Constructor
 function ship.new(_x, _y, _acceleration)
   local newShip = {
@@ -52,8 +55,8 @@ function ship.new(_x, _y, _acceleration)
   bulletCount = 1;
   lastAngle = 0;
   lastMagnitude = 0;
-  width = 92;
-  length = 153.5;
+  width = 69;
+  length = 115.125;
 
   player = display.newRect(_x, _y, width, length);
 
@@ -170,6 +173,10 @@ function ship:getSpeed()
   return speed;
 end
 
+function ship:getRadar()
+  return radar;
+end
+
 function ship:setX(_x)
   x = _x;
 end
@@ -224,6 +231,8 @@ function ship:initHUD()
                         0.6,     --blue
                         0.5,     --alpha
                         "fire");  --tag
+
+  radar = RadarClass.class(player);
   fireBttn:init();
   stick:init();
 end
@@ -240,7 +249,6 @@ end
 function ship:run() --Runs every frame
   --Updates the healthbar
   player.healthBar.width = (player.healthBar.health/player.maxHealth)*player.healthMissing.width;
-
   --Moves the healthbar with the player
   player.healthBar.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
   player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + speed * lastMagnitude * math.sin(math.rad(lastAngle));
@@ -272,6 +280,7 @@ function ship:run() --Runs every frame
     lastAngle = joystick:getAngle();
     lastMagnitude = joystick:getMagnitude();
   end
+  radar:run();
 
   bullets:removeBullets();
   shootCooldown = shootCooldown + 1;

@@ -13,10 +13,10 @@ local M = {};
 M.class = class("Aquae", enemyBase.BaseEnemy);
 M.description = "Careful: Aquaes won't restrict themselves to one shape or size."
 
-function M.class:__init(_x, _y)
+function M.class:__init(_x, _y, newIndex)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 2, self.x, self.y, math.random(100, 500), math.random(100, 500), 45, "img/sprites/aqua.png", "Aquae", description, 0);
+  enemyBase.BaseEnemy.__init(self, 2, self.x, self.y, math.random(100, 500), math.random(100, 500), 45, "img/sprites/aqua.png", "Aquae", description, 0, newIndex);
 
   self.sprite.maxSpeed = 200;
   self.sprite.acceleration = 0.25;
