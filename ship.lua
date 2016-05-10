@@ -277,8 +277,8 @@ function ship:run() --Runs every frame
   shootCooldown = shootCooldown + 1;
   if(isShooting == true and shootCooldown > (8)) then
     bullets:shoot(4);
-    bullets:shoot(4, 2);
-    bullets:shoot(4, -2);
+    bullets:shoot(4, 2 - (currentSpeed/36.5));
+    bullets:shoot(4, -2 + (currentSpeed/36.5));
     shootCooldown = 0;
   end
 

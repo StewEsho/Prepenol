@@ -59,7 +59,7 @@ function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spr
   self.sprite.isPassive = false;
   self.sprite.healthBar.maxHealth = 30;
   self.sprite.healthBar.health = 30;
-  self.sprite.healthBar.armour = 0.5;
+  self.sprite.healthBar.armour = 0.5; --armour is damage resistance. from 0-1. higher number means more resistance
 
   scene:addObjectToScene(self.sprite, self.layer);
   scene:addObjectToScene(self.sprite.healthMissing, self.layer);
@@ -74,13 +74,13 @@ end
 function M.BaseEnemy:shake()
   if(self.sprite.isShaking == true) then
     if(self.sprite.shakeMax <= 1) then
-      self.sprite.shakeMax = 15;
+      self.sprite.shakeMax = 12;
       self.sprite.isShaking = false;
     else
       self.sprite.shakeAmount = math.random(self.sprite.shakeMax);
       self.sprite.x = self.x + math.random(-self.sprite.shakeAmount, self.sprite.shakeAmount);
       self.sprite.y = self.y + math.random(-self.sprite.shakeAmount, self.sprite.shakeAmount);
-      self.sprite.shakeMax = self.sprite.shakeMax - 0.85;
+      self.sprite.shakeMax = self.sprite.shakeMax - 1;
     end
   end
 end
@@ -141,7 +141,6 @@ function M.BaseEnemy:setOppositeAngle()
   if (self.oppositeAngle < 0) then
     self.oppositeAngle = 360 + self.oppositeAngle;
   end
-  print(self.oppositeAngle)
   return self.oppositeAngle;
 end
 
@@ -224,7 +223,7 @@ function M.BaseEnemy:run()
 
     if(self.sprite.isStuck == false) then
       self:setOppositeAngle();
-      self:chase(self.sprite.isPassive);
+      self:chase(true);
     else
       self:turnAround();
     end
