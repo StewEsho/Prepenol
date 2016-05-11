@@ -37,7 +37,8 @@ function radar.class:getDistanceTo(_x1, _y1, _x2, _y2)
   return distance;
 end
 
-function radar.class:draw(_x, _y, _enemyType, _index)
+function radar.class:draw(_x, _y, _enemyType, _index, _colour)
+  _colour = _colour or {1, 1, 1}
   _x = _x/10;
   _y = _y/10;
 
@@ -46,15 +47,10 @@ function radar.class:draw(_x, _y, _enemyType, _index)
     table.insert(self.dotTable[_enemyType], _index, dot);
   else
     self.dotTable[_enemyType][_index].isVisible = true;
+    self.dotTable[_enemyType][_index].isVisible = true;
     self.dotTable[_enemyType][_index].x = 275+_x;
     self.dotTable[_enemyType][_index].y = 275+_y;
-    if(_enemyType == 1) then
-      self.dotTable[_enemyType][_index]:setFillColor(1,0,0)
-    elseif(_enemyType == 2) then
-      self.dotTable[_enemyType][_index]:setFillColor(0,1,0)
-    elseif(_enemyType == 3) then
-      self.dotTable[_enemyType][_index]:setFillColor(0,0,1)
-    end
+    self.dotTable[_enemyType][_index]:setFillColor(unpack(_colour));
   end
 end
 

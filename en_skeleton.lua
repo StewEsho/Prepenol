@@ -23,6 +23,8 @@ function M.class:__init(_x, _y, newIndex)
   self.sprite.healthBar.maxHealth = 30;
   self.sprite.healthBar.health = 30;
   self.sprite.healthBar.armour = math.random(25, 35)/100;
+  self.sprite.radarColour = {0.8, 0.8, 0.8};
+
 end
 
 function M.class:runCoroutine()
