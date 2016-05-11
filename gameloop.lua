@@ -25,6 +25,7 @@ local stick;
 local fireBttn;
 local testEn;
 local enemy;
+local debugText = display.newText( "", display.contentWidth/2, display.contentHeight/4, native.systemFontBold, 120 ) --general purpose debugging text
 ------------------------------ Public Functions --------------------------------
 
 --Runs once to initialize the game

@@ -76,7 +76,7 @@ function ship.new(_x, _y, _acceleration)
   collisionID = 1;
   physics.addBody( player, "kinematic", {filter = { categoryBits = collisionID, maskBits=7 }});
 
-  bullets = bullet.newInstance(player, "img/sprites/bullet-player.png", nil, player.height/1.25);
+  bullets = bullet.newInstance(player, "img/sprites/bullet-player.png", player.width/6);
 
   debug_speedText = display.newText("", 1200, 300, "Arial", 72);
   debug_currentSpeed = display.newText("", 500, 300, "Arial", 72);
@@ -291,7 +291,7 @@ function ship:run() --Runs every frame
     shootCooldown = 0;
   end
 
-  if(player.damageTimeout <= 295) then
+  if(player.damageTimeout <= 299) then
     player.isVisible = true;
   else
     player.isVisible = not player.isVisible;
