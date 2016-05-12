@@ -48,6 +48,9 @@ function gameloop:init()
   scene:init(1);
   player:init();
   player:initHUD();
+
+  enemy:spawn(4);
+  enemy:spawn(4);
 end
 
 --Runs continously. Different code for each different game state

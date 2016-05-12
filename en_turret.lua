@@ -66,7 +66,7 @@ end
 
 function M.class:runCoroutine()
   if(self.sprite.isChasingPlayer == true and self.bulletCooldown<=0) then
-    self.bulletCooldown = 4;
+    self.bulletCooldown = 16;
     self.bullets:shoot(1, -10);
     self.bullets:shoot(1, -5);
     self.bullets:shoot(1);
