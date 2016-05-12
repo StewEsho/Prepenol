@@ -9,6 +9,7 @@ local ship = require ("ship");
 local physics = require("physics");
 local scene = require("scene");
 local enemies = require("enemies");
+local powerup = require("powerup_manager");
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -25,6 +26,7 @@ local stick;
 local fireBttn;
 local testEn;
 local enemy;
+local powerups;
 local debugText = display.newText( "", display.contentWidth/2, display.contentHeight/4, native.systemFontBold, 120 ) --general purpose debugging text
 ------------------------------ Public Functions --------------------------------
 
@@ -51,6 +53,8 @@ function gameloop:init()
 
   enemy:spawn(4);
   enemy:spawn(4);
+
+  powerups = powerup:class();
 end
 
 --Runs continously. Different code for each different game state
@@ -61,6 +65,8 @@ function gameloop:run()
 
   enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
   enemy:run(); --runs enemy logic
+
+  speedboost:run();
 end
 
 return gameloop;
