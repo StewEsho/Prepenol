@@ -74,7 +74,7 @@ function ship.new(_x, _y, _acceleration)
   player.damageTimeout = 0;
 
   collisionID = 1;
-  physics.addBody( player, "kinematic", {filter = { categoryBits = collisionID, maskBits=7 }});
+  physics.addBody( player, "kinematic", {filter = { categoryBits = collisionID, maskBits=23 }});
 
   bullets = bullet.newInstance(player, "img/sprites/bullet-player.png", player.width/6);
 
