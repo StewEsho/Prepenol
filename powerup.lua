@@ -14,11 +14,13 @@ local powerups = {};
 powerups.class = class("Powerup");
 
 function powerups.class:__init(params)
-  params.x = params.x or 0;
-  params.y = params.y or 0;
+  self.x = params.x or 0;
+  self.y = params.y or 0;
+  self.width = params.width or 256;
+  self.height = params.height or 256;
   self.image = params.image or "";
-  self.sprite = display.newImageRect(params.image, params.width, params.height);
-  self.sprite.x, self.sprite.y = params.x, params.y
+  self.sprite = display.newImageRect(self.image, self.width, self.height);
+  self.sprite.x, self.sprite.y = self.x, self.y;
   scene:addObjectToScene(self.sprite, 1);
 end
 
