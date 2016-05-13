@@ -55,7 +55,7 @@ function gameloop:init()
   enemy:spawn(4);
   enemy:spawn(4);
 
-  powerups:spawn(1, {x = 200, y = 300});
+  powerups:spawn(1);
   powerups:spawn(1);
   powerups:spawn(1);
   powerups:spawn(1);
