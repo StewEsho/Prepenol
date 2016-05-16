@@ -18,13 +18,14 @@ function M.class:__init(_x, _y, newIndex)
   self.y = _y;
   enemyBase.BaseEnemy.__init(self, 1, self.x, self.y, 120, 150, 0, "img/sprites/skel.jpg", "Skeleship", description, 0, newIndex);
 
-  self.sprite.maxSpeed = 1200;
+  self.sprite.maxSpeed = 1800;
   self.sprite.acceleration = 1;
   self.sprite.healthBar.maxHealth = 30;
   self.sprite.healthBar.health = 30;
   self.sprite.healthBar.armour = math.random(25, 35)/100;
   self.sprite.radarColour = {0.8, 0.8, 0.8};
   self.sprite.damage = 18;
+  self.turnRate = 6
 
 end
 
