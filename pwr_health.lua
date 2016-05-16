@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
 --
--- Powerup --> Speedboost; increases player speed;
+-- Powerup --> Health Kit; Heals player health;
 --
 --------------------------------------------------------------------------------
---------------------------------- PWR_SPEED.LUA --------------------------------
+--------------------------------- PWR_HEALTH.LUA -------------------------------
 --------------------------------------------------------------------------------
 local basePowerup = require("powerup");
 local class = require("classy");
@@ -11,13 +11,13 @@ local physics = require("physics");
 
 local M = {};
 
-M.class = class("Speedboost", basePowerup.class);
+M.class = class("Healthkit", basePowerup.class);
 
 function M.class:__init(_index, params)
-  params.image = "img/sprites/pwr-speed.png";
+  params.image = "img/sprites/pwr-health.png";
   basePowerup.class.__init(self, params);
   self.index = _index;
-  self.name = "Speedboost";
+  self.name = "Healthkit";
 end
 
 function M.class:sayHello()
@@ -27,8 +27,10 @@ end
 function M.class.onCollision(self, event)
   if(event.phase == "began") then
     self.isDead = true;
-    if (event.other.maxSpeed < 72) then
-      event.other.maxSpeed = event.other.maxSpeed + 15;
+    if (event.other.healthBar.health < event.other.healthBar.maxHealth) then
+      event.other.healthBar.health = event.other.healthBar.health + 120 + (self.width/5);
+    else
+      event.other.healthBar.health = event.other.healthBar.maxHealth;
     end
   end
 end

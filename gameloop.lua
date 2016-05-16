@@ -38,7 +38,7 @@ function gameloop:init()
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
   native.setProperty("androidSystemUiVisibility", "immersiveSticky");
-  --physics.setDrawMode("hybrid");
+  physics.setDrawMode("hybrid");
 
   --sets gamestate
   gameState = 2;
@@ -52,13 +52,12 @@ function gameloop:init()
   player:init();
   player:initHUD();
 
-  enemy:spawn(4);
-  enemy:spawn(4);
+  enemy:spawn(3, 100, 100);
 
   powerups:spawn(1);
   powerups:spawn(1);
-  powerups:spawn(1);
-  powerups:spawn(1);
+  powerups:spawn(2);
+  powerups:spawn(2);
   powerups:spawn(1);
 end
 
@@ -71,6 +70,7 @@ function gameloop:run()
   enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
   enemy:run(); --runs enemy logic
 
+  powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
   powerups:run();
 
 end

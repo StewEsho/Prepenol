@@ -22,7 +22,7 @@ local sprite_ship = {
 }
 
 local width, length;
-local speed, currentSpeed, maxSpeed;
+local speed, currentSpeed;
 local accelerationRate;
 local isShooting;
 local shootCooldown;
@@ -47,7 +47,7 @@ function ship.new(_x, _y, _acceleration)
 
   speed = 0;
   currentSpeed = 0;
-  maxSpeed = 50;
+
   accelerationRate = _acceleration;
 
   shootCooldown = 0;
@@ -69,12 +69,15 @@ function ship.new(_x, _y, _acceleration)
   player.name = "Player";
   player.healthBar.health = 1000;
   player.healthBar.armour = 0;
-  player.maxHealth = 1000;
+  player.healthBar.maxHealth = 1000;
   player.damage = nil;
   player.damageTimeout = 0;
+  player.maxSpeed = 35;
 
   collisionID = 1;
-  physics.addBody( player, "kinematic", {filter = { categoryBits = collisionID, maskBits=23 }});
+  physics.addBody( player, "dynamic", {filter = { categoryBits = collisionID, maskBits=23 }});
+  player.isFixedRotation = true;
+  player.gravityScale = 0;
 
   bullets = bullet.newInstance(player, "img/sprites/bullet-player.png", player.width/6);
 
@@ -248,7 +251,7 @@ end
 
 function ship:run() --Runs every frame
   --Updates the healthbar
-  player.healthBar.width = (player.healthBar.health/player.maxHealth)*player.healthMissing.width;
+  player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
   --Moves the healthbar with the player
   player.healthBar.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
   player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + speed * lastMagnitude * math.sin(math.rad(lastAngle));
@@ -270,7 +273,9 @@ function ship:run() --Runs every frame
                   lastAngle);
 
   elseif (joystick:isInUse() == true) then
-    if (speed < maxSpeed) then
+    player:setLinearVelocity(0, 0);
+    player:applyTorque(0);
+    if (speed < player.maxSpeed) then
       speed = speed + (accelerationRate * joystick:getMagnitude());
     end
     currentSpeed = joystick:getMagnitude() * speed;
@@ -298,9 +303,12 @@ function ship:run() --Runs every frame
   end
 
   player.damageTimeout = player.damageTimeout - 1;
-  if(player.damageTimeout <= 0 and player.healthBar.health < player.maxHealth) then
+  if(player.damageTimeout <= 0 and player.healthBar.health < player.healthBar.maxHealth) then
     player.healthBar.health = player.healthBar.health + 1;
   end
+
+  player.x = player.x;
+  player.y = player.y;
 end
 
 function ship:debug()
