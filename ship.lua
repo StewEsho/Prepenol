@@ -45,7 +45,7 @@ function ship.new(_x, _y, _acceleration)
   local newShip = {
   }
 
-  speed = 0;
+
   currentSpeed = 0;
 
   accelerationRate = _acceleration;
@@ -73,6 +73,15 @@ function ship.new(_x, _y, _acceleration)
   player.damage = nil;
   player.damageTimeout = 0;
   player.maxSpeed = 35;
+  player.speed = 0;
+  --stores the cooldowns on the buffs gained by most powerups
+  --counts down; 0 means cooldown is done
+  --[[
+    [1] --> speedBoost
+  ]]
+  player.powerupBuffs = {
+    -1
+  }
 
   collisionID = 1;
   physics.addBody( player, "kinematic", {filter = { categoryBits = collisionID, maskBits=23 }});
@@ -173,7 +182,7 @@ function ship:getY()
 end
 
 function ship:getSpeed()
-  return speed;
+  return player.speed;
 end
 
 function ship:getRadar()
@@ -193,7 +202,7 @@ function ship:setIsShooting(_flag)
 end
 
 function ship:setSpeed(_speed)
-  speed = _speed;
+  player.speed = _speed;
 end
 
 function ship:setAcceleration(_acceleration)
@@ -207,16 +216,28 @@ function ship.damage(_damage)
   end
 end
 
+function ship:updateBuffs()
+  for k = 1, table.getn(player.powerupBuffs) do
+    player.powerupBuffs[k] = player.powerupBuffs[k] - 1;
+    if(player.powerupBuffs[k] == 0) then
+      if(k == 1) then
+        player.maxSpeed = 35;
+        player.speed = 35;
+      end
+    end
+  end
+end
+
 function ship:translate(_x, _y, _angle)
   player.x = player.x + _x;
   player.y = player.y + _y;
 
   turnRateAngleDiff = (player.rotation - _angle + 180) % 360 - 180;
 
-  if (turnRateAngleDiff > speed/4) then
-    player.rotation = player.rotation - speed/4;
-  elseif (turnRateAngleDiff < -speed/4) then
-    player.rotation = player.rotation + speed/4;
+  if (turnRateAngleDiff > player.speed/4) then
+    player.rotation = player.rotation - player.speed/4;
+  elseif (turnRateAngleDiff < -player.speed/4) then
+    player.rotation = player.rotation + player.speed/4;
   else
     player.rotation = _angle;
   end
@@ -250,14 +271,14 @@ function ship:init()
 end
 
 function ship:run() --Runs every frame
-  print(player.maxSpeed)
+  ship:updateBuffs();
   --Updates the healthbar
   player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
   --Moves the healthbar with the player
-  player.healthBar.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + speed * lastMagnitude * math.sin(math.rad(lastAngle));
-  player.healthMissing.y = player.y - 100 - speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthMissing.x = player.x + speed * lastMagnitude * math.sin(math.rad(lastAngle));
+  player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
+  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
+  player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
+  player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
 
   if (fireBttn:isPressed() == true) then
     isShooting = true;
@@ -265,21 +286,21 @@ function ship:run() --Runs every frame
     isShooting = false;
   end
 
-  if (joystick:isInUse() == false and (speed) > 0) then
-    speed = speed - accelerationRate;
-    currentSpeed = speed;
+  if (joystick:isInUse() == false and (player.speed) > 0) then
+    player.speed = player.speed - accelerationRate;
+    currentSpeed = player.speed;
 
-    ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * speed,
-                  -lastMagnitude * math.cos(math.rad(lastAngle)) * speed,
+    ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
+                  -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
                   lastAngle);
 
   elseif (joystick:isInUse() == true) then
     player:setLinearVelocity(0, 0);
     player:applyTorque(0);
-    if (speed < player.maxSpeed) then
-      speed = speed + (accelerationRate * joystick:getMagnitude());
+    if (player.speed < player.maxSpeed) then
+      player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
     end
-    currentSpeed = joystick:getMagnitude() * speed;
+    currentSpeed = joystick:getMagnitude() * player.speed;
     ship:translate(currentSpeed * math.sin(math.rad(joystick:getAngle())),
                   -currentSpeed * math.cos(math.rad(joystick:getAngle())),
                   joystick:getAngle());
@@ -313,7 +334,7 @@ function ship:run() --Runs every frame
 end
 
 function ship:debug()
-  debug_speedText.text = speed;
+  debug_speedText.text = player.speed;
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
   debug_currentSpeed.text = currentSpeed;
