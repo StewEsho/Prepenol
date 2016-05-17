@@ -27,10 +27,9 @@ end
 function M.class.onCollision(self, event)
   if(event.phase == "began") then
     self.isDead = true;
-    if (event.other.maxSpeed < 55) then
-      event.other.maxSpeed = event.other.maxSpeed + 15;
-    else
-      event.other.maxSpeed = 55;
+    event.other.maxSpeed = event.other.maxSpeed + 3;
+    if (event.other.maxSpeed > 50) then
+      event.other.maxSpeed = 50;
     end
   end
 end
