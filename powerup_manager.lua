@@ -9,6 +9,7 @@ local scene = require("scene");
 local class = require("classy");
 --powerup modules
 local speedboost = require("pwr_speed");
+local doubleDamage = require("pwr_doubledamage");
 local healthkit = require("pwr_health");
 
 local M = {};
@@ -18,17 +19,21 @@ function M.class:__init()
   self.moduleList = {
     --[[
         [1] --> Speed Boost
-        [2] --> HealthKit
+        [2] --> Double Damage
+        [3] --> HealthKit
     --]]
     speedboost,
+    doubleDamage,
     healthkit
   }
 
   self.speedBoostList = {}
   self.healthkitList = {}
+  self.doubleDList = {}
 
   self.powerupList = {
-    self.speedBoostList;
+    self.speedBoostList,
+    self.doubleDList,
     self.healthkitList
   }
 

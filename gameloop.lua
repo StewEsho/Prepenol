@@ -51,13 +51,6 @@ function gameloop:init()
   scene:init(1);
   player:init();
   player:initHUD();
-
-  powerups:spawn(1);
-  powerups:spawn(1);
-  powerups:spawn(1);
-  powerups:spawn(1);
-  powerups:spawn(1);
-  powerups:spawn(1);
 end
 
 --Runs continously. Different code for each different game state
