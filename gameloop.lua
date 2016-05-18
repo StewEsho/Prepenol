@@ -43,6 +43,7 @@ function gameloop:init()
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
   native.setProperty("androidSystemUiVisibility", "immersiveSticky");
+  display.setStatusBar(display.HiddenStatusBar);
   --physics.setDrawMode("hybrid");
 
   --sets gamestate
