@@ -10,6 +10,7 @@ local physics = require("physics");
 local scene = require("scene");
 local enemies = require("enemies");
 local powerup = require("powerup_manager");
+local RadarClass = require("radar");
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -27,7 +28,11 @@ local fireBttn;
 local testEn;
 local enemy;
 local powerups;
+local radar;
 local debugText = display.newText( "", display.contentWidth/2, display.contentHeight/4, native.systemFontBold, 120 ) --general purpose debugging text
+
+--Display Groups
+local groupGUI = display.newGroup();
 ------------------------------ Public Functions --------------------------------
 
 --Runs once to initialize the game
@@ -51,20 +56,28 @@ function gameloop:init()
   scene:init(1);
   player:init();
   player:initHUD();
+  radar = RadarClass.class(player:getDisplayObject());
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
+  if(player:isDead()) then
+    if player.getGameOverBG().alpha <= 0.9 then
+      player.getGameOverBG().alpha = player.getGameOverBG().alpha + 0.01
+    end
+  else
 
-  player:run(); --runs player controls
-  --player:debug();
+    radar:run();
 
-  enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
-  enemy:run(); --runs enemy logic
+    player:run(); --runs player controls
+    --player:debug();
 
-  powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
-  powerups:run();
+    enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
+    enemy:run({radar = radar}); --runs enemy logic
 
+    powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
+    powerups:run();
+  end
 end
 
 return gameloop;

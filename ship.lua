@@ -11,7 +11,6 @@ local button = require ("button");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullet = require ("bullets");
-local RadarClass = require("radar");
 
 local ship = {};
 local ship_mt = {__index = ship}; --metatable
@@ -29,6 +28,7 @@ local shootCooldown;
 local turnRateAngleDiff;
 local lastAngle;
 local lastMagnitude;
+local gameOverBackground;
 
 local debug_speedText;
 local debug_currentSpeed;
@@ -37,8 +37,6 @@ local debug_bulletNum;
 
 local bullets;
 local collisionID;
-
-local radar;
 
 --Constructor
 function ship.new(_x, _y, _acceleration)
@@ -75,6 +73,8 @@ function ship.new(_x, _y, _acceleration)
   player.damageTimeout = 0;
   player.maxSpeed = 35;
   player.speed = 0;
+  player.isDead = false;
+
   --stores the cooldowns on the buffs gained by most powerups
   --counts down; 0 means cooldown is done
   --[[
@@ -172,6 +172,14 @@ end
 
 ]]--
 
+function ship:getGameOverBG()
+  return gameOverBackground;
+end
+
+function ship:isDead()
+  return player.isDead;
+end
+
 function ship:getDisplayObject()
   return player;
 end
@@ -186,10 +194,6 @@ end
 
 function ship:getSpeed()
   return player.speed;
-end
-
-function ship:getRadar()
-  return radar;
 end
 
 function ship:setX(_x)
@@ -261,10 +265,16 @@ function ship:initHUD()
                         0.6,     --blue
                         0.5,     --alpha
                         "fire");  --tag
-
-  radar = RadarClass.class(player);
   fireBttn:init();
   stick:init();
+end
+
+function ship:getStick()
+  return stick;
+end
+
+function ship:getButton()
+  return fireBttn;
 end
 
 function ship:init()
@@ -277,66 +287,72 @@ function ship:init()
 end
 
 function ship:run() --Runs every frame
-  ship:updateBuffs();
-  --Updates the healthbar
-  player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
-  --Moves the healthbar with the player
-  player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-  player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-
-  if (fireBttn:isPressed() == true) then
-    isShooting = true;
+  if(player.healthBar.health <= 0) then
+    player.isDead = true;
+    gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
+    gameOverBackground:setFillColor(0.8, 0.1, 0.2, 1);
+    gameOverBackground.alpha = 0;
   else
-    isShooting = false;
-  end
+    ship:updateBuffs();
+    --Updates the healthbar
+    player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
+    --Moves the healthbar with the player
+    player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
+    player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
+    player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
+    player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
 
-  if (joystick:isInUse() == false and (player.speed) > 0) then
-    player.speed = player.speed - accelerationRate;
-    currentSpeed = player.speed;
-
-    ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
-                  -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
-                  lastAngle);
-
-  elseif (joystick:isInUse() == true) then
-    player:setLinearVelocity(0, 0);
-    player:applyTorque(0);
-    if (player.speed < player.maxSpeed) then
-      player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
+    if (fireBttn:isPressed() == true) then
+      isShooting = true;
+    else
+      isShooting = false;
     end
-    currentSpeed = joystick:getMagnitude() * player.speed;
-    ship:translate(currentSpeed * math.sin(math.rad(joystick:getAngle())),
-                  -currentSpeed * math.cos(math.rad(joystick:getAngle())),
-                  joystick:getAngle());
-    lastAngle = joystick:getAngle();
-    lastMagnitude = joystick:getMagnitude();
-  end
-  radar:run();
 
-  bullets:removeBullets();
-  shootCooldown = shootCooldown + 1;
-  if(isShooting == true and shootCooldown > (8)) then
-    bullets:shoot(4);
-    bullets:shoot(4, 2 - (currentSpeed/36.5));
-    bullets:shoot(4, -2 + (currentSpeed/36.5));
-    shootCooldown = 0;
-  end
+    if (joystick:isInUse() == false and (player.speed) > 0) then
+      player.speed = player.speed - accelerationRate;
+      currentSpeed = player.speed;
 
-  if(player.damageTimeout <= 299) then
-    player.isVisible = true;
-  else
-    player.isVisible = not player.isVisible;
-  end
+      ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
+                    -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
+                    lastAngle);
 
-  player.damageTimeout = player.damageTimeout - 1;
-  if(player.damageTimeout <= 0 and player.healthBar.health < player.healthBar.maxHealth) then
-    player.healthBar.health = player.healthBar.health + 1;
-  end
+    elseif (joystick:isInUse() == true) then
+      player:setLinearVelocity(0, 0);
+      player:applyTorque(0);
+      if (player.speed < player.maxSpeed) then
+        player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
+      end
+      currentSpeed = joystick:getMagnitude() * player.speed;
+      ship:translate(currentSpeed * math.sin(math.rad(joystick:getAngle())),
+                    -currentSpeed * math.cos(math.rad(joystick:getAngle())),
+                    joystick:getAngle());
+      lastAngle = joystick:getAngle();
+      lastMagnitude = joystick:getMagnitude();
+    end
 
-  player.x = player.x;
-  player.y = player.y;
+    bullets:removeBullets();
+    shootCooldown = shootCooldown + 1;
+    if(isShooting == true and shootCooldown > (8)) then
+      bullets:shoot(4);
+      bullets:shoot(4, 2 - (currentSpeed/36.5));
+      bullets:shoot(4, -2 + (currentSpeed/36.5));
+      shootCooldown = 0;
+    end
+
+    if(player.damageTimeout <= 299) then
+      player.isVisible = true;
+    else
+      player.isVisible = not player.isVisible;
+    end
+
+    player.damageTimeout = player.damageTimeout - 1;
+    if(player.damageTimeout <= 0 and player.healthBar.health < player.healthBar.maxHealth) then
+      player.healthBar.health = player.healthBar.health + 1;
+    end
+
+    player.x = player.x;
+    player.y = player.y;
+  end
 end
 
 function ship:debug()
