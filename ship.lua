@@ -28,7 +28,6 @@ local shootCooldown;
 local turnRateAngleDiff;
 local lastAngle;
 local lastMagnitude;
-local gameOverBackground;
 
 local debug_speedText;
 local debug_currentSpeed;
@@ -104,106 +103,6 @@ end
 
 ------------------------------ Public Functions --------------------------------
 
---[[
-
-  getDisplayObject
-    @return player
-    - returns the display object / sprite of the ship
-    - used for camera tracking
-
-  getX
-    @return x
-    - gets the ship's x position on the screen
-
-  getY
-    @return y
-    - gets the ship's y position on the screen
-
-  getSpeed
-    @return speed
-    - gets the speed of the ship
-
-  getBullets
-    @return bullets
-    - gets the table containing all shot bullets
-
-  setIsShooting
-    ( _flag = boolean to set isShooting as)
-    - used to toggle shooting on or off
-
-  setX
-    ( _x = new x coordinate of the ship)
-    - sets the ship's x coordinate
-
-  setY
-    ( _y = new y coordinate of the ship)
-    - sets the ship's y coordinate
-
-  setSpeed
-    (_speed = new speed of ship)
-    - sets the ship's new speed
-
-  setAcceleration
-    (_acceleration = new accelerationRate of ship)
-    - sets the acceleartion and decceleration rate of the ship (in pixels per 1/60th of a second squared)
-
-  init
-    - runs once at the beginning of the game loop
-    - used to initiate the physics engine
-
-  translate
-    (_x = new x coordinate
-     _y = new y coordinate
-     _angle = angle to rotate the ship)
-    - translates the ship around
-    - usually used alongside the joystick in a gameloop
-
-  debug
-    - sets the gui texts as important info, such as coordinates or speed
-    - mainly used to debug game during development
-
-  run
-    - runs during the game loop.
-    - allows for the ship to move using the joystick.
-
-  shoot
-    - controlls the shooting of bullets
-    - adds bullets to a table containing all bullets
-
-]]--
-
-function ship:getGameOverBG()
-  return gameOverBackground;
-end
-
-function ship:isDead()
-  return player.isDead;
-end
-
-function ship:getDisplayObject()
-  return player;
-end
-
-function ship:getX()
-  return player.x;
-end
-
-function ship:getY()
-  return player.y;
-end
-
-function ship:getSpeed()
-  return player.speed;
-end
-
-function ship:setX(_x)
-  x = _x;
-end
-
-function ship:setY(_y)
-  y = _y;
-end
-
 function ship:setIsShooting(_flag)
   isShooting = _flag;
 end
@@ -253,22 +152,6 @@ function ship:translate(_x, _y, _angle)
   end
 end
 
-function ship:initHUD()
-  --Spawns in HUD and Controls
-  stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
-  fireBttn = button.new(display.contentWidth - (display.contentHeight/4),  --x
-                        display.contentHeight-(display.contentHeight/6),   --y
-                        display.contentHeight/2, display.contentHeight/3,  --width, height
-                        false,     --toggleable?
-                        1,      --red
-                        0.6,      --green
-                        0.6,     --blue
-                        0.5,     --alpha
-                        "fire");  --tag
-  fireBttn:init();
-  stick:init();
-end
-
 function ship:getStick()
   return stick;
 end
@@ -289,10 +172,6 @@ end
 function ship:run() --Runs every frame
   if(player.healthBar.health <= 0) then
     player.isDead = true;
-    gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
-    gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.actualContentWidth, display.actualContentHeight);
-    gameOverBackground:setFillColor(0.8, 0.1, 0.2, 1);
-    gameOverBackground.alpha = 0;
   else
     ship:updateBuffs();
     --Updates the healthbar

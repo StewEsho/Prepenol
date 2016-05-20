@@ -10,7 +10,7 @@ local physics = require("physics");
 local scene = require("scene");
 local enemies = require("enemies");
 local powerup = require("powerup_manager");
-local RadarClass = require("radar");
+local gui = require("gui");
 
 local gameloop = {};
 local gameloop_mt = {}; --metatable
@@ -20,19 +20,15 @@ local gameloop_mt = {}; --metatable
   1 = main menu
   2 = gameplay
   3 = pause menu
+  4 = game over
 ]]
 local gameState = 0;
 local player;
-local stick;
-local fireBttn;
 local testEn;
 local enemy;
 local powerups;
-local radar;
-local debugText = display.newText( "", display.contentWidth/2, display.contentHeight/4, native.systemFontBold, 120 ) --general purpose debugging text
-
---Display Groups
-local groupGUI = display.newGroup();
+local stickee;
+local kek;
 ------------------------------ Public Functions --------------------------------
 
 --Runs once to initialize the game
@@ -51,33 +47,37 @@ function gameloop:init()
 
   --creates instances of classes
   enemy = enemies.new();
-  player = ship.new(0, 0, 0.75);
+  --player = ship.new(0, 0, 0.75);
   powerups = powerup.class();
+
+  kek = gui.class();
   --initializes instances
   scene:init(1);
-  player:init();
-  player:initHUD();
-  radar = RadarClass.class(player:getDisplayObject());
+  --player:init();
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
-  if(player:isDead()) then
-    if player.getGameOverBG().alpha <= 0.9 then
-      player.getGameOverBG().alpha = player.getGameOverBG().alpha + 0.01
-    end
-  else
+  if(false) then
+    gameState = 4;
+  end
 
-    radar:run();
+  if(gameState == 2) then
 
-    player:run(); --runs player controls
+    --player:run(); --runs player controls
     --player:debug();
 
-    enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
+    --enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
     enemy:run({radar = radar}); --runs enemy logic
 
-    powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
+    --powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     powerups:run();
+  elseif(gameState == 4) then
+    --if player.getGameOverBG().alpha <= 0.9 then
+    --  player.getGameOverBG().alpha = player.getGameOverBG().alpha + 0.01
+    --else
+    --  gameOverText.text = "gaem is ded"
+    --end
   end
 end
 

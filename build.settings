@@ -73,6 +73,9 @@ settings =
 	--
 	android =
 	{
-
+		UIAppFonts =  --List of supported fonts
+		{
+			"font/LeagueSpartan-Bold.ttf",
+		},
 	},
 }
