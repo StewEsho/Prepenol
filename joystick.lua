@@ -78,7 +78,7 @@ function joystick.newInstance:snapStick(event)
     event.target.stick.y = event.y;
     event.target.stick.touch = event.target.onStickHold;
     event.target.stick:addEventListener("touch", event.target.stick);
-    display.getCurrentStage():setFocus( stick, event.id )
+    display.getCurrentStage():setFocus( event.target.stick, event.id )
     isStickFocus = true;
   end
 end
