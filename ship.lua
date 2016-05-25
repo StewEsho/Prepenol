@@ -6,8 +6,6 @@
 --
 ------------------------------- Private Fields ---------------------------------
 
-local joystick = require ("joystick");
-local button = require ("button");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullet = require ("bullets");
@@ -181,14 +179,8 @@ function ship:run() --Runs every frame
     player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
     player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
     player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-
-    if (fireBttn:isPressed() == true) then
-      isShooting = true;
-    else
-      isShooting = false;
-    end
-
-    if (joystick:isInUse() == false and (player.speed) > 0) then
+    --[[
+    if (player.speed) > 0) then
       player.speed = player.speed - accelerationRate;
       currentSpeed = player.speed;
 
@@ -197,8 +189,6 @@ function ship:run() --Runs every frame
                     lastAngle);
 
     elseif (joystick:isInUse() == true) then
-      player:setLinearVelocity(0, 0);
-      player:applyTorque(0);
       if (player.speed < player.maxSpeed) then
         player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
       end
@@ -209,6 +199,7 @@ function ship:run() --Runs every frame
       lastAngle = joystick:getAngle();
       lastMagnitude = joystick:getMagnitude();
     end
+    ]]
 
     bullets:removeBullets();
     shootCooldown = shootCooldown + 1;

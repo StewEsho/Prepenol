@@ -55,6 +55,8 @@ function joystick.new(_x, _y)
   angle = 0
 
   background = display.newCircle(_x, _y, display.contentWidth/8);
+  background.x = _x;
+  background.y = _y;
   background:setFillColor(0.5, 0.5, 0.5, 0.4);
   stick = display.newCircle(_x, _y, display.contentWidth/20);
   stick:setFillColor(0.6, 0.6, 0.6, 1);
@@ -134,6 +136,14 @@ end
     - used only for debugging.
 
 ]]--
+
+function joystick:getStickDisplayObject()
+  return stick;
+end
+
+function joystick:getBackgroundDisplayObject()
+  return background;
+end
 
 function joystick:getAngle()
   if (stick.x - background.x < 0) then

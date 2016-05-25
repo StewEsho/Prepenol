@@ -51,6 +51,9 @@ function button.new(_x,
   a = _a or 1;
 
   buttonBox = display.newRect(x, y, width, height);
+  buttonBox.anchorX = 1;
+  buttonBox.anchorY = 1;
+
   buttonBox:setFillColor(r, g, b, a);
 
   return setmetatable(newButton, button_mt);
@@ -86,6 +89,10 @@ end
 
 function button:init()
   buttonBox:addEventListener("touch", run);
+end
+
+function button:getDisplayObject()
+  return buttonBox;
 end
 
 function button:isPressed()

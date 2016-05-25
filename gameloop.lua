@@ -27,8 +27,7 @@ local player;
 local testEn;
 local enemy;
 local powerups;
-local stickee;
-local kek;
+local hud;
 ------------------------------ Public Functions --------------------------------
 
 --Runs once to initialize the game
@@ -47,13 +46,15 @@ function gameloop:init()
 
   --creates instances of classes
   enemy = enemies.new();
-  --player = ship.new(0, 0, 0.75);
+  player = ship.new(0, 0, 0.75);
   powerups = powerup.class();
 
-  kek = gui.class();
   --initializes instances
   scene:init(1);
-  --player:init();
+  player:init();
+
+  --initializes the hud
+  hud = gui.class();
 end
 
 --Runs continously. Different code for each different game state
@@ -64,14 +65,15 @@ function gameloop:run()
 
   if(gameState == 2) then
 
-    --player:run(); --runs player controls
+    player:run(); --runs player controls
     --player:debug();
 
     --enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
-    enemy:run({radar = radar}); --runs enemy logic
+    enemy:run({}); --runs enemy logic
 
     --powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     powerups:run();
+    hud:run();
   elseif(gameState == 4) then
     --if player.getGameOverBG().alpha <= 0.9 then
     --  player.getGameOverBG().alpha = player.getGameOverBG().alpha + 0.01
