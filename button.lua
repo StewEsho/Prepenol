@@ -63,23 +63,31 @@ end
 local function run(event)
   if(event.phase == "began") then
     if(isToggleable == false) then
-      buttonBox.width = width - 25;
-      buttonBox.height = height - 25;
+      buttonBox.width = width - 50;
+      buttonBox.height = height - 50;
+      buttonBox.x = display.contentWidth - 25;
+      buttonBox.y = display.contentHeight - 25;
       isPressed = true;
     else
       isPressed = not isPressed;
       if (isPressed) then
-        buttonBox.width = width - 25;
-        buttonBox.height = height - 25;
+        buttonBox.width = width - 50;
+        buttonBox.height = height - 50;
+        buttonBox.x = display.contentWidth - 25;
+        buttonBox.y = display.contentHeight - 25;
       else
-        buttonBox.width = width + 25;
-        buttonBox.height = height + 25;
+        buttonBox.width = width;
+        buttonBox.height = height;
+        buttonBox.x = display.contentWidth;
+        buttonBox.y = display.contentHeight;
       end
     end
   elseif(event.phase == "ended" or event.phase == "cancelled") then
     if(isToggleable == false) then
-      buttonBox.width = width + 25;
-      buttonBox.height = height + 25;
+      buttonBox.width = width;
+      buttonBox.height = height;
+      buttonBox.x = display.contentWidth;
+      buttonBox.y = display.contentHeight;
       isPressed = false;
     end
   end

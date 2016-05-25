@@ -59,7 +59,7 @@ function joystick.new(_x, _y)
   background.y = _y;
   background:setFillColor(0.5, 0.5, 0.5, 0.4);
   stick = display.newCircle(_x, _y, display.contentWidth/20);
-  stick:setFillColor(0.6, 0.6, 0.6, 1);
+  stick:setFillColor(0.6, 1, 0.6, 1);
   deltaRadius = (3 * display.contentWidth)/40;
 
   angleText = display.newText("", 500, 300, "Arial", 72);

@@ -54,6 +54,7 @@ function ship.new(_x, _y, _acceleration)
   length = 115.125;
 
   player = display.newRect(_x, _y, width, length);
+  player.rotation = 50;
 
   player.healthBar = display.newRect(_x, _y - 100, 150, 20);
   player.healthBar:setFillColor(50/255, 100/255, 255/255);
@@ -120,6 +121,10 @@ function ship.damage(_damage)
   end
 end
 
+function ship:getDisplayObject()
+  return player;
+end
+
 function ship:updateBuffs()
   for k = 1, table.getn(player.powerupBuffs) do
     player.powerupBuffs[k] = player.powerupBuffs[k] - 1;
@@ -148,14 +153,6 @@ function ship:translate(_x, _y, _angle)
   else
     player.rotation = _angle;
   end
-end
-
-function ship:getStick()
-  return stick;
-end
-
-function ship:getButton()
-  return fireBttn;
 end
 
 function ship:init()

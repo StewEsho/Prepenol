@@ -14,24 +14,21 @@ local gui = {};
 
 gui.class = class("GUI");
 
-function gui.class:__init()
+function gui.class:__init(params)
   --Display Groups
   self.groupGUI = display.newGroup();
 
-  self.redd = display.newRect(1200, 400, 200, 300);
-  self.redd.rotation = self.redd.rotation+55;
-
   --GUI
-  self.radar = radar.class(self.redd);
+  self.radar = radar.class(params.player);
   self.stick = stick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
   self.button = button.new(display.contentWidth,  --x
                            display.contentHeight,   --y
                            display.contentHeight/2, display.contentHeight/3,  --width, height
                            false,     --toggleable?
-                           1,      --red
-                           0.6,      --green
+                           0.6,      --red
+                           1,      --green
                            0.6,     --blue
-                           0.5,     --alpha
+                           0.6,     --alpha
                            "fire");  --tag)
   self.gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
   self.gameOverBackground:setFillColor(0.8, 0.1, 0.2);
@@ -43,22 +40,22 @@ function gui.class:__init()
   self.gameOverGUI:insert(self.gameOverText);
 
   self.stickGUI = display.newGroup();
-  self.stickGUI:insert(self.stick:getStickDisplayObject());
   self.stickGUI:insert(self.stick:getBackgroundDisplayObject());
+  self.stickGUI:insert(self.stick:getStickDisplayObject());
 
   self.radarGUI = display.newGroup();
   self.radarGUI:insert(self.radar:getRadarObject());
   self.radarGUI:insert(self.radar:getRadarTriangle());
 
   self.miscGUI = display.newGroup();
-  self.radarGUI:insert(self.redd);
 
   self.groupGUI:insert(self.miscGUI);
   self.groupGUI:insert(self.button:getDisplayObject());
   self.groupGUI:insert(self.radarGUI);
   self.groupGUI:insert(self.stickGUI);
   self.groupGUI:insert(self.gameOverGUI);
-  self.groupGUI[5].alpha = 0;
+
+  self.groupGUI[5].alpha = 0.9;
 
 end
 
