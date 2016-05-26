@@ -102,6 +102,14 @@ end
 
 ------------------------------ Public Functions --------------------------------
 
+function ship:getX()
+  return player.x;
+end
+
+function ship:getY()
+  return player.y;
+end
+
 function ship:setIsShooting(_flag)
   isShooting = _flag;
 end
@@ -177,7 +185,7 @@ function ship:run(joystick, fireButton) --Runs every frame
     player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
     player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
 
-    if (fireButton:isPressed() == true) then 
+    if (fireButton:isPressed() == true) then
       isShooting = true;
     else
       isShooting = false;
