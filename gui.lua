@@ -16,68 +16,85 @@ gui.class = class("GUI");
 
 function gui.class:__init(params)
   --Display Groups
-  self.groupGUI = display.newGroup();
+  self.groupGUI = display.newGroup();     --[ 0 ] -- main group. contains all sub groups within
+  self.gameOverGUI = display.newGroup();  --[ 1 ] -- Gameover Screens
+  self.stickGUI = display.newGroup();     --[ 2 ] -- Joysticks
+  self.buttonGUI = display.newGroup();    --[ 3 ] -- Buttons
+  self.radarGUI = display.newGroup();     --[ 4 ] -- Radar
+  self.miscGUI = display.newGroup();      --[ 5 ] -- Misc. GUI objects
+
+  --adds the groups to the main group
+  self.groupGUI:insert(self.miscGUI);
+  self.groupGUI:insert(self.buttonGUI);
+  self.groupGUI:insert(self.radarGUI);
+  self.groupGUI:insert(self.stickGUI);
+  self.groupGUI:insert(self.gameOverGUI);
+
+  self.miscTable = {};      --[ 1 ] -- Misc. GUI objects
+  self.gameOverTable = {};  --[ 2 ] -- Gameover Screens
+  self.stickTable = {};     --[ 3 ] -- Joysticks
+  self.buttonTable = {};    --[ 4 ] -- Buttons
+  self.radarTable = {};     --[ 5 ] -- Radar
+  self.GUItable = {
+    self.miscTable,
+    self.gameOverTable,
+    self.stickTable,
+    self.buttonTable,
+    self.radarTable
+  }
 
   --GUI
   self.radar = radar.class(params.player);
   self.stick = stick.newInstance(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
-  self.button = button.new(display.contentWidth,  --x
-                           display.contentHeight,   --y
-                           display.contentHeight/2, display.contentHeight/3,  --width, height
-                           false,     --toggleable?
-                           0.6,      --red
-                           1,      --green
-                           0.6,     --blue
-                           0.6,     --alpha
-                           "fire");  --tag)
+  self.button = button.newInstance({x      = display.contentWidth - display.contentHeight/4,  --x
+                                   y       = display.contentHeight - display.contentHeight/6,   --y
+                                   width   = display.contentHeight/2,
+                                   height  = display.contentHeight/3,  --width, height
+                                   r       = 0.6,      --red
+                                   g       = 1,      --green
+                                   b       = 0.6,     --blue
+                                   a       = 0.6,     --alpha
+                                   tag     = "fire"});  --tag)
   self.gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
   self.gameOverBackground:setFillColor(0.8, 0.1, 0.2);
   self.gameOverBackground.alpha = 1;
   self.gameOverText = display.newText( "gaem is ded", display.contentWidth/2, display.contentHeight/2, "font/LeagueSpartan-Bold.ttf", 212);
 
-  self.gameOverGUI = display.newGroup()
   self.gameOverGUI:insert(self.gameOverBackground);
   self.gameOverGUI:insert(self.gameOverText);
 
-  self.stickGUI = display.newGroup();
   self.stickGUI:insert(self.stick:getBackgroundDisplayObject());
   self.stickGUI:insert(self.stick:getStickDisplayObject());
 
-  self.radarGUI = display.newGroup();
+  self.buttonGUI:insert(self.button:getDisplayObject());
+
   self.radarGUI:insert(self.radar:getRadarObject());
   self.radarGUI:insert(self.radar:getRadarTriangle());
 
-  self.miscGUI = display.newGroup();
+  ----------
 
-  self.groupGUI:insert(self.miscGUI);
-  self.groupGUI:insert(self.button:getDisplayObject());
-  self.groupGUI:insert(self.radarGUI);
-  self.groupGUI:insert(self.stickGUI);
-  self.groupGUI:insert(self.gameOverGUI);
+  table.insert(self.gameOverTable, self.gameOverBackground);
+  table.insert(self.gameOverTable, self.gameOverText);
+
+  table.insert(self.stickTable, self.stick);
+
+  table.insert(self.buttonTable, self.button);
+
+  table.insert(self.radarTable, self.radar);
+
+  ---------
 
   self.groupGUI[5].alpha = 0.2;
 
 end
 
-function gui.class:initControls()
-  self.stick:init();
-  self.button:init();
-end
-
-function gui.class:getJoystick()
-  return self.stick;
-end
-
-function gui.class:getButton()
-  return self.button;
-end
-
-function gui.class:getRadar()
-  return self.radar;
+--gets an object from the hud
+function gui.class:get(index1, index2)
+  return self.GUItable[index1][index2];
 end
 
 function gui.class:run()
-  -- there seems to be nothing here.
+  self.radar:run();
 end
 
 return gui;

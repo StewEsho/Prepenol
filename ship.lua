@@ -164,7 +164,7 @@ function ship:init()
   player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2);
 end
 
-function ship:run() --Runs every frame
+function ship:run(joystick, fireButton) --Runs every frame
   if(player.healthBar.health <= 0) then
     player.isDead = true;
   else
@@ -176,16 +176,14 @@ function ship:run() --Runs every frame
     player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
     player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
     player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-    --[[
-    if (player.speed) > 0) then
-      player.speed = player.speed - accelerationRate;
-      currentSpeed = player.speed;
 
-      ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
-                    -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
-                    lastAngle);
+    if (fireButton:isPressed() == true) then 
+      isShooting = true;
+    else
+      isShooting = false;
+    end
 
-    elseif (joystick:isInUse() == true) then
+    if (joystick:isInUse() == true) then
       if (player.speed < player.maxSpeed) then
         player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
       end
@@ -195,8 +193,16 @@ function ship:run() --Runs every frame
                     joystick:getAngle());
       lastAngle = joystick:getAngle();
       lastMagnitude = joystick:getMagnitude();
+    elseif (player.speed > 0) then
+
+    player.speed = player.speed - accelerationRate;
+    currentSpeed = player.speed;
+
+    ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
+                  -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
+                  lastAngle);
+
     end
-    ]]
 
     bullets:removeBullets();
     shootCooldown = shootCooldown + 1;
@@ -228,7 +234,6 @@ function ship:debug()
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
   debug_currentSpeed.text = currentSpeed;
-  print(player.health)
 end
 
 return ship;

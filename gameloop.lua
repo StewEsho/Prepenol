@@ -55,7 +55,6 @@ function gameloop:init()
 
   --initializes the hud
   hud = gui.class({player = player:getDisplayObject()});
-  hud:initControls(); --adds event listeners
 end
 
 --Runs continously. Different code for each different game state
@@ -65,16 +64,14 @@ function gameloop:run()
   end
 
   if(gameState == 2) then
-
-    player:run(); --runs player controls
-    --player:debug();
+    player:debug();
 
     --enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
-    enemy:run({}); --runs enemy logic
-
     --powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
-    powerups:run();
-    hud:run();
+    player:run(hud:get(3, 1), hud:get(4, 1)); --runs player controls
+    enemy:run({}); --runs enemy logic
+    powerups:run(); --runs misc. powerup animations and event listeners
+    hud:run(); --runs HUD and GUI elements
   elseif(gameState == 4) then
     --if player.getGameOverBG().alpha <= 0.9 then
     --  player.getGameOverBG().alpha = player.getGameOverBG().alpha + 0.01

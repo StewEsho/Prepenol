@@ -52,6 +52,11 @@ function joystick.newInstance:__init(_x, _y)
 
   self.angleText = display.newText("", 500, 300, "Arial", 72);
   self.magText = display.newText("", 500, 500, "Arial", 72);
+
+  --initalizes controls
+  self.background.touch = self.snapStick;
+  self.background.onStickHold = self.onStickHold;
+  self.background:addEventListener("touch", self.background);
 end
 
 ----------------------------- Private Functions --------------------------------
@@ -143,12 +148,6 @@ function joystick.newInstance:getMagnitude()
   else
     return self.magnitude;
   end
-end
-
-function joystick.newInstance:init()
-  self.background.touch = self.snapStick;
-  self.background.onStickHold = self.onStickHold;
-  self.background:addEventListener("touch", self.background);
 end
 
 function joystick.newInstance:isInUse()

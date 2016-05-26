@@ -16,7 +16,7 @@ function radar.class:__init(_rootObj)
   self.rootObject = _rootObj;
 
   self.radarBackground = display.newCircle(275, 275, 225);
-  self.radarBackground:setFillColor(0,0,0, 0.65);
+  self.radarBackground:setFillColor(0,0,0, 0.65); 
   self.radarTri = display.newImageRect("img/sprites/radar-triangle.png", 50, 50);
   self.radarTri.x = 275; self.radarTri.y = 275;
   self.radarTri.rotation = self.rootObject.rotation;
