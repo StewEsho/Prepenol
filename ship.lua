@@ -182,7 +182,7 @@ function ship:run(joystick, fireButton) --Runs every frame
     player.isFixedRotation = true;
     player.bodyType = "dynamic";
     player.density = 3.0;
-    player:applyAngularImpulse(math.random(1200));
+    player:applyTorque(120000);
   else
     ship:updateBuffs();
     --Updates the healthbar
