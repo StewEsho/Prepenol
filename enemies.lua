@@ -85,6 +85,7 @@ end
 ]]
 
 function enemies:spawn(_index, _x, _y, params)
+  params = params or {};
   if (_index and _index ~= 4) then
     table.insert(enemyList[_index], moduleList[_index].class(_x, _y, table.getn(enemyList[_index])+1, params));
     --print(enemyList[_index][table.getn(enemyList[_index])].sprite.name .. " | " .. enemyList[_index][table.getn(enemyList[_index])].sprite.index);
@@ -114,7 +115,7 @@ function enemies:randomSpawn(_x, _y, params)
     enemyTimer = enemyTimer + 1;
   else
     enemyTimer = 0;
-    if (enemyCount < 100) then
+    if (enemyCount < 25) then
       enemies:spawn(math.random(1, table.getn(enemyList)), math.random(_x - 3000, _x + 3000), math.random(_y - 3000, _y + 3000), params);
     end
   end

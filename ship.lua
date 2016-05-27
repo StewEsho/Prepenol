@@ -110,6 +110,10 @@ function ship:getY()
   return player.y;
 end
 
+function ship:getIsDead()
+  return player.isDead;
+end
+
 function ship:setIsShooting(_flag)
   isShooting = _flag;
 end
@@ -175,6 +179,10 @@ end
 function ship:run(joystick, fireButton) --Runs every frame
   if(player.healthBar.health <= 0) then
     player.isDead = true;
+    player.isFixedRotation = true;
+    player.bodyType = "dynamic";
+    player.density = 3.0;
+    player:applyAngularImpulse(math.random(1200));
   else
     ship:updateBuffs();
     --Updates the healthbar

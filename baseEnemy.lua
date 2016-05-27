@@ -30,7 +30,7 @@ function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spr
   self.sprite.name = _name or "BaseEnemy";
   self.sprite.description = _description or "Base Description";
   self.layer = _layer or 1;
-  self.radar = params.radar;
+  self.radar = params.radar or nil;
 
   self.sprite.speed = 10;
   self.sprite.shakeMax = 24;
@@ -104,7 +104,7 @@ end
 
 --Kills the enemy (does NOT remove from list of enemies)
 function M.BaseEnemy:kill()
-  self.radar:kill(self.sprite.enemyType, self.sprite.index)
+  --self.radar:kill(self.sprite.enemyType, self.sprite.index)
   self.sprite.healthBar:removeSelf();
   self.sprite.healthMissing:removeSelf();
   self.sprite:removeSelf();
@@ -217,14 +217,13 @@ end
 
 function M.BaseEnemy:drawOnRadar()
   if(self:getDistanceTo(player:getX(), player:getY()) < 5500)then
-    print(self.radar.getRadarObject);
     --[[self.radar:draw((self.sprite.x - player:getX())/25,
                     (self.sprite.y - player:getY())/25,
                     self.sprite.enemyType,
                     self.sprite.index,
                     self.sprite.radarColour);]]
   else
-    self.radar:kill(self.sprite.enemyType, self.sprite.index)
+    --self.radar:kill(self.sprite.enemyType, self.sprite.index)
   end
 end
 

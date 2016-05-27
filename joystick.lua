@@ -42,7 +42,7 @@ function joystick.newInstance:__init(_x, _y)
   self.background = display.newCircle(_x, _y, display.contentWidth/8);
   self.background.x = _x;
   self.background.y = _y;
-  self.background:setFillColor(0.5, 0.5, 0.5, 0.4);
+  self.background:setFillColor(0.8, 0.8, 0.8, 0.2);
 
   self.background.stick = display.newCircle(_x, _y, display.contentWidth/20);
   self.background.stick:setFillColor(0.6, 1, 0.6, 1);
