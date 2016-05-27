@@ -103,8 +103,8 @@ function M.BaseEnemy:updateHealthBar()
 end
 
 --Kills the enemy (does NOT remove from list of enemies)
-function M.BaseEnemy:kill()
-  --self.radar:kill(self.sprite.enemyType, self.sprite.index)
+function M.BaseEnemy:kill(radar)
+  if(radar) then radar:kill(self.sprite.enemyType, self.sprite.index) end
   self.sprite.healthBar:removeSelf();
   self.sprite.healthMissing:removeSelf();
   self.sprite:removeSelf();
