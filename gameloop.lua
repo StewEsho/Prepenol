@@ -13,7 +13,6 @@ local powerup = require("powerup_manager");
 local gui = require("gui");
 
 local gameloop = {};
-local gameloop_mt = {}; --metatable
 
 --[[  Stores the gameState
   0 = not initialized
@@ -53,6 +52,15 @@ function gameloop:init()
   scene:init(1);
   player:init();
 
+  powerups:spawn(1, {x = -300, y = -300})
+  powerups:spawn(1, {x =    0, y = -300})
+  powerups:spawn(1, {x =  300, y = -300})
+  powerups:spawn(2, {x = -300, y = -600})
+  powerups:spawn(2, {x =    0, y = -600})
+  powerups:spawn(2, {x =  300, y = -600})
+  powerups:spawn(3, {x = -300, y = -900})
+  powerups:spawn(3, {x =    0, y = -900})
+  powerups:spawn(3, {x =  300, y = -900})
 
   --initializes the hud
   hud = gui.class({player = player:getDisplayObject()});
@@ -69,8 +77,8 @@ function gameloop:run()
   if(gameState == 2) then
     --player:debug();
 
-    enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(4, 1)}) --spawns enemies randomly
-    powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
+    --enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(4, 1)}) --spawns enemies randomly
+    --powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
     enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners

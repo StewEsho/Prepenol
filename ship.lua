@@ -184,21 +184,6 @@ function ship:run(joystick, fireButton) --Runs every frame
     player.density = 3.0;
     player:applyTorque(120000);
   else
-    ship:updateBuffs();
-    --Updates the healthbar
-    player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
-    --Moves the healthbar with the player
-    player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-    player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-    player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-    player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-
-    if (fireButton:isPressed() == true) then
-      isShooting = true;
-    else
-      isShooting = false;
-    end
-
     if (joystick:isInUse() == true) then
       if (player.speed < player.maxSpeed) then
         player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
@@ -220,7 +205,12 @@ function ship:run(joystick, fireButton) --Runs every frame
 
     end
 
-    bullets:removeBullets();
+    if (fireButton:isPressed() == true) then
+      isShooting = true;
+    else
+      isShooting = false;
+    end
+
     shootCooldown = shootCooldown + 1;
     if(isShooting == true and shootCooldown > (8)) then
       bullets:shoot(4);
@@ -229,20 +219,27 @@ function ship:run(joystick, fireButton) --Runs every frame
       shootCooldown = 0;
     end
 
+    player.damageTimeout = player.damageTimeout - 1;
     if(player.damageTimeout <= 299) then
       player.isVisible = true;
     else
       player.isVisible = not player.isVisible;
     end
-
-    player.damageTimeout = player.damageTimeout - 1;
-    if(player.damageTimeout <= 0 and player.healthBar.health < player.healthBar.maxHealth) then
-      player.healthBar.health = player.healthBar.health + 1;
-    end
-
-    player.x = player.x;
-    player.y = player.y;
+    ship:updateBuffs();
   end
+
+  --Updates the healthbar
+  player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
+  --Moves the healthbar with the player
+  player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
+  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
+  player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
+  player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
+
+  bullets:removeBullets();
+
+  player.x = player.x;
+  player.y = player.y;
 end
 
 function ship:debug()
