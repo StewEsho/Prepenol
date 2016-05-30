@@ -53,12 +53,6 @@ function gameloop:init()
   scene:init(1);
   player:init();
 
-  enemy:spawn(1, 100, 100);
-  enemy:spawn(2, 100, 100);
-  enemy:spawn(3, 100, 100);
-  enemy:spawn(4, 100, 100);
-  enemy:spawn(3, 100, 100);
-  enemy:spawn(3, 100, 100);
 
   --initializes the hud
   hud = gui.class({player = player:getDisplayObject()});
