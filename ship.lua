@@ -56,10 +56,22 @@ function ship.new(_x, _y, _acceleration)
   player = display.newRect(_x, _y, width, length);
   player.rotation = 50;
 
-  player.healthBar = display.newRect(_x, _y - 100, 150, 20);
-  player.healthBar:setFillColor(50/255, 100/255, 255/255);
-  player.healthMissing = display.newRect(_x, _y - 100, 150, 20);
-  player.healthMissing:setFillColor(255/255, 100/255, 60/255);
+  player.healthMissing = display.newRect(500, 75, display.actualContentWidth-500, 100);
+  player.healthMissing:setFillColor(0.3, 0.3, 0.3);
+  player.healthMissing.anchorX = 0;
+  player.healthMissing.anchorY = 0;
+  player.healthMissing.path.x1 = -100;
+
+  player.healthBar = display.newRect(player.healthMissing.x, player.healthMissing.y, player.healthMissing.width, player.healthMissing.height);
+  player.healthBar:setFillColor(0.2, 0.85, 0.4);
+  player.healthBar.anchorX = 0;
+  player.healthBar.anchorY = 0;
+  player.healthBar.path.x1 = -100;
+  player.healthBar.path.x4 = -100;
+
+  player.healthGroup = display.newGroup();
+  player.healthGroup:insert(player.healthMissing);
+  player.healthGroup:insert(player.healthBar);
 
   player.fill = sprite_ship;
   player.name = "Player";
@@ -126,6 +138,10 @@ function ship:setAcceleration(_acceleration)
   accelerationRate = _acceleration;
 end
 
+function ship:getHealthGroup()
+  return player.healthGroup;
+end
+
 function ship.damage(_damage)
   if(player.damageTimeout <= 275) then
     player.healthBar.health = player.healthBar.health - _damage;
@@ -170,19 +186,15 @@ end
 function ship:init()
   player.damage = ship.damage;
   scene:addObjectToScene(player, 0);
-  scene:addObjectToScene(player.healthMissing, 0);
-  scene:addObjectToScene(player.healthBar, 0);
   scene:addFocusTrack(player);
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2);
 end
 
 function ship:run(joystick, fireButton) --Runs every frame
   if(player.healthBar.health <= 0) then
     player.isDead = true;
-    player.isFixedRotation = true;
+    player.isFixedRotation = false;
     player.bodyType = "dynamic";
-    player.density = 3.0;
-    player:applyTorque(120000);
+    player.healthBar.width = 0;
   else
     if (joystick:isInUse() == true) then
       if (player.speed < player.maxSpeed) then
@@ -229,12 +241,19 @@ function ship:run(joystick, fireButton) --Runs every frame
   end
 
   --Updates the healthbar
-  player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
-  --Moves the healthbar with the player
-  player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-  player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-  player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
+  player.healthBar.healthPercent = (player.healthBar.health/player.healthBar.maxHealth)
+  player.healthBar.width = player.healthBar.healthPercent*player.healthMissing.width;
+
+  if(player.healthBar.healthPercent < 0.5) then
+    player.healthBar.g = player.healthBar.healthPercent + 0.3;
+    player.healthBar.r = 0.8;
+  else
+    player.healthBar.g = 0.8;
+    player.healthBar.r = -player.healthBar.healthPercent + 1.3;
+  end
+  player.healthBar:setFillColor(player.healthBar.r,
+                                player.healthBar.g,
+                                0.4);
 
   bullets:removeBullets();
 
