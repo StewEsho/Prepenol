@@ -20,7 +20,7 @@ function timerManager:init()
    };
 
   for i = 1, table.getn(countdownTimers) do
-    countdownTimers[i].y = display.contentHeight - 200;
+    countdownTimers[i].y = display.contentHeight - 120;
     countdownTimers[i].x = -1000;
     countdownTimers[i].isInProgress = false;
   end
@@ -42,7 +42,7 @@ function timerManager:create(params)
     countdownTimers[params.index].isInProgress = true;
     countdownTimers[params.index].x = params.x or 300;
     countdownTimers[params.index]:goTo(0, 1000*params.duration);
-    --countdownTimers[params.index]:addEventListener("completed", timerManager.onComplete)
+    countdownTimers[params.index]:addEventListener("completed", timerManager.onComplete)
   else
     countdownTimers[params.index]:goTo(1, 0.1);
     countdownTimers[params.index].isInProgress = false;
