@@ -9,7 +9,8 @@ local progressRing = require("progressRing");
 
 local timerManager = {};
 
-local countdownTimers = {};
+local countdownTimers = {}; --stores the timers
+local timerPositions = {}; --stores the id of the timer if they are active. Used to automatically position the timers
 
 function timerManager:init()
   countdownTimers = {
@@ -23,6 +24,7 @@ function timerManager:init()
     countdownTimers[i].y = display.contentHeight - 120;
     countdownTimers[i].x = -1000;
     countdownTimers[i].isInProgress = false;
+    countdownTimers[i].tag = i;
   end
 
 end
@@ -40,22 +42,20 @@ function timerManager:create(params)
 
   if(countdownTimers[params.index].isInProgress == false) then
     countdownTimers[params.index].isInProgress = true;
-    countdownTimers[params.index].x = params.x or 300;
+    table.insert(timerPositions, countdownTimers[params.index].tag)
+    countdownTimers[params.index].x = (table.getn(timerPositions)*200) + 400 or 300;
     countdownTimers[params.index]:goTo(0, 1000*params.duration);
     countdownTimers[params.index]:addEventListener("completed", timerManager.onComplete)
   else
+    table.remove(timerPositions);
     countdownTimers[params.index]:goTo(1, 0.1);
     countdownTimers[params.index].isInProgress = false;
-    local recursiveTimer = timer.performWithDelay(5, function() timerManager:create({index = params.index, duration = params.duration, x = params.x}) end);
+    timer.performWithDelay(5, function() timerManager:create({index = params.index, duration = params.duration, x = params.x}) end);
   end
 end
 
 function timerManager:onComplete()
-  print(self);
-  print(countdownTimers);
-  print(countdownTimers[1]);
-  print(countdownTimers[2]);
-  print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+  print("timer complete");
 end
 
 return timerManager;
