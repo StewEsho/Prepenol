@@ -94,7 +94,7 @@ testGroup.isVisible = false
 local testObject = display.newRect(testGroup, 0, 0, 1, 1)
 function testObject.finalize(self, event)
 	finalizeFixed = true
-	--print("no longer any need to fix finalize() - thanks Corona Labs!")
+	print("no longer any need to fix finalize() - thanks Corona Labs!")
 end
 testObject:addEventListener("finalize")
 display.remove(testGroup)
@@ -163,7 +163,7 @@ function progressRing.new(params)
 	local sliceContainer = display.newContainer(group, radius*2, radius*2)
 	sliceContainer.anchorChildren = false
 	sliceContainer.anchorX = 0
-	group.isVisible = false
+	group.isVisible = true
 
 	local slices = {}
 

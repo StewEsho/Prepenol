@@ -11,6 +11,7 @@ local scene = require("scene");
 local enemies = require("enemies");
 local powerup = require("powerup_manager");
 local gui = require("gui");
+local progressRing = require("progressRing");
 
 local gameloop = {};
 
@@ -36,8 +37,8 @@ function gameloop:init()
   math.randomseed(os.time()); math.random(); math.random();
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
-  native.setProperty("androidSystemUiVisibility", "immersiveSticky");
-  display.setStatusBar(display.HiddenStatusBar);
+  --native.setProperty("androidSystemUiVisibility", "immersiveSticky");
+  --display.setStatusBar(display.HiddenStatusBar);
   --physics.setDrawMode("hybrid");
 
   --sets gamestate
@@ -61,6 +62,10 @@ function gameloop:init()
   powerups:spawn(3, {x = -300, y = -900})
   powerups:spawn(3, {x =    0, y = -900})
   powerups:spawn(3, {x =  300, y = -900})
+
+  local kekme = progressRing.new({ringColor = {0.2, 0.1, 0.8}, bgColor = {0,0,0, 0.01}, position = 1, ringDepth = 1, radius = 80});
+  kekme.x = 1000; kekme.y = 500
+  kekme:goTo(0, 10000)
 
   --initializes the hud
   hud = gui.class({player = player:getDisplayObject()});
