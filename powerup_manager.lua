@@ -83,13 +83,24 @@ end
 function M.class:run()
   for i = 1, table.getn(self.powerupList) do
     for j = 1, table.getn(self.powerupList[i]) do
-      --print(i .. " | " .. j)
       if (self.powerupList[i][j] == nil) then break
       elseif (self.powerupList[i][j].sprite.isDead == true) then
         self.powerupList[i][j].sprite:removeSelf();
         table.remove(self.powerupList[i], j)
       else
         self.powerupList[i][j]:run();
+      end
+    end
+  end
+end
+
+function M.class:clear()
+  for i = 1, table.getn(self.powerupList) do
+    for j = 1, table.getn(self.powerupList[i]) do
+      if (self.powerupList[i][j] == nil) then break
+      else
+        self.powerupList[i][j].sprite:removeSelf();
+        table.remove(self.powerupList[i], j)
       end
     end
   end

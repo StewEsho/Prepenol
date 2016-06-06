@@ -107,6 +107,7 @@ end
 
 function enemies:kill(_index1, _index2)
   table.remove(enemyList[_index1], _index2);
+  print("Kill me? Later.");
 end
 
 function enemies:randomSpawn(_x, _y, params)
@@ -117,6 +118,18 @@ function enemies:randomSpawn(_x, _y, params)
     enemyTimer = 0;
     if (enemyCount < 25) then
       enemies:spawn(math.random(1, table.getn(enemyList)), math.random(_x - 3000, _x + 3000), math.random(_y - 3000, _y + 3000), params);
+    end
+  end
+end
+
+function enemies:clear(radar)
+  for i = 1, table.getn(enemyList) do
+    for j = 1, table.getn(enemyList[i]) do
+      if (enemyList[i][j] == nil) then break
+      else
+        enemyList[i][j]:kill(radar);
+        self:kill(i, j);
+      end
     end
   end
 end
