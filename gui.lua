@@ -60,7 +60,7 @@ function gui.class:__init(params)
                                    b       = 0.6,     --blue
                                    a       = 0.6,     --alpha
                                    tag     = "fire"});  --tag)
-  self.gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
+  self.gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.actualContentWidth, display.actualContentHeight);
   self.gameOverBackground:setFillColor(0.8, 0.2, 0.1);
   self.gameOverText = display.newText( "gg", display.contentWidth/2, display.contentHeight/2, "font/LeagueSpartan-Bold.ttf", 212);
 
