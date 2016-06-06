@@ -20,7 +20,7 @@ M.description = "Packing heat all day, any day."
 function M.class:__init(_x, _y, newIndex, params)
   self.x = _x;
   self.y = _y;
-  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 132, 187.5, math.random(0, 359), "img/sprites/fire.jpg", "Fireballer", description, 0, newIndex, params);
+  enemyBase.BaseEnemy.__init(self, 3, self.x, self.y, 132, 187.5, math.random(0, 359), "img/sprites/fire.png", "Fireballer", description, 0, newIndex, params);
 
   self.sprite.maxSpeed = 800;
   self.sprite.acceleration = 0.5;
