@@ -11,6 +11,7 @@ local class = require("classy");
 local speedboost = require("pwr_speed");
 local doubleDamage = require("pwr_doubledamage");
 local healthkit = require("pwr_health");
+local timeMan = require("powerupTimerManager");
 
 local M = {};
 M.class = class("PowerupManager");
@@ -38,6 +39,16 @@ function M.class:__init()
   }
 
   self.spawnTimer = 0;
+
+  timeMan:init();
+end
+
+function M.class:getTimerObject(_index)
+  if(_index) then
+    return timeMan:get(_index);
+  else
+    return timeMan:get();
+  end
 end
 
 function M.class:get(_index1, _index2)
@@ -64,7 +75,7 @@ function M.class:randomSpawn(_x, _y)
   else
     self.spawnTimer = 0;
     if (true) then
-      self:spawn(math.random(1, table.getn(self.powerupList)), {x = math.random(_x - 3000, _x + 3000), y = math.random(_y - 3000, _y + 3000)});
+      self:spawn(math.random(1, table.getn(self.powerupList)), {x = math.random(_x - 2200, _x + 2200), y = math.random(_y - 2200, _y + 2200)});
     end
   end
 end

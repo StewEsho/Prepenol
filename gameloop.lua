@@ -10,29 +10,24 @@ local physics = require("physics");
 local scene = require("scene");
 local enemies = require("enemies");
 local powerup = require("powerup_manager");
-local RadarClass = require("radar");
+local gui = require("gui");
+local progressRing = require("progressRing");
 
 local gameloop = {};
-local gameloop_mt = {}; --metatable
 
 --[[  Stores the gameState
   0 = not initialized
   1 = main menu
   2 = gameplay
   3 = pause menu
+  4 = game over
 ]]
 local gameState = 0;
 local player;
-local stick;
-local fireBttn;
 local testEn;
 local enemy;
 local powerups;
-local radar;
-local debugText = display.newText( "", display.contentWidth/2, display.contentHeight/4, native.systemFontBold, 120 ) --general purpose debugging text
-
---Display Groups
-local groupGUI = display.newGroup();
+local hud;
 ------------------------------ Public Functions --------------------------------
 
 --Runs once to initialize the game
@@ -42,8 +37,8 @@ function gameloop:init()
   math.randomseed(os.time()); math.random(); math.random();
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
-  native.setProperty("androidSystemUiVisibility", "immersiveSticky");
-  display.setStatusBar(display.HiddenStatusBar);
+  --native.setProperty("androidSystemUiVisibility", "immersiveSticky");
+  --display.setStatusBar(display.HiddenStatusBar);
   --physics.setDrawMode("hybrid");
 
   --sets gamestate
@@ -53,31 +48,49 @@ function gameloop:init()
   enemy = enemies.new();
   player = ship.new(0, 0, 0.75);
   powerups = powerup.class();
+
   --initializes instances
   scene:init(1);
   player:init();
-  player:initHUD();
-  radar = RadarClass.class(player:getDisplayObject());
+
+  powerups:spawn(1, {x = -300, y = -300})
+  powerups:spawn(1, {x =    0, y = -300})
+  powerups:spawn(1, {x =  300, y = -300})
+  powerups:spawn(2, {x = -300, y = -600})
+  powerups:spawn(2, {x =    0, y = -600})
+  powerups:spawn(2, {x =  300, y = -600})
+  powerups:spawn(3, {x = -300, y = -900})
+  powerups:spawn(3, {x =    0, y = -900})
+  powerups:spawn(3, {x =  300, y = -900})
+
+  --initializes the hud
+  hud = gui.class({player = player:getDisplayObject()});
+  --adds misc. objects that belong in the HUD/GUI
+  hud:insert(player:getHealthGroup(), 1) --player healthbar
+  for i = 1, table.getn(powerups:getTimerObject()) do
+    hud:insert(powerups:getTimerObject(i), 1) --all powerup timers
+  end
 end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
-  if(player:isDead()) then
-    if player.getGameOverBG().alpha <= 0.9 then
-      player.getGameOverBG().alpha = player.getGameOverBG().alpha + 0.01
-    end
+  if(player:getIsDead()) then
+    gameState = 4;
   else
+    gameState = 2;
+  end
 
-    radar:run();
-
-    player:run(); --runs player controls
+  if(gameState == 2) then
     --player:debug();
 
-    enemy:randomSpawn(player:getX(), player:getY()) --spawns enemies randomly
-    enemy:run({radar = radar}); --runs enemy logic
-
+    enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(4, 1)}) --spawns enemies randomly
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
-    powerups:run();
+    player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
+    enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
+    powerups:run(); --runs misc. powerup animations and event listeners
+    hud:run(); --runs HUD and GUI elements
+  elseif(gameState == 4) then
+    hud:showEndscreen();
   end
 end
 

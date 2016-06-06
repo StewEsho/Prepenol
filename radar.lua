@@ -16,9 +16,12 @@ function radar.class:__init(_rootObj)
   self.rootObject = _rootObj;
 
   self.radarBackground = display.newCircle(275, 275, 225);
-  self.radarBackground:setFillColor(0,0,0, 0.65);
+  self.radarBackground:setFillColor(0,0.2,0, 0.65);
+  self.radarBackground.strokeWidth = 5
+  self.radarBackground.stroke = {0.1, 0.7, 0.2}
   self.radarTri = display.newImageRect("img/sprites/radar-triangle.png", 50, 50);
   self.radarTri.x = 275; self.radarTri.y = 275;
+  self.radarTri.rotation = self.rootObject.rotation;
 
   self.skeletonDot = {};
   self.aquaeDot = {};
@@ -29,6 +32,20 @@ function radar.class:__init(_rootObj)
     self.aquaeDot,
     self.fireDot
   }
+  self.dots = display.newGroup();
+end
+
+--returns the display object
+function radar.class:getRadarObject()
+  return self.radarBackground;
+end
+
+function radar.class:getRadarTriangle()
+  return self.radarTri;
+end
+
+function radar.class:getDots()
+  return self.dots;
 end
 
 --Gets distance, in pixel widths, to a given point
@@ -45,6 +62,7 @@ function radar.class:draw(_x, _y, _enemyType, _index, _colour)
   if(self.dotTable[_enemyType][_index] == nil) then
     local dot = display.newCircle(275+_x, 275+_y, 10);
     table.insert(self.dotTable[_enemyType], _index, dot);
+    self.dots:insert(dot);
   else
     self.dotTable[_enemyType][_index].isVisible = true;
     self.dotTable[_enemyType][_index].x = 275+_x;
@@ -60,11 +78,14 @@ function radar.class:kill(_enemyType, _index)
 end
 
 function radar.class:clear()
+  self.dots.isVisible = false;
+  --[[
   for i = 1, table.getn(self.dotTable) do
     for i = 1, table.getn(self.dotTable[i]) do
       self.dotTable[i][j].isVisible = false;
     end
   end
+  ]]
 end
 
 function radar.class:run()

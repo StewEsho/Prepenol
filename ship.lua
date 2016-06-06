@@ -6,8 +6,6 @@
 --
 ------------------------------- Private Fields ---------------------------------
 
-local joystick = require ("joystick");
-local button = require ("button");
 local physics = require ("physics");
 local scene = require ("scene")
 local bullet = require ("bullets");
@@ -28,7 +26,6 @@ local shootCooldown;
 local turnRateAngleDiff;
 local lastAngle;
 local lastMagnitude;
-local gameOverBackground;
 
 local debug_speedText;
 local debug_currentSpeed;
@@ -57,11 +54,24 @@ function ship.new(_x, _y, _acceleration)
   length = 115.125;
 
   player = display.newRect(_x, _y, width, length);
+  player.rotation = 50;
 
-  player.healthBar = display.newRect(_x, _y - 100, 150, 20);
-  player.healthBar:setFillColor(50/255, 100/255, 255/255);
-  player.healthMissing = display.newRect(_x, _y - 100, 150, 20);
-  player.healthMissing:setFillColor(255/255, 100/255, 60/255);
+  player.healthMissing = display.newRect(display.contentWidth, 75, display.actualContentWidth-550, 100);
+  player.healthMissing:setFillColor(0.3, 0.3, 0.3);
+  player.healthMissing.anchorX = 1;
+  player.healthMissing.anchorY = 0;
+  player.healthMissing.path.x1 = -75;
+
+  player.healthBar = display.newRect(player.healthMissing.x+75, player.healthMissing.y, player.healthMissing.width, player.healthMissing.height);
+  player.healthBar:setFillColor(0.2, 0.85, 0.4);
+  player.healthBar.anchorX = 1;
+  player.healthBar.anchorY = 0;
+  player.healthBar.path.x1 = -75;
+  player.healthBar.path.x4 = -75;
+
+  player.healthGroup = display.newGroup();
+  player.healthGroup:insert(player.healthMissing);
+  player.healthGroup:insert(player.healthBar);
 
   player.fill = sprite_ship;
   player.name = "Player";
@@ -104,86 +114,6 @@ end
 
 ------------------------------ Public Functions --------------------------------
 
---[[
-
-  getDisplayObject
-    @return player
-    - returns the display object / sprite of the ship
-    - used for camera tracking
-
-  getX
-    @return x
-    - gets the ship's x position on the screen
-
-  getY
-    @return y
-    - gets the ship's y position on the screen
-
-  getSpeed
-    @return speed
-    - gets the speed of the ship
-
-  getBullets
-    @return bullets
-    - gets the table containing all shot bullets
-
-  setIsShooting
-    ( _flag = boolean to set isShooting as)
-    - used to toggle shooting on or off
-
-  setX
-    ( _x = new x coordinate of the ship)
-    - sets the ship's x coordinate
-
-  setY
-    ( _y = new y coordinate of the ship)
-    - sets the ship's y coordinate
-
-  setSpeed
-    (_speed = new speed of ship)
-    - sets the ship's new speed
-
-  setAcceleration
-    (_acceleration = new accelerationRate of ship)
-    - sets the acceleartion and decceleration rate of the ship (in pixels per 1/60th of a second squared)
-
-  init
-    - runs once at the beginning of the game loop
-    - used to initiate the physics engine
-
-  translate
-    (_x = new x coordinate
-     _y = new y coordinate
-     _angle = angle to rotate the ship)
-    - translates the ship around
-    - usually used alongside the joystick in a gameloop
-
-  debug
-    - sets the gui texts as important info, such as coordinates or speed
-    - mainly used to debug game during development
-
-  run
-    - runs during the game loop.
-    - allows for the ship to move using the joystick.
-
-  shoot
-    - controlls the shooting of bullets
-    - adds bullets to a table containing all bullets
-
-]]--
-
-function ship:getGameOverBG()
-  return gameOverBackground;
-end
-
-function ship:isDead()
-  return player.isDead;
-end
-
-function ship:getDisplayObject()
-  return player;
-end
-
 function ship:getX()
   return player.x;
 end
@@ -192,16 +122,8 @@ function ship:getY()
   return player.y;
 end
 
-function ship:getSpeed()
-  return player.speed;
-end
-
-function ship:setX(_x)
-  x = _x;
-end
-
-function ship:setY(_y)
-  y = _y;
+function ship:getIsDead()
+  return player.isDead;
 end
 
 function ship:setIsShooting(_flag)
@@ -216,11 +138,19 @@ function ship:setAcceleration(_acceleration)
   accelerationRate = _acceleration;
 end
 
+function ship:getHealthGroup()
+  return player.healthGroup;
+end
+
 function ship.damage(_damage)
   if(player.damageTimeout <= 275) then
     player.healthBar.health = player.healthBar.health - _damage;
     player.damageTimeout = 300;
   end
+end
+
+function ship:getDisplayObject()
+  return player;
 end
 
 function ship:updateBuffs()
@@ -253,73 +183,20 @@ function ship:translate(_x, _y, _angle)
   end
 end
 
-function ship:initHUD()
-  --Spawns in HUD and Controls
-  stick = joystick.new(1.125 * display.contentWidth/8, 6 * display.contentHeight / 8);
-  fireBttn = button.new(display.contentWidth - (display.contentHeight/4),  --x
-                        display.contentHeight-(display.contentHeight/6),   --y
-                        display.contentHeight/2, display.contentHeight/3,  --width, height
-                        false,     --toggleable?
-                        1,      --red
-                        0.6,      --green
-                        0.6,     --blue
-                        0.5,     --alpha
-                        "fire");  --tag
-  fireBttn:init();
-  stick:init();
-end
-
-function ship:getStick()
-  return stick;
-end
-
-function ship:getButton()
-  return fireBttn;
-end
-
 function ship:init()
   player.damage = ship.damage;
   scene:addObjectToScene(player, 0);
-  scene:addObjectToScene(player.healthMissing, 0);
-  scene:addObjectToScene(player.healthBar, 0);
   scene:addFocusTrack(player);
-  player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2);
 end
 
-function ship:run() --Runs every frame
+function ship:run(joystick, fireButton) --Runs every frame
   if(player.healthBar.health <= 0) then
     player.isDead = true;
-    gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.contentWidth, display.contentHeight);
-    gameOverBackground = display.newRect(display.contentWidth/2, display.contentHeight/2, display.actualContentWidth, display.actualContentHeight);
-    gameOverBackground:setFillColor(0.8, 0.1, 0.2, 1);
-    gameOverBackground.alpha = 0;
+    player.isFixedRotation = false;
+    player.bodyType = "dynamic";
+    player.healthBar.width = 0;
   else
-    ship:updateBuffs();
-    --Updates the healthbar
-    player.healthBar.width = (player.healthBar.health/player.healthBar.maxHealth)*player.healthMissing.width;
-    --Moves the healthbar with the player
-    player.healthBar.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-    player.healthBar.x = player.x - ((player.healthMissing.width - player.healthBar.width)/2) + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-    player.healthMissing.y = player.y - 100 - player.speed * lastMagnitude * math.cos(math.rad(lastAngle));
-    player.healthMissing.x = player.x + player.speed * lastMagnitude * math.sin(math.rad(lastAngle));
-
-    if (fireBttn:isPressed() == true) then
-      isShooting = true;
-    else
-      isShooting = false;
-    end
-
-    if (joystick:isInUse() == false and (player.speed) > 0) then
-      player.speed = player.speed - accelerationRate;
-      currentSpeed = player.speed;
-
-      ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
-                    -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
-                    lastAngle);
-
-    elseif (joystick:isInUse() == true) then
-      player:setLinearVelocity(0, 0);
-      player:applyTorque(0);
+    if (joystick:isInUse() == true) then
       if (player.speed < player.maxSpeed) then
         player.speed = player.speed + (accelerationRate * joystick:getMagnitude());
       end
@@ -329,9 +206,23 @@ function ship:run() --Runs every frame
                     joystick:getAngle());
       lastAngle = joystick:getAngle();
       lastMagnitude = joystick:getMagnitude();
+    elseif (player.speed > 0) then
+
+    player.speed = player.speed - accelerationRate;
+    currentSpeed = player.speed;
+
+    ship:translate(lastMagnitude * math.sin(math.rad(lastAngle)) * player.speed,
+                  -lastMagnitude * math.cos(math.rad(lastAngle)) * player.speed,
+                  lastAngle);
+
     end
 
-    bullets:removeBullets();
+    if (fireButton:isPressed() == true) then
+      isShooting = true;
+    else
+      isShooting = false;
+    end
+
     shootCooldown = shootCooldown + 1;
     if(isShooting == true and shootCooldown > (8)) then
       bullets:shoot(4);
@@ -340,20 +231,34 @@ function ship:run() --Runs every frame
       shootCooldown = 0;
     end
 
+    player.damageTimeout = player.damageTimeout - 1;
     if(player.damageTimeout <= 299) then
       player.isVisible = true;
     else
       player.isVisible = not player.isVisible;
     end
-
-    player.damageTimeout = player.damageTimeout - 1;
-    if(player.damageTimeout <= 0 and player.healthBar.health < player.healthBar.maxHealth) then
-      player.healthBar.health = player.healthBar.health + 1;
-    end
-
-    player.x = player.x;
-    player.y = player.y;
+    ship:updateBuffs();
   end
+
+  --Updates the healthbar
+  player.healthBar.healthPercent = (player.healthBar.health/player.healthBar.maxHealth)
+  player.healthBar.width = player.healthBar.healthPercent*player.healthMissing.width;
+
+  if(player.healthBar.healthPercent < 0.5) then
+    player.healthBar.g = player.healthBar.healthPercent + 0.3;
+    player.healthBar.r = 0.8;
+  else
+    player.healthBar.g = 0.8;
+    player.healthBar.r = -player.healthBar.healthPercent + 1.3;
+  end
+  player.healthBar:setFillColor(player.healthBar.r,
+                                player.healthBar.g,
+                                0.4);
+
+  bullets:removeBullets();
+
+  player.x = player.x;
+  player.y = player.y;
 end
 
 function ship:debug()
@@ -361,7 +266,6 @@ function ship:debug()
   debug_shipX.text = player.x;
   debug_shipY.text = player.y;
   debug_currentSpeed.text = currentSpeed;
-  print(player.health)
 end
 
 return ship;

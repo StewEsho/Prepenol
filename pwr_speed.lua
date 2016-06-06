@@ -8,6 +8,7 @@
 local basePowerup = require("powerup");
 local class = require("classy");
 local physics = require("physics");
+local timeMan = require("powerupTimerManager");
 
 local M = {};
 
@@ -18,6 +19,7 @@ function M.class:__init(_index, params)
   basePowerup.class.__init(self, params);
   self.index = _index;
   self.name = "Speedboost";
+  self.sprite.duration = 3;
 end
 
 function M.class:sayHello()
@@ -27,7 +29,10 @@ end
 function M.class.onCollision(self, event)
   if(event.phase == "began") then
     self.isDead = true;
-    event.other.powerupBuffs[1] = 180; --buff duration
+    event.other.powerupBuffs[1] = self.duration*60; --buff duration
+
+    timeMan:create({index = 1, x = 600, duration = self.duration});
+
     event.other.maxSpeed = 50;
   end
 end

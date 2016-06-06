@@ -14,7 +14,7 @@ local M = {}
 
 M.BaseEnemy = class("BaseEnemy");
 
-function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spriteImg, _name, _description, _layer, newIndex)
+function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spriteImg, _name, _description, _layer, newIndex, params)
   self.x = _x or math.random(-10000, 10000);
   self.y = _y or math.random(-10000, 10000);
   self.width = _width or 100;
@@ -30,6 +30,7 @@ function M.BaseEnemy:__init(_enemyType, _x, _y, _width, _height, _rotation, _spr
   self.sprite.name = _name or "BaseEnemy";
   self.sprite.description = _description or "Base Description";
   self.layer = _layer or 1;
+  self.radar = params.radar or nil;
 
   self.sprite.speed = 10;
   self.sprite.shakeMax = 24;
@@ -102,8 +103,8 @@ function M.BaseEnemy:updateHealthBar()
 end
 
 --Kills the enemy (does NOT remove from list of enemies)
-function M.BaseEnemy:kill(_radarObject)
-  _radarObject:kill(self.sprite.enemyType, self.sprite.index)
+function M.BaseEnemy:kill(radar)
+  if(radar) then radar:kill(self.sprite.enemyType, self.sprite.index) end
   self.sprite.healthBar:removeSelf();
   self.sprite.healthMissing:removeSelf();
   self.sprite:removeSelf();
@@ -214,25 +215,28 @@ function M.BaseEnemy:onCollision(event)
   end
 end
 
-function M.BaseEnemy:drawOnRadar(_radarObject)
-  if(self:getDistanceTo(player:getX(), player:getY()) < 5500)then
-    _radarObject:draw((self.sprite.x - player:getX())/25,
-                      (self.sprite.y - player:getY())/25,
-                      self.sprite.enemyType,
-                      self.sprite.index,
-                      self.sprite.radarColour);
-  else
-    _radarObject:kill(self.sprite.enemyType, self.sprite.index)
+function M.BaseEnemy:drawOnRadar(radar)
+  if(radar) then
+    if(self:getDistanceTo(player:getX(), player:getY()) < 5500)then
+      radar:draw((self.sprite.x - player:getX())/25,
+                (self.sprite.y - player:getY())/25,
+                self.sprite.enemyType,
+                self.sprite.index,
+                self.sprite.radarColour);
+    else
+      radar:kill(self.sprite.enemyType, self.sprite.index)
+    end
   end
 end
 
-function M.BaseEnemy:run()
+function M.BaseEnemy:run(radar)
   --Checks if enemy is dead
   if (self.sprite.healthBar.health <= 0 or self:getDistanceTo(player:getX(), player:getY()) > 100000) then
     self.sprite.isDead = true;
   else
     --print(self.sprite.isStuck)
     self:updateHealthBar();
+    self:drawOnRadar(radar);
     --runs shake routine
     self:shake();
 

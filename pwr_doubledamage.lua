@@ -3,11 +3,12 @@
 -- Powerup --> Double Damage; Doubles the player's bullet damage;
 --
 --------------------------------------------------------------------------------
------------------------------ PWR_DOUBLEDAMAGE.LUA -----------------------------
+----------------------------- pwr_doubledamage.lua -----------------------------
 --------------------------------------------------------------------------------
 local basePowerup = require("powerup");
 local class = require("classy");
 local physics = require("physics");
+local timeMan = require("powerupTimerManager");
 
 local M = {};
 
@@ -18,6 +19,7 @@ function M.class:__init(_index, params)
   basePowerup.class.__init(self, params);
   self.index = _index;
   self.name = "Double Damage";
+  self.sprite.duration = 7;
 end
 
 function M.class:sayHello()
@@ -27,9 +29,13 @@ end
 function M.class.onCollision(self, event)
   if(event.phase == "began") then
     self.isDead = true;
-    event.other.powerupBuffs[2] = 120; --buff duration
-    event.other:setFillColor(90/255, 30/255, 255/255)
-    event.other.bulletDamage = event.other.bulletDamage * 2;
+    if(event.other.powerupBuffs[2] <= 0) then
+      event.other.bulletDamage = event.other.bulletDamage * 2;
+      event.other:setFillColor(90/255, 30/255, 255/255)
+    end
+    event.other.powerupBuffs[2] = self.duration*60; --buff duration
+
+    timeMan:create({index = 2, x = 800, duration = self.duration});
   end
 end
 

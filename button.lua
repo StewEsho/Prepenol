@@ -5,96 +5,90 @@
 --  button.lua
 --
 ------------------------------- Private Fields ---------------------------------
+local class = require ("classy");
 
 local button = {};
-local button_mt = {__index = button}; --metatable
+button.newInstance = class("Button");
 
-local r, g, b, a;
-local width, height;
-local x, y;
-local isPressed;
-local isToggleable;
-local tag;
-
-local buttonBox;
+--[[
+_x,
+_y,
+_width,
+_height,
+_toggleable,
+_r,
+_g,
+_b,
+_a,
+_tag
+]]
 
 --Constructor
-function button.new(_x,
-                    _y,
-                    _width,
-                    _height,
-                    _toggleable,
-                    _r,
-                    _g,
-                    _b,
-                    _a,
-                    _tag)
-  local newButton = {
-    x = _x;
-    y = _y;
-    width = _width;
-    height = _height;
-    tag = _tag;
-    isToggleable = _toggleable
-  }
+function button.newInstance:__init(params)
 
-  x = _x;
-  y = _y;
-  width = _width;
-  height = _height;
-  tag = _tag or "button";
-  isToggleable = _toggleable or false;
-  isPressed = false;
-  r = _r or 1;
-  g = _g or 1;
-  b = _b or 1;
-  a = _a or 1;
+  self.x = params.x;
+  self.y = params.y;
+  self.width = params.width;
+  self.height = params.height;
 
-  buttonBox = display.newRect(x, y, width, height);
-  buttonBox:setFillColor(r, g, b, a);
+  self.buttonBox = display.newRect(self.x, self.y, self.width, self.height);
 
-  return setmetatable(newButton, button_mt);
+  self.buttonBox.tag = params.tag or "button";
+  self.buttonBox.isToggleable = params.isToggleable or false;
+  self.buttonBox.isPressed = false;
+  self.buttonBox.r = params.r or 1;
+  self.buttonBox.g = params.g or 1;
+  self.buttonBox.b = params.b or 1;
+  self.buttonBox.a = params.a or 1;
+
+  self.buttonBox.originalWidth = params.width;
+  self.buttonBox.originalHeight = params.height;
+  self.buttonBox.originalX = params.x;
+  self.buttonBox.originalY = params.y;
+  self.buttonBox:setFillColor(self.buttonBox.r, self.buttonBox.g, self.buttonBox.b, self.buttonBox.a);
+
+  --initializes the touch input
+  self.buttonBox.touch = self.run;
+  self.buttonBox:addEventListener("touch", self.buttonBox);
 end
------------------------------ Private Functions --------------------------------
+------------------------------ Public Functions --------------------------------
 
-local function run(event)
-  if(event.phase == "began") then
-    if(isToggleable == false) then
-      buttonBox.width = width - 25;
-      buttonBox.height = height - 25;
-      isPressed = true;
+function button.newInstance:run(event)
+  if (event.phase == "began") then
+    if(event.target.isToggleable == false) then
+      event.target.width = event.target.originalWidth - 50;
+      event.target.height = event.target.originalHeight - 50;
+      event.target.isPressed = true;
     else
-      isPressed = not isPressed;
-      if (isPressed) then
-        buttonBox.width = width - 25;
-        buttonBox.height = height - 25;
+      event.target.isPressed = not event.target.isPressed;
+      if (event.target.isPressed) then
+        event.target.width = event.target.originalWidth - 50;
+        event.target.height = event.target.originalHeight - 50;
       else
-        buttonBox.width = width + 25;
-        buttonBox.height = height + 25;
+        event.target.width = event.target.originalWidth;
+        event.target.height = event.target.originalHeight;
       end
     end
   elseif(event.phase == "ended" or event.phase == "cancelled") then
-    if(isToggleable == false) then
-      buttonBox.width = width + 25;
-      buttonBox.height = height + 25;
-      isPressed = false;
+    if(event.target.isToggleable == false) then
+      event.target.width = event.target.originalWidth;
+      event.target.height = event.target.originalHeight;
+      event.target.isPressed = false;
     end
   end
 end
 
------------------------------- Public Functions --------------------------------
-
-function button:init()
-  buttonBox:addEventListener("touch", run);
+function button.newInstance:getDisplayObject()
+  return self.buttonBox;
 end
 
-function button:isPressed()
-  return isPressed;
+function button.newInstance:isPressed()
+  return self.buttonBox.isPressed;
 end
 
-function button:setCoordinates(_x, _y)
-  x = _x;
-  y = _y;
+function button.newInstance:setCoordinates(_x, _y)
+  self.buttonBox.x = _x;
+  self.buttonBox.y = _y;
 end
 
 return button;

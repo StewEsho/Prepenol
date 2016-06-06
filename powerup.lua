@@ -31,6 +31,8 @@ function powerups.class:__init(params)
   self.sprite.gravityScale = 0;
   self.sprite.collision = self.onCollision;
   self.sprite:addEventListener("collision", self.sprite);
+
+  self.sprite.duration = 1; --time, in seconds, that the powerup lasts
 end
 
 function powerups.class:run(_index)
