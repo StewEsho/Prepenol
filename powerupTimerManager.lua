@@ -9,20 +9,17 @@ local progressRing = require("progressRing");
 
 local timerManager = {};
 
-local countdownTimers = {};
+local countdownTimers = {
+  progressRing.new({ringColor = {0.8, 0.1, 0.6}, bgColor = {0,0,0, 0.01}, position = 1, ringDepth = 1, radius = 80}),
+  progressRing.new({ringColor = {0.2, 0.1, 0.8}, bgColor = {0,0,0, 0.01}, position = 1, ringDepth = 1, radius = 80})
+};
 
 function timerManager:init()
-  countdownTimers = {
-    --speedboost
-    progressRing.new({ringColor = {0.8, 0.1, 0.6}, bgColor = {1,1,1,0.01}, position = 1, ringDepth = 1, radius = 80}),
-    --double damage
-    progressRing.new({ringColor = {0.2, 0.1, 0.8}, bgColor = {1,1,1,0.01}, position = 1, ringDepth = 1, radius = 80})
-   };
+  print("init");
 
   for i = 1, table.getn(countdownTimers) do
     countdownTimers[i].y = display.contentHeight - 120;
-    countdownTimers[i].x = -1000;
-    countdownTimers[i].isInProgress = false;
+    countdownTimers[i].x = -1000
   end
 
 end
@@ -36,6 +33,7 @@ function timerManager:get(_index)
 end
 
 function timerManager:create(params)
+  print("powa || " .. countdownTimers[params.index].position)
   params.duration = params.duration or 1;
 
   if(countdownTimers[params.index].isInProgress == false) then
@@ -51,11 +49,7 @@ function timerManager:create(params)
 end
 
 function timerManager:onComplete()
-  print(self);
-  print(countdownTimers);
-  print(countdownTimers[1]);
-  print(countdownTimers[2]);
-  print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+  print("timeOUT!!!!!!!!!!!!!!!!!!!!!");
 end
 
 return timerManager;

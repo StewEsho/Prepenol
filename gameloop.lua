@@ -11,6 +11,7 @@ local scene = require("scene");
 local enemies = require("enemies");
 local powerup = require("powerup_manager");
 local gui = require("gui");
+local progressRing = require("progressRing");
 
 local gameloop = {};
 
@@ -36,8 +37,8 @@ function gameloop:init()
   math.randomseed(os.time()); math.random(); math.random();
   display.setDefault("background", 30/255, 15/255, 27/255);
   system.activate("multitouch");
-  native.setProperty("androidSystemUiVisibility", "immersiveSticky");
-  display.setStatusBar(display.HiddenStatusBar);
+  --native.setProperty("androidSystemUiVisibility", "immersiveSticky");
+  --display.setStatusBar(display.HiddenStatusBar);
   --physics.setDrawMode("hybrid");
 
   --sets gamestate
