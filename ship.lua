@@ -75,7 +75,7 @@ function ship.new(_x, _y, _acceleration)
 
   player.fill = sprite_ship;
   player.name = "Player";
-  player.healthBar.health = 1000;
+  player.healthBar.health = 50;
   player.healthBar.armour = 0;
   player.healthBar.maxHealth = 1000;
   player.damage = nil;
@@ -206,6 +206,10 @@ function ship:run(joystick, fireButton) --Runs every frame
     player.isFixedRotation = false;
     player.bodyType = "dynamic";
     player.healthBar.width = 0;
+    for i = 1, table.getn(player.powerupBuffs) do
+      player.powerupBuffs[i] = 0;
+    end
+    self:updateBuffs();
   else
     if (joystick:isInUse() == true) then
       if (player.speed < player.maxSpeed) then
