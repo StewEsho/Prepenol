@@ -73,6 +73,8 @@ function gui.class:__init(params)
                                    b       = 0.6,     --blue
                                    a       = 0.6,     --alpha
                                    tag     = "fire"});  --tag)
+  self.button:getDisplayObject().path.x1 = -40;
+  self.button:getDisplayObject().path.y1 = -40;
 
   --Gameover Background
   self.gameOverBackground = display.newRect(self.gameOverGUI, display.contentWidth/2, display.contentHeight/2, display.actualContentWidth, display.actualContentHeight);
@@ -91,8 +93,6 @@ function gui.class:__init(params)
   self.menuButton.super = self;
   self.menuButton.touch = self.returnToMenu;
   self.menuButton:addEventListener("touch", self.menuButton);
-
-
 
   self.restartButtonGroup = display.newGroup();
   self.restartButtonGroup.alpha = 0;
