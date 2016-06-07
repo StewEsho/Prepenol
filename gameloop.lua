@@ -54,7 +54,6 @@ end
 --Runs continously. Different code for each different game state
 function gameloop:run()
   if(hud:getState() == 1) then --MAIN MENU--
-    display.newRect(300, 400, 300, 400);
   elseif(hud:getState() == 2) then  --GAMEPLAY--
     --player:debug();
 

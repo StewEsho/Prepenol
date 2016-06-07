@@ -142,11 +142,14 @@ function gui.class:__init(params)
   self.menuGroup:insert(self.menuMultiplayerButtonGroup);
   self.menuGroup:insert(self.menuTitleGroup);
 
-
   display.newText(self.menuTitleGroup, "Prepenol", display.contentWidth/2+5, 155, "font/Audiowide-Regular.ttf", 164);
   self.menuTitleGroup[1]:setFillColor(0.1, 0.1, 0.1);
   display.newText(self.menuTitleGroup, "Prepenol", display.contentWidth/2, 150, "font/Audiowide-Regular.ttf", 164);
   self.menuTitleGroup[2]:setFillColor(1, 0.5, 0.25);
+
+  display.newRect(self.menuArcadeButtonGroup, 300, 400, 500, 600);
+
+  self.menuGroup.isVisible = false;
 end
 
 --gets an object from the hud
@@ -197,6 +200,7 @@ function gui.class:returnToMenu(event)
     self.super.menuButtonGroup.alpha = 0;
     self.super.restartButtonGroup.alpha = 0;
     self.super.controlGroup.isVisible = false;
+    self.super.menuGroup.isVisible = true;
   end
 end
 
