@@ -132,7 +132,6 @@ end
 
 function gui.class:restartGame(event)
   if(event.phase == "began") then
-    print("wew lad");
     self.super.gameState = 5;
     self.super.groupGUI[5].alpha = 0;
   end

@@ -107,7 +107,6 @@ end
 
 function enemies:kill(_index1, _index2)
   table.remove(enemyList[_index1], _index2);
-  print("Kill me? Later.");
 end
 
 function enemies:randomSpawn(_x, _y, params)
