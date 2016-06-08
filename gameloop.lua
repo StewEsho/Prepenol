@@ -54,8 +54,13 @@ end
 --Runs continously. Different code for each different game state
 function gameloop:run()
   if(hud:getState() == 1) then --MAIN MENU--
+    hud:getSelf().menuGroup.isVisible = true;
+    hud:getSelf().controlGroup.isVisible = false;
+    player:wander();
   elseif(hud:getState() == 2) then  --GAMEPLAY--
     --player:debug();
+    hud:getSelf().menuGroup.isVisible = false;
+    hud:getSelf().controlGroup.isVisible = true;
 
     enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(4, 1)}) --spawns enemies randomly
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
@@ -70,6 +75,11 @@ function gameloop:run()
     powerups:clear();
     player:reset();
     hud:setState(2);
+  elseif(hud:getState() == 6) then --PREPARING FOR MENU
+    enemy:clear(hud:get(3, 1));
+    powerups:clear();
+    player:reset();
+    hud:setState(1);
   end
 
   if(player:getIsDead() and hud:getState() == 2) then

@@ -183,6 +183,19 @@ function ship:translate(_x, _y, _angle)
   end
 end
 
+local wanderTimer = 0;
+function ship:wander()
+  wanderTimer = wanderTimer + 1;
+  if (wanderTimer < math.random(45, 60) and wanderTimer < 60) then
+    player.rotation = player.rotation + 5;
+  elseif (wanderTimer >= 45 and (wanderTimer < math.random(90, 120) and wanderTimer < 120)) then
+    player.rotation = player.rotation - 5;
+  elseif (wanderTimer >= 90) then
+    wanderTimer = 0;
+  end
+  player:setLinearVelocity(2000 * math.sin(math.rad(player.rotation)), 2000 * -math.cos(math.rad(player.rotation)));
+end
+
 function ship:init()
   player.damage = ship.damage;
   scene:addObjectToScene(player, 0);
