@@ -139,17 +139,19 @@ function gui.class:__init(params)
   ------------------------------------------------------------------------------
 
   self.menuGroup = display.newGroup();
-  self.menuArcadeButtonGroup = display.newGroup();
+  self.menuGauntletGroup = display.newGroup();
+  self.menuTimeAttackGroup = display.newGroup();
   self.menuOptionsButtonGroup = display.newGroup();
   self.menuMultiplayerButtonGroup = display.newGroup();
-  self.menuButtonGroup = display.newGroup();
+  self.mainMenuButtonGroup = display.newGroup();
   self.menuTitleGroup = display.newGroup();
 
-  self.menuButtonGroup:insert(self.menuArcadeButtonGroup);
-  self.menuButtonGroup:insert(self.menuOptionsButtonGroup);
-  self.menuButtonGroup:insert(self.menuMultiplayerButtonGroup);
+  self.mainMenuButtonGroup:insert(self.menuGauntletGroup);
+  self.mainMenuButtonGroup:insert(self.menuTimeAttackGroup);
+  self.mainMenuButtonGroup:insert(self.menuOptionsButtonGroup);
+  self.mainMenuButtonGroup:insert(self.menuMultiplayerButtonGroup);
 
-  self.menuGroup:insert(self.menuButtonGroup);
+  self.menuGroup:insert(self.mainMenuButtonGroup);
   self.menuGroup:insert(self.menuTitleGroup);
 
   display.newText(self.menuTitleGroup, "Prepenol", display.contentWidth/2+5, 155, "font/Audiowide-Regular.ttf", 164);
@@ -157,34 +159,99 @@ function gui.class:__init(params)
   display.newText(self.menuTitleGroup, "Prepenol", display.contentWidth/2, 150, "font/Audiowide-Regular.ttf", 164);
   self.menuTitleGroup[2]:setFillColor(1, 0.5, 0.25);
 
-  display.newRect(self.menuArcadeButtonGroup,
+  display.newRect(self.menuGauntletGroup,
                   32,
                   164+75+32,
-                  900,
-                  display.contentHeight - ((164+75+32) + 32));
-  self.menuArcadeButtonGroup[1].anchorX = 0;
-  self.menuArcadeButtonGroup[1].anchorY = 0;
-  self.menuArcadeButtonGroup[1]:setFillColor(0.8, 0.2, 0.3)
+                  1024,
+                  display.contentHeight - ((164+75+32) + 32) - 400);
+  self.menuGauntletGroup[1].anchorX = 0;
+  self.menuGauntletGroup[1].anchorY = 0;
+  self.menuGauntletGroup[1].fill = {
+    type = "gradient",
+    color1 = { 0.7, 0.1, 0.2},
+    color2 = { 0.9, 0.3, 0.4},
+    direction = "down"
+  }
+  display.newText(self.menuGauntletGroup,
+                  "Gauntlet",
+                  self.menuGauntletGroup[1].x + self.menuGauntletGroup[1].width/2,
+                  self.menuGauntletGroup[1].y + self.menuGauntletGroup[1].height/2,
+                  "font/LeagueSpartan-Bold.ttf",
+                  210);
+  self.menuGauntletGroup.super = self;
+  self.menuGauntletGroup.touch = self.restartGame;
+  self.menuGauntletGroup:addEventListener("touch", self.menuGauntletGroup);
+
+  display.newRect(self.menuTimeAttackGroup,
+                  32,
+                  164+75+32 + 400,
+                  self.menuGauntletGroup[1].width,
+                  display.contentHeight - ((164+75+32) + 32 + 400));
+  self.menuTimeAttackGroup[1].anchorX = 0;
+  self.menuTimeAttackGroup[1].anchorY = 0;
+  self.menuTimeAttackGroup[1].fill = {
+    type = "gradient",
+    color1 = { 0.7, 0.7, 0.2},
+    color2 = { 1, 1, 0.5},
+    direction = "down"
+  }
+  display.newText(self.menuTimeAttackGroup,
+                  "Time Attack",
+                  self.menuTimeAttackGroup[1].x + self.menuTimeAttackGroup[1].width/2,
+                  self.menuTimeAttackGroup[1].y + self.menuTimeAttackGroup[1].height/2,
+                  "font/LeagueSpartan-Bold.ttf",
+                  150);
+
 
   display.newRect(self.menuOptionsButtonGroup,
-                  32 + self.menuArcadeButtonGroup[1].width + 32,
+                  32 + self.menuGauntletGroup[1].width + 32,
                   164+75+32,
-                  display.contentWidth - (self.menuArcadeButtonGroup[1].width + 32 + 32 + 32),
+                  display.contentWidth - (self.menuGauntletGroup[1].width + 32 + 32 + 32),
                   250);
   self.menuOptionsButtonGroup[1].anchorX = 0;
   self.menuOptionsButtonGroup[1].anchorY = 0;
-  self.menuOptionsButtonGroup[1]:setFillColor(56/255, 173/255, 1)
+  self.menuOptionsButtonGroup[1].fill = {
+    type = "gradient",
+    color1 = { 30/255, (173/255)-0.2, 0.7, 1},
+    color2 = { 56/255, 173/255, 1, 1},
+    direction = "down"
+  }
+  display.newText(self.menuOptionsButtonGroup,
+                  "Options",
+                  self.menuOptionsButtonGroup[1].x + self.menuOptionsButtonGroup[1].width/2,
+                  self.menuOptionsButtonGroup[1].y + self.menuOptionsButtonGroup[1].height/2,
+                  "font/LeagueSpartan-Bold.ttf",
+                  120);
 
   display.newRect(self.menuMultiplayerButtonGroup,
-                  32 + self.menuArcadeButtonGroup[1].width + 32,
+                  32 + self.menuGauntletGroup[1].width + 32,
                   164+75+32 + self.menuOptionsButtonGroup[1].height + 32,
-                  display.contentWidth - (self.menuArcadeButtonGroup[1].width + 32 + 32 + 32),
+                  display.contentWidth - (self.menuGauntletGroup[1].width + 32 + 32 + 32),
                   display.contentHeight - ((164+75+32) + 32 + self.menuOptionsButtonGroup[1].height + 32));
   self.menuMultiplayerButtonGroup[1].anchorX = 0;
   self.menuMultiplayerButtonGroup[1].anchorY = 0;
-  self.menuMultiplayerButtonGroup[1]:setFillColor(1, 0.5, 0.1);
+  self.menuMultiplayerButtonGroup[1].fill = {type = "image", filename = "img/menu/twin1.jpg"}
+  display.newRect(self.menuMultiplayerButtonGroup,
+                  self.menuMultiplayerButtonGroup[1].x,
+                  self.menuMultiplayerButtonGroup[1].y,
+                  self.menuMultiplayerButtonGroup[1].width,
+                  self.menuMultiplayerButtonGroup[1].height)
+                  self.menuMultiplayerButtonGroup[2].anchorX = 0;
+                  self.menuMultiplayerButtonGroup[2].anchorY = 0;
+  self.menuMultiplayerButtonGroup[2].fill = {
+    type = "gradient",
+    color1 = { 1, 0.5, 0.1},
+    color2 = { 1, 0.7, 0.3},
+    direction = "down"
+  }
+  display.newText(self.menuMultiplayerButtonGroup,
+                  "Dogfight",
+                  self.menuMultiplayerButtonGroup[1].x + self.menuMultiplayerButtonGroup[1].width/2,
+                  self.menuMultiplayerButtonGroup[1].y + self.menuMultiplayerButtonGroup[1].height/2,
+                  "font/LeagueSpartan-Bold.ttf",
+                  164);
 
-  self.menuButtonGroup.alpha = 0.75
+  self.mainMenuButtonGroup.alpha = 0.9
 
   self.menuGroup.isVisible = false;
 
@@ -222,10 +289,10 @@ end
 
 function gui.class:showEndscreen()
   -- if (self.controlGroup[5].alpha < 1) then
-    self.controlGroup[5].alpha = self.controlGroup[5].alpha + 0.01;
+    self.controlGroup[5].alpha = self.controlGroup[5].alpha + 0.02;
     if(self.controlGroup[5].alpha >= 0.87) then
-      self.menuButtonGroup.alpha = self.menuButtonGroup.alpha + 0.03
-      self.restartButtonGroup.alpha = self.restartButtonGroup.alpha + 0.03
+      self.menuButtonGroup.alpha = self.menuButtonGroup.alpha + 0.05
+      self.restartButtonGroup.alpha = self.restartButtonGroup.alpha + 0.05
     end
   -- end
 end
