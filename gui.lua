@@ -19,8 +19,8 @@ function gui.class:__init(params)
   --[[  Stores the gameState
     0 = not initialized
     1 = main menu
-    2 = gameplay
-    3 = pause menu
+    2 = gameplay (Gauntlet)
+    3 = gameplay (101 Ships)
     4 = game over
     5 = resetting process
     6 = resetting process in preperation of the main menu
@@ -65,6 +65,16 @@ function gui.class:__init(params)
                                    tag     = "fire"});  --tag)
   self.button:getDisplayObject().path.x1 = -40;
   self.button:getDisplayObject().path.y1 = -40;
+
+  --101 Man Brawl Enemy Countdown
+  self.brawlCounterGroup = display.newGroup();
+
+  self.brawlEnemyCounterHeading = display.newText(self.brawlCounterGroup, "Targets Remaining:", display.contentWidth/1.7, display.contentHeight - 60, "font/LeagueSpartan-Bold.ttf", 56)
+  self.brawlEnemyCounterHeading.anchorX = 1;
+  self.brawlEnemyCounter = display.newText(self.brawlCounterGroup, "101", self.brawlEnemyCounterHeading.x + 20, self.brawlEnemyCounterHeading.y, "font/LeagueSpartan-Bold.ttf", 81)
+  self.brawlEnemyCounter.anchorX = 0;
+  self.brawlEnemyCounter:setFillColor(0.8, 0.2, 0.1);
+  self.brawlCounterGroup.isVisible = false;
 
   --Gameover Background
   self.gameOverBackground = display.newRect(self.gameOverGUI, display.contentWidth/2, display.contentHeight/2, display.actualContentWidth, display.actualContentHeight);
@@ -140,14 +150,14 @@ function gui.class:__init(params)
 
   self.menuGroup = display.newGroup();
   self.menuGauntletGroup = display.newGroup();
-  self.menuTimeAttackGroup = display.newGroup();
+  self.menuBrawlGroup = display.newGroup();
   self.menuOptionsButtonGroup = display.newGroup();
   self.menuMultiplayerButtonGroup = display.newGroup();
   self.mainMenuButtonGroup = display.newGroup();
   self.menuTitleGroup = display.newGroup();
 
   self.mainMenuButtonGroup:insert(self.menuGauntletGroup);
-  self.mainMenuButtonGroup:insert(self.menuTimeAttackGroup);
+  self.mainMenuButtonGroup:insert(self.menuBrawlGroup);
   self.mainMenuButtonGroup:insert(self.menuOptionsButtonGroup);
   self.mainMenuButtonGroup:insert(self.menuMultiplayerButtonGroup);
 
@@ -182,26 +192,28 @@ function gui.class:__init(params)
   self.menuGauntletGroup.touch = self.restartGame;
   self.menuGauntletGroup:addEventListener("touch", self.menuGauntletGroup);
 
-  display.newRect(self.menuTimeAttackGroup,
+  display.newRect(self.menuBrawlGroup,
                   32,
                   164+75+32 + 400,
                   self.menuGauntletGroup[1].width,
                   display.contentHeight - ((164+75+32) + 32 + 400));
-  self.menuTimeAttackGroup[1].anchorX = 0;
-  self.menuTimeAttackGroup[1].anchorY = 0;
-  self.menuTimeAttackGroup[1].fill = {
+  self.menuBrawlGroup[1].anchorX = 0;
+  self.menuBrawlGroup[1].anchorY = 0;
+  self.menuBrawlGroup[1].fill = {
     type = "gradient",
     color1 = { 0.7, 0.7, 0.2},
     color2 = { 1, 1, 0.5},
     direction = "down"
   }
-  display.newText(self.menuTimeAttackGroup,
-                  "Time Attack",
-                  self.menuTimeAttackGroup[1].x + self.menuTimeAttackGroup[1].width/2,
-                  self.menuTimeAttackGroup[1].y + self.menuTimeAttackGroup[1].height/2,
+  display.newText(self.menuBrawlGroup,
+                  "101 Ship Brawl",
+                  self.menuBrawlGroup[1].x + self.menuBrawlGroup[1].width/2,
+                  self.menuBrawlGroup[1].y + self.menuBrawlGroup[1].height/2,
                   "font/LeagueSpartan-Bold.ttf",
-                  150);
-
+                  130);
+  self.menuBrawlGroup.super = self;
+  self.menuBrawlGroup.touch = self.restartBrawl;
+  self.menuBrawlGroup:addEventListener("touch", self.menuBrawlGroup);
 
   display.newRect(self.menuOptionsButtonGroup,
                   32 + self.menuGauntletGroup[1].width + 32,
@@ -270,6 +282,19 @@ function gui.class:get(index1, index2)
   end
 end
 
+function gui.class:getEnemyCounter()
+  return self.brawlEnemyCounter;
+end
+
+function gui.class:setEnemyCounter(_count)
+  self.brawlEnemyCounter.text = _count;
+  return self.brawlEnemyCounter;
+end
+
+function gui.class:getEnemyCounterGroup()
+  return self.brawlCounterGroup;
+end
+
 function gui.class:getState()
   return self.gameState;
 end
@@ -304,6 +329,15 @@ end
 function gui.class:restartGame(event)
   if(event.phase == "began") then
     self.super.gameState = 5;
+    self.super.controlGroup[5].alpha = 0;
+    self.super.menuButtonGroup.alpha = 0;
+    self.super.restartButtonGroup.alpha = 0;
+  end
+end
+
+function gui.class:restartBrawl(event)
+  if(event.phase == "began") then
+    self.super.gameState = 7;
     self.super.controlGroup[5].alpha = 0;
     self.super.menuButtonGroup.alpha = 0;
     self.super.restartButtonGroup.alpha = 0;

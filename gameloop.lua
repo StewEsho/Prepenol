@@ -20,6 +20,8 @@ local testEn;
 local enemy;
 local powerups;
 local hud;
+local radarClearTimer;
+local brawlEnemyCount;
 ------------------------------ Public Functions --------------------------------
 
 --Runs once to initialize the game
@@ -49,6 +51,8 @@ function gameloop:init()
   for i = 1, table.getn(powerups:getTimerObject()) do
     hud:insert(powerups:getTimerObject(i), 1) --all powerup timers
   end
+  radarClearTimer = 0;
+  brawlEnemyCount = 101;
 end
 
 --Runs continously. Different code for each different game state
@@ -57,32 +61,73 @@ function gameloop:run()
     hud:getSelf().menuGroup.isVisible = true;
     hud:getSelf().controlGroup.isVisible = false;
     player:wander();
-  elseif(hud:getState() == 2) then  --GAMEPLAY--
+  elseif(hud:getState() == 2) then  --GAMEPLAY--(GAUNTLET)
     --player:debug();
     hud:getSelf().menuGroup.isVisible = false;
     hud:getSelf().controlGroup.isVisible = true;
 
-    enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(4, 1)}) --spawns enemies randomly
+    enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(3, 1)}) --spawns enemies randomly
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
     enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
     hud:run(); --runs HUD and GUI elements
+  elseif(hud:getState() == 3) then--GAMEPLAY--(101 SHIP BRAWL)
+    radarClearTimer = radarClearTimer + 1;
+    if(radarClearTimer == 240) then
+      hud:get(3, 1):clear();
+      radarClearTimer = 0;
+    end
+    --player:debug();
+    hud:getSelf().menuGroup.isVisible = false;
+    hud:getSelf().controlGroup.isVisible = true;
+    hud:getEnemyCounterGroup().isVisible = true;
+
+    local enemySpawned = enemy:getAmount();
+    powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
+    player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
+    enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
+    powerups:run(); --runs misc. powerup animations and event listeners
+    hud:run(); --runs HUD and GUI elements
+
+    if (enemySpawned - enemy:getAmount() >= 1) then
+      local enemyDiff = (enemySpawned - enemy:getAmount())
+      if (enemy:getAmount() > 25) then
+        enemy:batchSpawn((enemySpawned - enemy:getAmount()), {radar = hud:get(3, 1)});
+      end
+      brawlEnemyCount = brawlEnemyCount - enemyDiff;
+    end
+    hud:setEnemyCounter(brawlEnemyCount);
+
+    if(enemy:getAmount() <= 0) then
+      hud:setState(4);
+    end
   elseif(hud:getState() == 4) then --GAME OVER--
     hud:showEndscreen();
-  elseif(hud:getState() == 5) then --RESETTING
+    hud:getEnemyCounterGroup().isVisible = false;
+  elseif(hud:getState() == 5) then --RESETTING FOR GAUNTLET
     enemy:clear(hud:get(3, 1));
     powerups:clear();
     player:reset();
     hud:setState(2);
+    hud:getEnemyCounterGroup().isVisible = false;
   elseif(hud:getState() == 6) then --PREPARING FOR MENU
     enemy:clear(hud:get(3, 1));
     powerups:clear();
     player:reset();
     hud:setState(1);
+    hud:getEnemyCounterGroup().isVisible = false;
+  elseif(hud:getState() == 7) then --RESETTING FOR 101 SHIP BRAWL
+    enemy:clear(hud:get(3, 1));
+    powerups:clear();
+    player:reset();
+    enemy:batchSpawn(25, {radar = hud:get(3, 1)});
+    brawlEnemyCount = 101;
+    hud:getEnemyCounterGroup().isVisible = true;
+    hud:setState(3);
   end
 
-  if(player:getIsDead() and hud:getState() == 2) then
+  if(player:getIsDead() and (hud:getState() == 2 or hud:getState() == 3)) then
     hud:setState(4);
   end
 end

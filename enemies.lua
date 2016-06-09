@@ -38,7 +38,7 @@ function enemies.new()
   skeletonList = {}; --List of all Skeleton enemies
   aquaeList = {}; --List of all aquae ships
   fireList = {}; --List of all fireballer ships
-  turretList = {};
+  --turretList = {};
   --List of all enemies
   enemyList = {
     --[[
@@ -52,8 +52,8 @@ function enemies.new()
     ]]
     skeletonList,
     aquaeList,
-    fireList,
-    turretList
+    fireList
+    --turretList
   }
 
   --List of all clases; corresponds with order in enemyList
@@ -61,8 +61,8 @@ function enemies.new()
   moduleList = {
     skeleton,
     aquae,
-    fireballer,
-    turret
+    fireballer
+    --turret
   }
 
   return newEnemies;
@@ -86,12 +86,17 @@ end
 
 function enemies:spawn(_index, _x, _y, params)
   params = params or {};
-  if (_index and _index ~= 4) then
+  _index = _index or math.random(1, table.getn(enemyList))
+  table.insert(enemyList[_index], moduleList[_index].class(_x, _y, table.getn(enemyList[_index])+1, params));
+  --print(enemyList[_index][table.getn(enemyList[_index])].sprite.name .. " | " .. enemyList[_index][table.getn(enemyList[_index])].sprite.index);
+  return enemyList[_index][table.getn(enemyList[_index])];
+end
+
+function enemies:batchSpawn(_amount, params, _index)
+  _amount = _amount or 5;
+  for i = 1, _amount do
+    _index = math.random(1, table.getn(enemyList))
     table.insert(enemyList[_index], moduleList[_index].class(_x, _y, table.getn(enemyList[_index])+1, params));
-    --print(enemyList[_index][table.getn(enemyList[_index])].sprite.name .. " | " .. enemyList[_index][table.getn(enemyList[_index])].sprite.index);
-    return enemyList[_index][table.getn(enemyList[_index])];
-  else
-    return -1;
   end
 end
 
@@ -150,6 +155,19 @@ function enemies:run(params)
     end
   end
   return enemyCount;
+end
+
+function enemies:getAmount()
+  local enemyAmount = 0;
+  for i = 1, table.getn(enemyList) do
+    for j = 1, table.getn(enemyList[i]) do
+      if (enemyList[i][j] == nil) then break
+      else
+        enemyAmount = enemyAmount + 1;
+      end
+    end
+  end
+  return enemyAmount;
 end
 
 return enemies;
