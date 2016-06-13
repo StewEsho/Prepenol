@@ -99,7 +99,6 @@ function gameloop:run()
       brawlEnemyCount = brawlEnemyCount - enemyDiff;
     end
     hud:setEnemyCounter(brawlEnemyCount);
-    print( enemy:getAmount());
 
     if(enemy:getAmount() <= 0) then
       hud:setState(9);
