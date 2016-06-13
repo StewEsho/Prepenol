@@ -77,5 +77,11 @@ settings =
 		{
 			"font/LeagueSpartan-Bold.ttf",
 		},
+
+		usesPermissions =
+    {
+        "android.permission.INTERNET",
+				"android.permission.VIBRATE",
+    },
 	},
 }

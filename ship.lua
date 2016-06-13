@@ -145,6 +145,7 @@ end
 function ship.damage(_damage)
   if(player.damageTimeout <= 275) then
     player.healthBar.health = player.healthBar.health - _damage;
+    system.vibrate();
     player.damageTimeout = 300;
   end
 end
