@@ -73,6 +73,7 @@ function gameloop:run()
     powerups:run(); --runs misc. powerup animations and event listeners
     hud:run(); --runs HUD and GUI elements
   elseif(hud:getState() == 3) then--GAMEPLAY--(101 SHIP BRAWL)
+
     radarClearTimer = radarClearTimer + 1;
     if(radarClearTimer == 240) then
       hud:get(3, 1):clear();
@@ -92,16 +93,18 @@ function gameloop:run()
 
     if (enemySpawned - enemy:getAmount() >= 1) then
       local enemyDiff = (enemySpawned - enemy:getAmount())
-      if (enemy:getAmount() > 25) then
+      if (brawlEnemyCount > 20) then
         enemy:batchSpawn((enemySpawned - enemy:getAmount()), {radar = hud:get(3, 1)});
       end
       brawlEnemyCount = brawlEnemyCount - enemyDiff;
     end
     hud:setEnemyCounter(brawlEnemyCount);
+    print( enemy:getAmount());
 
     if(enemy:getAmount() <= 0) then
-      hud:setState(4);
+      hud:setState(9);
     end
+
   elseif(hud:getState() == 4) then --GAME OVER--
     hud:showEndscreen();
     hud:getEnemyCounterGroup().isVisible = false;
@@ -121,15 +124,23 @@ function gameloop:run()
     enemy:clear(hud:get(3, 1));
     powerups:clear();
     player:reset();
-    enemy:batchSpawn(25, {radar = hud:get(3, 1)});
+    enemy:batchSpawn(20, {radar = hud:get(3, 1)});
     brawlEnemyCount = 101;
     hud:getEnemyCounterGroup().isVisible = true;
     hud:setState(3);
+  elseif(hud:getState() == 8) then --GAME OVER AFTER BRAWL--
+    hud:showEndscreen();
+    hud:getEnemyCounterGroup().isVisible = false;
+  elseif(hud:getState() == 9) then --Victory AFTER BRAWL--
+    hud:showVictoryScreen();
+    hud:getEnemyCounterGroup().isVisible = false;
   end
 
-  if(player:getIsDead() and (hud:getState() == 2 or hud:getState() == 3)) then
-    hud:setState(4);
+  if(player:getIsDead()) then
+    if(hud:getState() == 2) then hud:setState(4);
+    elseif(hud:getState() == 3) then hud:setState(8); end
   end
+
 end
 
 return gameloop;
