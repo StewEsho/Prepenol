@@ -151,14 +151,14 @@ function gui.class:__init(params)
   self.menuGroup = display.newGroup();
   self.menuGauntletGroup = display.newGroup();
   self.menuBrawlGroup = display.newGroup();
-  self.menuOptionsButtonGroup = display.newGroup();
+  self.menuAIFightButtonGroup = display.newGroup();
   self.menuMultiplayerButtonGroup = display.newGroup();
   self.mainMenuButtonGroup = display.newGroup();
   self.menuTitleGroup = display.newGroup();
 
   self.mainMenuButtonGroup:insert(self.menuGauntletGroup);
   self.mainMenuButtonGroup:insert(self.menuBrawlGroup);
-  self.mainMenuButtonGroup:insert(self.menuOptionsButtonGroup);
+  self.mainMenuButtonGroup:insert(self.menuAIFightButtonGroup);
   self.mainMenuButtonGroup:insert(self.menuMultiplayerButtonGroup);
 
   self.menuGroup:insert(self.mainMenuButtonGroup);
@@ -215,31 +215,31 @@ function gui.class:__init(params)
   self.menuBrawlGroup.touch = self.restartBrawl;
   self.menuBrawlGroup:addEventListener("touch", self.menuBrawlGroup);
 
-  display.newRect(self.menuOptionsButtonGroup,
+  display.newRect(self.menuAIFightButtonGroup,
                   32 + self.menuGauntletGroup[1].width + 32,
                   164+75+32,
                   display.contentWidth - (self.menuGauntletGroup[1].width + 32 + 32 + 32),
                   250);
-  self.menuOptionsButtonGroup[1].anchorX = 0;
-  self.menuOptionsButtonGroup[1].anchorY = 0;
-  self.menuOptionsButtonGroup[1].fill = {
+  self.menuAIFightButtonGroup[1].anchorX = 0;
+  self.menuAIFightButtonGroup[1].anchorY = 0;
+  self.menuAIFightButtonGroup[1].fill = {
     type = "gradient",
     color1 = { 30/255, (173/255)-0.2, 0.7, 1},
     color2 = { 56/255, 173/255, 1, 1},
     direction = "down"
   }
-  display.newText(self.menuOptionsButtonGroup,
-                  "Options",
-                  self.menuOptionsButtonGroup[1].x + self.menuOptionsButtonGroup[1].width/2,
-                  self.menuOptionsButtonGroup[1].y + self.menuOptionsButtonGroup[1].height/2,
+  display.newText(self.menuAIFightButtonGroup,
+                  "AI Duel",
+                  self.menuAIFightButtonGroup[1].x + self.menuAIFightButtonGroup[1].width/2,
+                  self.menuAIFightButtonGroup[1].y + self.menuAIFightButtonGroup[1].height/2,
                   "font/LeagueSpartan-Bold.ttf",
                   120);
 
   display.newRect(self.menuMultiplayerButtonGroup,
                   32 + self.menuGauntletGroup[1].width + 32,
-                  164+75+32 + self.menuOptionsButtonGroup[1].height + 32,
+                  164+75+32 + self.menuAIFightButtonGroup[1].height + 32,
                   display.contentWidth - (self.menuGauntletGroup[1].width + 32 + 32 + 32),
-                  display.contentHeight - ((164+75+32) + 32 + self.menuOptionsButtonGroup[1].height + 32));
+                  display.contentHeight - ((164+75+32) + 32 + self.menuAIFightButtonGroup[1].height + 32));
   self.menuMultiplayerButtonGroup[1].anchorX = 0;
   self.menuMultiplayerButtonGroup[1].anchorY = 0;
   self.menuMultiplayerButtonGroup[1].fill = {type = "image", filename = "img/menu/twin1.jpg"}
