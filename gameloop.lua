@@ -94,7 +94,7 @@ function gameloop:run()
     if (enemySpawned - enemy:getAmount() >= 1) then
       local enemyDiff = (enemySpawned - enemy:getAmount())
       if (brawlEnemyCount > 20) then
-        enemy:batchSpawn((enemySpawned - enemy:getAmount()), {radar = hud:get(3, 1)});
+        enemy:batchSpawn((enemySpawned - enemy:getAmount()), {radar = hud:get(3, 1), x = player.getX(), y = player.getY()});
       end
       brawlEnemyCount = brawlEnemyCount - enemyDiff;
     end
@@ -124,8 +124,12 @@ function gameloop:run()
     enemy:clear(hud:get(3, 1));
     powerups:clear();
     player:reset();
-    enemy:batchSpawn(20, {radar = hud:get(3, 1)});
     brawlEnemyCount = 101;
+    if brawlEnemyCount > 20 then
+      enemy:batchSpawn(20, {radar = hud:get(3, 1)});
+    else
+      enemy:batchSpawn(5, {radar = hud:get(3, 1)});
+    end
     hud:getEnemyCounterGroup().isVisible = true;
     hud:setState(3);
   elseif(hud:getState() == 8) then --GAME OVER AFTER BRAWL--
