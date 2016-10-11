@@ -168,10 +168,12 @@ function gui.class:__init(params)
   self.menuGroup:insert(self.mainMenuButtonGroup);
   self.menuGroup:insert(self.menuTitleGroup);
 
-  display.newText(self.menuTitleGroup, "Prepenol", display.contentWidth/2+5, 155, "font/Audiowide-Regular.ttf", 164);
-  self.menuTitleGroup[1]:setFillColor(0.5, 0.5, 0.5);
-  display.newText(self.menuTitleGroup, "Prepenol", display.contentWidth/2, 150, "font/Audiowide-Regular.ttf", 164);
-  self.menuTitleGroup[2]:setFillColor(1, 0.5, 0.25);
+  display.newImageRect(self.menuTitleGroup,
+                   "img/logos/logo.png",
+                   750,
+                   280);
+  self.menuTitleGroup[1].x = display.contentWidth/2;
+  self.menuTitleGroup[1].y = 155;
 
   display.newRect(self.menuGauntletGroup,
                   32,
