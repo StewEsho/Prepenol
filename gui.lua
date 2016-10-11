@@ -224,12 +224,12 @@ function gui.class:__init(params)
   self.menuAIFightButtonGroup[1].anchorY = 0;
   self.menuAIFightButtonGroup[1].fill = {
     type = "gradient",
-    color1 = { 30/255, (173/255)-0.2, 0.7, 1},
-    color2 = { 56/255, 173/255, 1, 1},
+    color1 = { 0.3, 0.3, 0.3, 1},
+    color2 = { 0.7, 0.7, 0.7, 1},
     direction = "down"
   }
   display.newText(self.menuAIFightButtonGroup,
-                  "AI Duel",
+                  "Boss Duel",
                   self.menuAIFightButtonGroup[1].x + self.menuAIFightButtonGroup[1].width/2,
                   self.menuAIFightButtonGroup[1].y + self.menuAIFightButtonGroup[1].height/2,
                   "font/LeagueSpartan-Bold.ttf",
@@ -252,8 +252,8 @@ function gui.class:__init(params)
                   self.menuMultiplayerButtonGroup[2].anchorY = 0;
   self.menuMultiplayerButtonGroup[2].fill = {
     type = "gradient",
-    color1 = { 1, 0.5, 0.1},
-    color2 = { 1, 0.7, 0.3},
+    color1 = { 0.3, 0.3, 0.3, 1},
+    color2 = { 0.7, 0.7, 0.7, 1},
     direction = "down"
   }
   display.newText(self.menuMultiplayerButtonGroup,
