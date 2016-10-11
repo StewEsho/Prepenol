@@ -81,7 +81,7 @@ function gui.class:__init(params)
   self.gameOverBackground:setFillColor(0.8, 0.2, 0.1);
   self.gameOverBackground.super = self;
 
-  self.gameOverText = display.newText(self.gameOverGUI, "gg", display.contentWidth/2, display.contentHeight/2, "font/LeagueSpartan-Bold.ttf", 212);
+  self.gameOverText = display.newText(self.gameOverGUI, "Game over.", display.contentWidth/2, display.contentHeight/2, "font/LeagueSpartan-Bold.ttf", 144, "center");
 
   self.menuButtonGroup = display.newGroup();
   self.menuButtonGroup.alpha = 0;
@@ -94,6 +94,8 @@ function gui.class:__init(params)
   self.menuButton.touch = self.returnToMenu;
   self.menuButton:addEventListener("touch", self.menuButton);
 
+  self.menuButtonText = display.newText(self.menuButtonGroup, "Menu", self.menuButton.x, self.menuButton.y, "font/LeagueSpartan-Bold.ttf", 72);
+
   self.restartButtonGroup = display.newGroup();
   self.restartButtonGroup.alpha = 0;
 
@@ -104,6 +106,8 @@ function gui.class:__init(params)
   self.restartButton.super = self;
   self.restartButton.touch = self.restartGame;
   self.restartButton:addEventListener("touch", self.restartButton);
+
+  self.restartButtonText = display.newText(self.restartButtonGroup, "Replay", self.restartButton.x, self.restartButton.y, "font/LeagueSpartan-Bold.ttf", 72);
 
   ------------------------------------------------------------------------------
 
@@ -316,7 +320,7 @@ function gui.class:showEndscreen()
   -- if (self.controlGroup[5].alpha < 1) then
     self.controlGroup[5].alpha = self.controlGroup[5].alpha + 0.02;
     self.gameOverBackground:setFillColor(0.8, 0.2, 0.1);
-    self.gameOverText.text = "gg wp";
+    self.gameOverText.text = "Game Over";
     if(self.controlGroup[5].alpha >= 0.87) then
       self.menuButtonGroup.alpha = self.menuButtonGroup.alpha + 0.05
       self.restartButtonGroup.alpha = self.restartButtonGroup.alpha + 0.05
