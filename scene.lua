@@ -12,6 +12,7 @@ local scene_mt = {__index = scene}; --metatable
 
 local camera;
 local sceneNum;
+local bgm;
 
 ------------------------------ Public Functions --------------------------------
 function scene:addObjectToScene(_obj, _layer)
@@ -53,7 +54,14 @@ function scene:init(_sceneNum)
     camera:setParallax(1, 1, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2); -- Here we set parallax for each layer in descending order
 
     camera.damping = 5;
+
+		--loads music
+		bgm = audio.loadStream("audio/music/track1.wav");
   end
+	--plays music
+	audio.reserveChannels(1);
+	audio.setVolume( 0.8, { channel=1 } );
+	audio.play( bgm, { channel=1, loops=-1 } )
 end
 
 function scene:destruct(_sceneNum, _transition)
