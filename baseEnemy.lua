@@ -114,6 +114,8 @@ function M.BaseEnemy:kill(radar)
   self.sprite.healthBar:removeSelf();
   self.sprite.healthMissing:removeSelf();
   transition.to(self.sprite, {time = 400, transition = easing.inCirc, alpha = 0, rotation = 720, width = 1, height = 1, onComplete = function() self.sprite:removeSelf(); end})
+	local soundEffect = audio.loadSound( "audio/sfx/success.wav" )
+	audio.play( soundEffect )
 end
 
 --Returns whether the enemy is dead or not
