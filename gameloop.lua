@@ -71,7 +71,7 @@ function gameloop:run()
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
     enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
-    hud:run(); --runs HUD and GUI elements
+    hud:run(enemy:getAmount()); --runs HUD and GUI elements
   elseif(hud:getState() == 3) then--GAMEPLAY--(101 SHIP BRAWL)
 
     radarClearTimer = radarClearTimer + 1;
@@ -89,7 +89,7 @@ function gameloop:run()
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
     enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
-    hud:run(); --runs HUD and GUI elements
+    hud:run(enemy:getAmount()); --runs HUD and GUI elements
 
     if (enemySpawned - enemy:getAmount() >= 1) then
       local enemyDiff = (enemySpawned - enemy:getAmount())
