@@ -147,6 +147,9 @@ function ship.damage(_damage)
     player.healthBar.health = player.healthBar.health - _damage;
     system.vibrate();
     player.damageTimeout = 300;
+
+		local soundEffect = audio.loadSound( "audio/sfx/hurt1.wav" )
+		audio.play( soundEffect )
   end
 end
 
@@ -258,6 +261,8 @@ function ship:run(joystick, fireButton) --Runs every frame
       bullets:shoot(4, 2 - (currentSpeed/36.5));
       bullets:shoot(4, -2 + (currentSpeed/36.5));
       shootCooldown = 0;
+			local soundEffect = audio.loadSound( "audio/sfx/shoot_single2.wav" )
+			audio.play( soundEffect )
     end
 
     player.damageTimeout = player.damageTimeout - 1;

@@ -34,6 +34,9 @@ function M.class.onCollision(self, event)
     timeMan:create({index = 1, x = 600, duration = self.duration});
 
     event.other.maxSpeed = 50;
+
+		local soundEffect = audio.loadSound( "audio/sfx/success.wav" )
+		audio.play( soundEffect )
   end
 end
 
