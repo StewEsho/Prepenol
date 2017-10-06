@@ -35,20 +35,20 @@ function scene:init(_sceneNum)
     -- Adds in Scenery
     ----------------------------------------------------------------------------
     --local sceneStars = {};
-    for i = 1, 2000 do
+    for i = 1, 1400 do
       if (math.random(1, 4) == 1) then
         sceneStars[i] = display.newRect(0, 0, 10, 10);
         sceneStars[i].rotation = 45;
       else
         sceneStars[i] = display.newCircle(0, 0, 10);
       end
-      sceneStars[i].x = math.random(-3 * display.contentWidth, 3 * display.contentWidth);
-      sceneStars[i].y = math.random(-3 * display.contentHeight, 3 * display.contentHeight);
+      sceneStars[i].x = math.random(-10 * display.contentWidth, 10 * display.contentWidth);
+      sceneStars[i].y = math.random(-10 * display.contentHeight, 10 * display.contentHeight);
       sceneStars[i]:setFillColor(math.random(100) * 0.01, math.random(100) * 0.01, math.random(100) * 0.01);
-      local layer = math.random(2, camera:layerCount());
-      camera:add(sceneStars[i], layer);
-      sceneStars[i].width = (11 - layer) * 3;
-      sceneStars[i].height = (11 - layer) * 3;
+      sceneStars[i].layer = math.random(2, camera:layerCount());
+      camera:add(sceneStars[i], sceneStars[i].layer);
+      sceneStars[i].width = (11 - sceneStars[i].layer) * 3;
+      sceneStars[i].height = (11 - sceneStars[i].layer) * 3;
     end
 
     --adds paralax to the layers
@@ -62,7 +62,7 @@ function scene:init(_sceneNum)
 	--plays music
 	audio.reserveChannels(1);
 	audio.setVolume( 0.8, { channel=1 } );
-	audio.play( bgm, { channel=1, loops=-1 } )
+	--audio.play( bgm, { channel=1, loops=-1 } )
 end
 
 function scene:destruct(_sceneNum, _transition)
@@ -86,18 +86,27 @@ function scene:run(_focalX, _focalY)
     local star = sceneStars[i]
     local layer = math.random(2, camera:layerCount());
 
-    if (i % 500) == 0 then
-      print ("(" .. star.x - _focalX .. ", " .. star.y + _focalY .. ")")
-    end
+    --print (_focalX .. "|||" .. wBound)
 
-    if math.abs(star.x - _focalX) > 2 * wBound
-    or math.abs(star.y - _focalY) > 2 * hBound then
-      star.x = math.random(_focalX - wBound, _focalX + wBound);
-      star.y = math.random(_focalY - hBound, _focalY + hBound);
-      camera:add(star, layer);
+    if math.abs(star.x - _focalX) > 2.5 * star.layer * wBound
+    or math.abs(star.y - _focalY) > 2.5 * star.layer * hBound then
+      if (star.x - _focalX < -2.5 * star.layer * wBound) then
+        star.x = star.x + 3 * star.layer * wBound
+      elseif (star.x - _focalX > 2.5 * star.layer * wBound) then
+        star.x = star.x - 3 * star.layer * wBound
+      end
+
+      if (star.y - _focalY < -2.5 * star.layer * hBound) then
+        star.y = star.y + 3 * star.layer * hBound
+      elseif (star.y - _focalY > 2.5 * star.layer * hBound) then
+        star.y = star.y - 3 * star.layer * hBound
+      end
+      -- star.x = math.random(_focalX - 2 * wBound, _focalX + 2 * wBound);
+      -- star.y = math.random(_focalY - 2 * hBound, _focalY + 2 * hBound);
+
+      --camera:add(star, layer)
     end
   end
-  print("(" .. _focalX .. ", " .. _focalY .. ")")
 end
 
 return scene;
