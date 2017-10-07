@@ -67,10 +67,10 @@ function gameloop:run()
     hud:getSelf().menuGroup.isVisible = false;
     hud:getSelf().controlGroup.isVisible = true;
 
-    --enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(3, 1)}) --spawns enemies randomly
+    enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(3, 1)}) --spawns enemies randomly
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
-    enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
+    enemy:run({radar = hud:get(3, 1), x = player:getX(), y = player:getY()}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
     hud:run(enemy:getAmount()); --runs HUD and GUI elements
   elseif(hud:getState() == 3) then--GAMEPLAY--(101 SHIP BRAWL)
@@ -88,7 +88,7 @@ function gameloop:run()
     local enemySpawned = enemy:getAmount();
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
-    enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
+    enemy:run({radar = hud:get(3, 1), x = player:getX(), y = player:getY()}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
     hud:run(enemy:getAmount()); --runs HUD and GUI elements
 
