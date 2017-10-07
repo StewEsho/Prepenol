@@ -95,7 +95,9 @@ function gameloop:run()
     if (enemySpawned - enemy:getAmount() >= 1) then
       local enemyDiff = (enemySpawned - enemy:getAmount())
       if (brawlEnemyCount > 20) then
-        enemy:batchSpawn((enemySpawned - enemy:getAmount()), {radar = hud:get(3, 1), x = player.getX(), y = player.getY()});
+        enemy:batchSpawn((enemySpawned - enemy:getAmount()),
+                          {radar = hud:get(3, 1), autokill = false,
+                           x = player.getX(), y = player.getY()});
       end
       brawlEnemyCount = brawlEnemyCount - enemyDiff;
     end
