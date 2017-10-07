@@ -57,6 +57,7 @@ end
 
 --Runs continously. Different code for each different game state
 function gameloop:run()
+  scene:run(player:getX(), player:getY());
   if(hud:getState() == 1) then --MAIN MENU--
     hud:getSelf().menuGroup.isVisible = true;
     hud:getSelf().controlGroup.isVisible = false;
@@ -69,7 +70,7 @@ function gameloop:run()
     enemy:randomSpawn(player:getX(), player:getY(), {radar = hud:get(3, 1)}) --spawns enemies randomly
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
-    enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
+    enemy:run({radar = hud:get(3, 1), x = player:getX(), y = player:getY()}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
     hud:run(enemy:getAmount()); --runs HUD and GUI elements
   elseif(hud:getState() == 3) then--GAMEPLAY--(101 SHIP BRAWL)
@@ -87,14 +88,16 @@ function gameloop:run()
     local enemySpawned = enemy:getAmount();
     powerups:randomSpawn(player:getX(), player:getY()) --spawns powerups randomly
     player:run(hud:get(4, 1), hud:get(2, 1)); --runs player controls, passes in joystick and fire button
-    enemy:run({radar = hud:get(3, 1)}); --runs enemy logic
+    enemy:run({radar = hud:get(3, 1), x = player:getX(), y = player:getY()}); --runs enemy logic
     powerups:run(); --runs misc. powerup animations and event listeners
     hud:run(enemy:getAmount()); --runs HUD and GUI elements
 
     if (enemySpawned - enemy:getAmount() >= 1) then
       local enemyDiff = (enemySpawned - enemy:getAmount())
       if (brawlEnemyCount > 20) then
-        enemy:batchSpawn((enemySpawned - enemy:getAmount()), {radar = hud:get(3, 1), x = player.getX(), y = player.getY()});
+        enemy:batchSpawn((enemySpawned - enemy:getAmount()),
+                          {radar = hud:get(3, 1), autokill = false,
+                           x = player.getX(), y = player.getY()});
       end
       brawlEnemyCount = brawlEnemyCount - enemyDiff;
     end

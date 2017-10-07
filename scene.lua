@@ -13,6 +13,7 @@ local scene_mt = {__index = scene}; --metatable
 local camera;
 local sceneNum;
 local bgm;
+local sceneStars = {};
 
 ------------------------------ Public Functions --------------------------------
 function scene:addObjectToScene(_obj, _layer)
@@ -33,21 +34,21 @@ function scene:init(_sceneNum)
     ----------------------------------------------------------------------------
     -- Adds in Scenery
     ----------------------------------------------------------------------------
-    local sceneStars = {};
-    for i = 1, 2000 do
+    --local sceneStars = {};
+    for i = 1, 1400 do
       if (math.random(1, 4) == 1) then
         sceneStars[i] = display.newRect(0, 0, 10, 10);
         sceneStars[i].rotation = 45;
       else
         sceneStars[i] = display.newCircle(0, 0, 10);
       end
-      sceneStars[i].x = math.random(-display.contentWidth * 3, display.contentWidth * 3);
-      sceneStars[i].y = math.random(-display.contentHeight * 3, display.contentHeight * 3);
+      sceneStars[i].x = math.random(-10 * display.contentWidth, 10 * display.contentWidth);
+      sceneStars[i].y = math.random(-10 * display.contentHeight, 10 * display.contentHeight);
       sceneStars[i]:setFillColor(math.random(100) * 0.01, math.random(100) * 0.01, math.random(100) * 0.01);
-      local layer = math.random(2, camera:layerCount());
-      camera:add(sceneStars[i], layer);
-      sceneStars[i].width = (11 - layer) * 3;
-      sceneStars[i].height = (11 - layer) * 3;
+      sceneStars[i].layer = math.random(2, camera:layerCount());
+      camera:add(sceneStars[i], sceneStars[i].layer);
+      sceneStars[i].width = (11 - sceneStars[i].layer) * 3;
+      sceneStars[i].height = (11 - sceneStars[i].layer) * 3;
     end
 
     --adds paralax to the layers
@@ -61,7 +62,7 @@ function scene:init(_sceneNum)
 	--plays music
 	audio.reserveChannels(1);
 	audio.setVolume( 0.8, { channel=1 } );
-	audio.play( bgm, { channel=1, loops=-1 } )
+	--audio.play( bgm, { channel=1, loops=-1 } )
 end
 
 function scene:destruct(_sceneNum, _transition)
@@ -74,6 +75,32 @@ function scene:change(_firstScene, _secondScene, _transition)
 
   scene:destruct(_firstScene, _transition);
   scene:init(_secondScene);
+end
+
+function scene:run(_focalX, _focalY)
+  _focalX = _focalX or 0;
+  _focalY = _focalY or 0;
+  wBound = display.contentWidth;
+  hBound = display.contentHeight;
+  for i = 1, #sceneStars do
+    local star = sceneStars[i]
+    local layer = math.random(2, camera:layerCount());
+
+    if math.abs(star.x - _focalX) > 2.5 * (star.layer - 1) * wBound
+    or math.abs(star.y - _focalY) > 2.5 * (star.layer - 1) * hBound then
+      if (star.x - _focalX < -2.5 * (star.layer - 1) * wBound) then
+        star.x = star.x + 3 * (star.layer - 1) * wBound
+      elseif (star.x - _focalX > 2.5 * (star.layer - 1) * wBound) then
+        star.x = star.x - 3 * (star.layer - 1) * wBound
+      end
+
+      if (star.y - _focalY < -2.5 * (star.layer - 1) * hBound) then
+        star.y = star.y + 3 * (star.layer - 1) * hBound
+      elseif (star.y - _focalY > 2.5 * (star.layer - 1) * hBound) then
+        star.y = star.y - 3 * (star.layer - 1) * hBound
+      end
+    end
+  end
 end
 
 return scene;
