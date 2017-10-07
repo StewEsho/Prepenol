@@ -34,6 +34,7 @@ function radar.class:__init(_rootObj)
   }
 
   self.dotNum = 0;
+  self.clearTimer = 0;
 
   self.dots = display.newGroup();
 end
@@ -93,10 +94,11 @@ end
 
 function radar.class:run(_enemyNum)
   self.radarTri.rotation = self.rootObject.rotation;
-  if (self:getDotNum() - _enemyNum > 10) then --if more dots (plus a buffer) than enemies . . .
+  self.clearTimer = self.clearTimer + 1;
+  if (self:getDotNum() - _enemyNum > 10 or self.clearTimer > 600) then --if more dots (plus a buffer) than enemies . . .
     self:clear() --clear and reset radar
+    self.clearTimer = 0
   end
-  -- print(_enemyNum .. " || " .. self:getDotNum())
 end
 
 function radar.class:getDotNum()
